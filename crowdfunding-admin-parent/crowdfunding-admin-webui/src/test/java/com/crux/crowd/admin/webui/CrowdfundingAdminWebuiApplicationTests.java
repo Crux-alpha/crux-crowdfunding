@@ -1,5 +1,6 @@
 package com.crux.crowd.admin.webui;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.crux.crowd.admin.component.service.AdminService;
 import com.crux.crowd.admin.entity.Admin;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,8 @@ class CrowdfundingAdminWebuiApplicationTests{
 
 	@Test
 	void select(){
-		adminService.list().forEach(admin -> log.info(admin.toString()));
+		Admin admin = adminService.getOne(Wrappers.lambdaQuery(Admin.class).eq(Admin::getUserName, "admin"));
+		log.info(admin.toString());
 	}
 
 	@Test
