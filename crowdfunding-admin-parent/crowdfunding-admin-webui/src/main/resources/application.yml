@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/project_crowd?useUnicode=true&characterEncoding=UTF-8'
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: SAIERHAO123
+    type: com.alibaba.druid.pool.DruidDataSource
+  mvc:
+    static-path-pattern: /static/**
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      table-prefix: 't_'

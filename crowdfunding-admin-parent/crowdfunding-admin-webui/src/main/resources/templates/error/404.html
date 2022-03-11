@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/common/error::head}">
+    <title>404</title>
+</head>
+
+<body class="error-page">
+
+<section>
+    <div class="container ">
+
+        <section class="error-wrapper text-center">
+            <h1><img alt="" th:src="@{/static/img/404-error.png}" src="/static/img/404-error.png"></h1>
+            <h2 th:text="${error}"></h2>
+            <!--<h2>page not found</h2>-->
+            <p class="nrml-txt" th:text="|您要访问的请求路径${path}不存在|"></p>
+            <!--<h3>We Couldn’t Find This Page</h3>-->
+            <a class="back-btn" href="/index">返回首页</a>
+        </section>
+
+    </div>
+</section>
+
+<div th:replace="~{/common/error::script}"></div>
+
+<!--common scripts for all pages-->
+<!--<script src="js/scripts.js"></script>-->
+
+</body>
+</html>
