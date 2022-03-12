@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>用户维护</title>
+
+    <link th:replace="~{/common/admin-main-common::head}"/>
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 用户维护</a></div>
+        </div>
+        <div th:replace="~{/common/admin-main-common::main-menu-head}"></div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{/common/admin-main-common::main-menu-left}"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input class="form-control has-success" id="keyword" type="text" name="keyword" placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-warning" id="keyword-select">
+                            <i class="glyphicon glyphicon-search"></i> 查询
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                            class=" glyphicon glyphicon-remove"></i> 删除
+                    </button>
+                    <button type="button" class="btn btn-primary" style="float:right;"
+                            onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增
+                    </button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="users">
+                            <thead>
+                            <tr>
+                                <th width="30">#</th>
+                                <th width="30"><input type="checkbox"></th>
+                                <th>账号</th>
+                                <th>名称</th>
+                                <th>邮箱地址</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <!--<tbody th:if="*{total != 0}">
+                            <tr th:each="admin : *{records}">
+                                <td th:text="${admin.id}"></td>
+                                <td><input type="checkbox"></td>
+                                <td th:text="${admin.loginAcct}"></td>
+                                <td th:text="${admin.userName}"></td>
+                                <td th:text="${admin.email}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-xs"><i
+                                            class=" glyphicon glyphicon-check"></i></button>
+                                    <button type="button" class="btn btn-primary btn-xs"><i
+                                            class=" glyphicon glyphicon-pencil"></i></button>
+                                    <button type="button" class="btn btn-danger btn-xs"><i
+                                            class=" glyphicon glyphicon-remove"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tbody th:if="*{total == 0}">
+                            <tr><td colspan="6">没有查询到数据</td></tr>
+                            </tbody>-->
+                            <!-- 在此显示用户信息 -->
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="6" align="center">
+                                    <!-- 在此标签内显示分页数据 -->
+                                    <div id="Pagination" class="pagination">
+
+                                    </div>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{/common/admin-main-common::script}"></div>
+<script type="text/javascript">
+	$(function(){
+		// 页面初始化
+		sendAjaxToGetUser({current: 1});
+
+		// 查询框单击事件
+		$("#keyword-select").click(function(){
+			var keyword = $("#keyword").val();
+			if(keyword == null || keyword.length === 0){
+				alert("请输入查询条件！");
+				return false;
+			}
+			sendAjaxToGetUser({current: 1, keyword: keyword});
+        });
+
+        // 删除单条记录
+        $("tbody").on("click", " i[class*=glyphicon-remove]", function(){
+			var id = $(this).parents("tr").children("td:first").text();
+			var acct = $(this).parents("tr").children("td:eq(2)").text();
+			if(!confirm("确定删除" + acct + "？")) return false;
+			$.ajax({
+				url: "/admin/main/user/" + id,
+				type: "POST",
+				data: {_method: "DELETE"},
+				success: function(json){
+					var current = $("#Pagination").children("span[class=current]").text();
+					var keyword = $("#keyword").val();
+					sendAjaxToGetUser({current: current, keyword: keyword});
+					alert(json.message);
+				},
+				error: function(json){
+					alert("删除失败！原因：" + json.message);
+				},
+				dataType: "json",
+			});
+        });
+	});
+
+	// 统一发送GET:/admin/main/user的请求
+	function sendAjaxToGetUser(data){
+		$.ajax({
+			url: "/admin/main/user",
+			type: "GET",
+			data: data,
+			success: updateUser,
+			dataType: "json"
+		});
+    }
+
+	// 获取json后更新表单内容
+	function updateUser(json){
+		var user_tbl = $("#users").children("tbody");
+		user_tbl.empty();
+		var page = json.data.adminPage;
+		for(var i=0; i<page.size; i++){
+			var admin = page.records[i];
+			$("<tr>\n" +
+				"<td>" + admin.id + "</td>\n" +
+				"<td><input type=\"checkbox\"></td>\n" +
+				"<td>" + admin.loginAcct + "</td>\n" +
+				"<td>" + admin.userName + "</td>\n" +
+				"<td>" + admin.email + "</td>\n" +
+				"<td>\n" +
+				    "<button type=\"button\" class=\"btn btn-success btn-xs\"><i class=\" glyphicon glyphicon-check\"></i></button>\n" +
+				    "<button type=\"button\" class=\"btn btn-primary btn-xs\"><i class=\" glyphicon glyphicon-pencil\"></i></button>\n" +
+				    "<button type=\"button\" class=\"btn btn-danger btn-xs\"><i class=\" glyphicon glyphicon-remove\"></i></button>\n" +
+				"</td>\n" +
+                "</tr>").appendTo(user_tbl);
+        }
+		var opts = {
+			num_edge_entries: 1,
+			num_display_entries: 5,
+			callback: paginationCallback,
+			items_per_page: page.size,
+			current_page: page.current - 1,
+			prev_text: "上一页",
+			next_text: "下一页"
+		}
+		$("#Pagination").pagination(page.total, opts);
+    }
+
+	// 分页条回调函数
+	function paginationCallback(pageIndex, jQuery){
+		var keyword = $("#keyword").val();
+		sendAjaxToGetUser({current: pageIndex + 1, keyword: keyword});
+		return false;
+    }
+</script>
+</body>
+</html>

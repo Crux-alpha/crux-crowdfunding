@@ -55,7 +55,7 @@ public class AdminExceptionResolver{
 	 * @return 如果是JSON请求，不返回ModelAndView，而是直接根据<code>responseMessage</code>输出JSON数据
 	 * @throws IOException 如果不能正常输出JSON数据
 	 */
-	private static ModelAndView distribute(ResponseMessage<?> responseMessage, Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private static ModelAndView distribute(ResponseMessage<?,?> responseMessage, Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException{
 		if(CrowdUtils.isJSONRequest(request)){
 			responseToJson(responseMessage, response);
 			return null;
@@ -63,7 +63,7 @@ public class AdminExceptionResolver{
 		return responseToView(e);
 	}
 
-	private static void responseToJson(ResponseMessage<?> responseMessage, HttpServletResponse response) throws IOException{
+	private static void responseToJson(ResponseMessage<?,?> responseMessage, HttpServletResponse response) throws IOException{
 		String json = gson.toJson(responseMessage);
 		response.getWriter().write(json);
 	}

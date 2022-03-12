@@ -9,6 +9,7 @@ public final class CrowdConstant{
 	public static final String EXCEPTION = "exception";
 	public static final String STATUS = "status";
 	public static final String ADMIN_LOGIN_ACCOUNT = "loginAccount_admin";
+	public static final String JSON_RESULT = "result_json";
 
 	/**
 	 * 与HTTP属性有关的常量池

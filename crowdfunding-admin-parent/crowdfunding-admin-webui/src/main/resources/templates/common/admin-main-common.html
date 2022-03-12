@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
-    <meta charset="UTF-8">
-    <title>admin-main-common</title>
+<head th:fragment="head">
+    <link th:replace="~{/common/common::head}"/>
+    <link rel="stylesheet" th:href="@{/static/css/main.css}">
+    <link rel="stylesheet" th:href="@{/static/css/pagination.css}">
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" th:fragment="main-menu-head">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 控制面板</a></div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
+        <div id="navbar" class="navbar-collapse collapse" th:fragment="main-menu-head">
             <ul class="nav navbar-nav navbar-right">
                 <li style="padding-top:8px;">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i> [[${session.loginAccount_admin.userName}]] <span class="caret"></span>
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle"
+                                data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i> [[${session.loginAccount_admin.userName}]] <span
+                                class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
@@ -37,17 +40,17 @@
         </div>
     </div>
 </nav>
-<div class="col-sm-3 col-md-2 sidebar" th:fragment="main-menu-left">
-    <div class="tree">
+<div class="tree" th:fragment="main-menu-left">
         <ul style="padding-left:0px;" class="list-group">
-            <li class="list-group-item tree-closed" >
-                <a href="main.html"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
+            <li class="list-group-item tree-closed">
+                <a th:href="@{/admin/main}"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a>
             </li>
             <li class="list-group-item tree-closed">
-                <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 权限管理 <span class="badge" style="float:right">3</span></span>
+                <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 权限管理 <span class="badge"
+                                                                                     style="float:right">3</span></span>
                 <ul style="margin-top:10px;display:none;">
                     <li style="height:30px;">
-                        <a href="user.html"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
+                        <a th:href="@{/admin/main/user}"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
                     </li>
                     <li style="height:30px;">
                         <a href="role.html"><i class="glyphicon glyphicon-king"></i> 角色维护</a>
@@ -58,7 +61,8 @@
                 </ul>
             </li>
             <li class="list-group-item tree-closed">
-                <span><i class="glyphicon glyphicon-ok"></i> 业务审核 <span class="badge" style="float:right">3</span></span>
+                <span><i class="glyphicon glyphicon-ok"></i> 业务审核 <span class="badge"
+                                                                        style="float:right">3</span></span>
                 <ul style="margin-top:10px;display:none;">
                     <li style="height:30px;">
                         <a href="auth_cert.html"><i class="glyphicon glyphicon-check"></i> 实名认证审核</a>
@@ -97,11 +101,29 @@
                     </li>
                 </ul>
             </li>
-            <li class="list-group-item tree-closed" >
+            <li class="list-group-item tree-closed">
                 <a href="param.html"><i class="glyphicon glyphicon-list-alt"></i> 参数管理</a>
             </li>
         </ul>
     </div>
+<div th:fragment="script">
+    <div th:replace="~{/common/common::script}"></div>
+    <script th:src="@{/static/script/docs.min.js}"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".list-group-item").click(function(){
+                if($(this).find("ul")){
+                    $(this).toggleClass("tree-closed");
+                    if($(this).hasClass("tree-closed")){
+                        $("ul", this).hide("fast");
+                    }else{
+                        $("ul", this).show("fast");
+                    }
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
 </div>
 </body>
 </html>

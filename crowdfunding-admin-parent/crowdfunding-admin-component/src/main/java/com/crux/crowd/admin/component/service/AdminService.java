@@ -1,5 +1,8 @@
 package com.crux.crowd.admin.component.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crux.crowd.admin.entity.Admin;
 import com.crux.crowd.common.LoginFailedException;
@@ -21,4 +24,13 @@ public interface AdminService extends IService<Admin>{
 	 */
 	Admin login(String account, String password) throws LoginFailedException;
 
+	Page<Admin> pageFuzzy(String keyword, int current, int size);
+
+	default LambdaQueryWrapper<Admin> getLambdaQueryWrapper(){
+		return (LambdaQueryWrapper<Admin>)lambdaQuery().getWrapper();
+	}
+
+	default QueryWrapper<Admin> getQueryWrapper(){
+		return (QueryWrapper<Admin>)query().getWrapper();
+	}
 }

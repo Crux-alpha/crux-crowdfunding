@@ -1,10 +1,14 @@
 package com.crux.crowd.common.util;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * 项目统一的响应实体类
- * @param <T> 响应数据的类型
+ * @param <K> 键的类型
+ * @param <V> 值的类型
  */
-public class ResponseMessage<T>{
+public class ResponseMessage<K,V>{
 	/**
 	 * 响应状态
 	 */
@@ -16,11 +20,11 @@ public class ResponseMessage<T>{
 	/**
 	 * 响应数据
 	 */
-	private T data;
+	private Map<K,V> data;
 
 	private ResponseMessage(){}
 
-	ResponseMessage(ResponseResult result, String message, T data){
+	ResponseMessage(ResponseResult result, String message, Map<K,V> data){
 		this.result = result;
 		this.message = message;
 		this.data = data;
@@ -35,39 +39,39 @@ public class ResponseMessage<T>{
 		return message;
 	}
 
-	public T getData(){
+	public Map<K,V> getData(){
 		return data;
 	}
 
-	public static <T> ResponseMessage<T> success(String message, T data){
+	public static <K,V> ResponseMessage<K,V> success(String message, Map<K,V> data){
 		return new ResponseMessage<>(ResponseResult.SUCCESS, message, data);
 	}
 
-	public static ResponseMessage<?> success(String message){
-		return success(message, null);
+	public static ResponseMessage<?,?> success(String message){
+		return success(message, Collections.emptyMap());
 	}
 
-	public static ResponseMessage<?> success(){
-		return success(null);
+	public static ResponseMessage<?,?> success(){
+		return success(Collections.emptyMap());
 	}
 
-	public static <T> ResponseMessage<T> success(T data){
+	public static <K,V> ResponseMessage<K,V> success(Map<K,V> data){
 		return success(null, data);
 	}
 
-	public static <T> ResponseMessage<T> failure(String message, T data){
+	public static <K,V> ResponseMessage<K,V> failure(String message, Map<K,V> data){
 		return new ResponseMessage<>(ResponseResult.FAILURE, message, data);
 	}
 
-	public static ResponseMessage<?> failure(String message){
-		return failure(message, null);
+	public static ResponseMessage<?,?> failure(String message){
+		return failure(message, Collections.emptyMap());
 	}
 
-	public static ResponseMessage<?> failure(){
-		return failure(null);
+	public static ResponseMessage<?,?> failure(){
+		return failure(Collections.emptyMap());
 	}
 
-	public static <T> ResponseMessage<T> failure(T data){
+	public static <K,V> ResponseMessage<K,V> failure(Map<K,V> data){
 		return failure(null, data);
 	}
 }
