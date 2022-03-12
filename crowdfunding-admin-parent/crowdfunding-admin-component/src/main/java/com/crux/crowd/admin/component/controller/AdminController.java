@@ -9,8 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 @Controller
 @RequestMapping("/admin")
@@ -52,15 +51,13 @@ public class AdminController{
 
 	@GetMapping(path = "/main/user", params = "current")
 	@ResponseBody
-	public ResponseMessage<String,?> getAdminPage(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
+	public ResponseMessage<String,Page<Admin>> getAdminPage(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
 							   @RequestParam(name = "current") int current,
 							   @RequestParam(name = "size", required = false, defaultValue = "10") int size){
 		Page<Admin> adminPage = service.pageFuzzy(keyword, current, size);
-		String message = "查询到" + adminPage.getTotal() + "条数据";
-		Map<String,Object> data = new HashMap<>();
-		data.put("adminPage", adminPage);
-		if(!keyword.isEmpty()) data.put("keyword", keyword);
-		return ResponseMessage.success(message, data);
+		long total = adminPage.getTotal();
+		String message = total > 0 ? "查询到" + total + "条数据" : "没有查询到任何数据";
+		return ResponseMessage.success(message, Collections.singletonMap("adminPage", adminPage));
 	}
 
 	@DeleteMapping("/main/user/{id}")

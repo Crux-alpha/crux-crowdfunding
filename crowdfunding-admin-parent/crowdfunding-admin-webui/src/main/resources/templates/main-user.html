@@ -125,10 +125,12 @@
 		// 查询框单击事件
 		$("#keyword-select").click(function(){
 			var keyword = $("#keyword").val();
+
 			if(keyword == null || keyword.length === 0){
 				alert("请输入查询条件！");
 				return false;
 			}
+
 			sendAjaxToGetUser({current: 1, keyword: keyword});
         });
 
@@ -136,7 +138,9 @@
         $("tbody").on("click", " i[class*=glyphicon-remove]", function(){
 			var id = $(this).parents("tr").children("td:first").text();
 			var acct = $(this).parents("tr").children("td:eq(2)").text();
+
 			if(!confirm("确定删除" + acct + "？")) return false;
+
 			$.ajax({
 				url: "/admin/main/user/" + id,
 				type: "POST",
@@ -157,6 +161,7 @@
 
 	// 统一发送GET:/admin/main/user的请求
 	function sendAjaxToGetUser(data){
+
 		$.ajax({
 			url: "/admin/main/user",
 			type: "GET",
@@ -164,6 +169,7 @@
 			success: updateUser,
 			dataType: "json"
 		});
+
     }
 
 	// 获取json后更新表单内容
@@ -171,31 +177,38 @@
 		var user_tbl = $("#users").children("tbody");
 		user_tbl.empty();
 		var page = json.data.adminPage;
-		for(var i=0; i<page.size; i++){
-			var admin = page.records[i];
-			$("<tr>\n" +
-				"<td>" + admin.id + "</td>\n" +
-				"<td><input type=\"checkbox\"></td>\n" +
-				"<td>" + admin.loginAcct + "</td>\n" +
-				"<td>" + admin.userName + "</td>\n" +
-				"<td>" + admin.email + "</td>\n" +
-				"<td>\n" +
-				    "<button type=\"button\" class=\"btn btn-success btn-xs\"><i class=\" glyphicon glyphicon-check\"></i></button>\n" +
-				    "<button type=\"button\" class=\"btn btn-primary btn-xs\"><i class=\" glyphicon glyphicon-pencil\"></i></button>\n" +
-				    "<button type=\"button\" class=\"btn btn-danger btn-xs\"><i class=\" glyphicon glyphicon-remove\"></i></button>\n" +
-				"</td>\n" +
-                "</tr>").appendTo(user_tbl);
+
+        for(var i=0; i<page.size && i<page.total; i++){
+            var admin = page.records[i];
+
+            $("<tr>\n" +
+                "<td>" + admin.id + "</td>\n" +
+                "<td><input type=\"checkbox\"></td>\n" +
+                "<td>" + admin.loginAcct + "</td>\n" +
+                "<td>" + admin.userName + "</td>\n" +
+                "<td>" + admin.email + "</td>\n" +
+                "<td>\n" +
+                "<button type=\"button\" class=\"btn btn-success btn-xs\"><i class=\" glyphicon glyphicon-check\"></i></button>\n" +
+                "<button type=\"button\" class=\"btn btn-primary btn-xs\"><i class=\" glyphicon glyphicon-pencil\"></i></button>\n" +
+                "<button type=\"button\" class=\"btn btn-danger btn-xs\"><i class=\" glyphicon glyphicon-remove\"></i></button>\n" +
+                "</td>\n" +
+            "</tr>").appendTo(user_tbl);
         }
-		var opts = {
-			num_edge_entries: 1,
-			num_display_entries: 5,
-			callback: paginationCallback,
-			items_per_page: page.size,
-			current_page: page.current - 1,
-			prev_text: "上一页",
-			next_text: "下一页"
-		}
-		$("#Pagination").pagination(page.total, opts);
+
+		$("<tr><td colspan='6' style='text-align: center'>" + json.message + "</td></tr>").appendTo(user_tbl);
+
+		if(page.total > 0){
+			var opts = {
+				num_edge_entries: 1,
+				num_display_entries: 5,
+				callback: paginationCallback,
+				items_per_page: page.size,
+				current_page: page.current - 1,
+				prev_text: "上一页",
+				next_text: "下一页"
+			}
+			$("#Pagination").pagination(page.total, opts);
+        }
     }
 
 	// 分页条回调函数
