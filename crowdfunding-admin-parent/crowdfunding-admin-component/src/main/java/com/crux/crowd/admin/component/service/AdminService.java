@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crux.crowd.admin.entity.Admin;
-import com.crux.crowd.common.LoginFailedException;
 
 /**
  * Admin业务层组件

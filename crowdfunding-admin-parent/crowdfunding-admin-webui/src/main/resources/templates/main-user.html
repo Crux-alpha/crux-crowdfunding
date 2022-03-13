@@ -49,23 +49,23 @@
                         <div class="form-group has-feedback">
                             <div class="input-group">
                                 <div class="input-group-addon">查询条件</div>
-                                <input class="form-control has-success" id="keyword" type="text" name="keyword" placeholder="请输入查询条件">
+                                <input class="form-control has-success" id="ipt-keyword" type="text" name="keyword" placeholder="请输入查询条件">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-warning" id="keyword-select">
+                        <button type="button" class="btn btn-warning" id="btn-keyword-select">
                             <i class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
                     <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
                             class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
-                    <button type="button" class="btn btn-primary" style="float:right;"
-                            onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增
+                    <button type="button" class="btn btn-primary" style="float:right;" id="btn-admin-save">
+                        <i class="glyphicon glyphicon-plus"></i> 新增
                     </button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="users">
+                        <table class="table table-bordered" id="tbl-users">
                             <thead>
                             <tr>
                                 <th width="30">#</th>
@@ -97,7 +97,7 @@
                             <tr><td colspan="6">没有查询到数据</td></tr>
                             </tbody>-->
                             <!-- 在此显示用户信息 -->
-                            <tbody>
+                            <tbody size="0" total="0">
                             </tbody>
                             <tfoot>
                             <tr>
@@ -116,15 +116,67 @@
         </div>
     </div>
 </div>
+
+<div>
+    <!-- 新增admin模态框 -->
+    <div class="modal fade" id="modal-admin-save" tabindex="-1" role="dialog" aria-labelledby="admin">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="admin">新增用户</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="ipt-username">用户昵称</label>
+                                <input type="text" class="form-control" id="ipt-username" name="userName" placeholder="请输入用户昵称">
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="ipt-loginAcct">登录账号</label>
+                                <input type="text" class="form-control" id="ipt-loginAcct" name="loginAcct" placeholder="请输入账号">
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="ipt-password">登录密码</label>
+                                <input type="password" class="form-control" id="ipt-password" name="userPswd" placeholder="请输入密码">
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="ipt-password-cfm">确认密码</label>
+                                <input type="password" class="form-control" id="ipt-password-cfm" placeholder="请输入确认密码">
+                                <p class="help-block"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="ipt-email">邮箱地址</label>
+                                <input type="email" class="form-control" id="ipt-email" name="email" placeholder="请输入邮箱。注意邮箱格式">
+                                <p class="help-block"></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 确定</button>
+                    <button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
 <script type="text/javascript">
+    ajaxReqURL = "/admin/main/user";
+
 	$(function(){
 		// 页面初始化
 		sendAjaxToGetUser({current: 1});
 
 		// 查询框单击事件
-		$("#keyword-select").click(function(){
-			var keyword = $("#keyword").val();
+		$("#btn-keyword-select").click(function(){
+			var keyword = $("#ipt-keyword").val();
 
 			if(keyword == null || keyword.length === 0){
 				alert("请输入查询条件！");
@@ -142,12 +194,12 @@
 			if(!confirm("确定删除" + acct + "？")) return false;
 
 			$.ajax({
-				url: "/admin/main/user/" + id,
+				url: ajaxReqURL + id,
 				type: "POST",
 				data: {_method: "DELETE"},
 				success: function(json){
 					var current = $("#Pagination").children("span[class=current]").text();
-					var keyword = $("#keyword").val();
+					var keyword = $("#ipt-keyword").val();
 					sendAjaxToGetUser({current: current, keyword: keyword});
 					alert(json.message);
 				},
@@ -157,13 +209,90 @@
 				dataType: "json",
 			});
         });
+
+		// 新增按钮单击弹出模态框
+		$("#btn-admin-save").click(function(){
+            $("#modal-admin-save").modal({backdrop: false});
+		});
+
+		// 以下为模态框表单失去焦点事件
+		$("#ipt-username").blur(function(){
+			var username = $(this).val();
+			var regex = /^[\u4E00-\u9FA5A-Za-z0-9_]{4,12}$/;
+			updateFormGroup(regex.test(username), "昵称必须由字母数字下划线组成，并且长度在4~12之间！", $(this));
+		});
+		$("#ipt-loginAcct").blur(function(){
+            var loginAcct = $(this).val();
+		    var regex = /^[A-Za-z0-9]{8,16}$/;
+
+			updateFormGroup(regex.test(loginAcct), "账号只能由字母和数字组成，并且长度在8~16之间！", $(this));
+		});
+		$("#ipt-password").blur(function(){
+			var password = $(this).val();
+			var regex = /^.{6,18}$/;
+			updateFormGroup(regex.test(password), "密码长度必须在6~18位之间！", $(this));
+        });
+		$("#ipt-password-cfm").blur(function(){
+            var passwordCfm = $(this).val();
+			var password = $("#ipt-password").val();
+			var state = false;
+			var message = "";
+
+			if(password.length < 1) message = "请输入密码！";
+			else if(passwordCfm !== password) message = "确认密码与密码不一致！";
+			else state = true;
+
+			updateFormGroup(state, message, $(this));
+		});
+		$("#ipt-email").blur(function(){
+			var email = $(this).val();
+			var regex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+			updateFormGroup(regex.test(email), "邮箱格式不正确！", $(this));
+        })
+
+        // 新增用户表单提交
+        $("#modal-admin-save .modal-footer").children(".btn-success").click(function(){
+			var form = $("#modal-admin-save form");
+            var formGroup = form.children("div[class*=form-group]");
+            var hasSuccess = form.children("div[class*=has-success]");
+
+			// 如果表单项与成功项数量不一致，阻止提交
+			if(formGroup.length !== hasSuccess.length){
+				formGroup.children("input").blur();
+				return false;
+            }
+
+			// 发送请求，添加admin
+			$.ajax({
+                url: ajaxReqURL,
+				type: "POST",
+                data: form.serialize(),
+                success: function(json){
+					alert(json.message);
+					$("#modal-admin-save").modal("hide");
+
+					// 跳转到最后一页
+					var current = $("#Pagination").children(":eq(-2)").text();
+					var body = $("#tbl-users>tbody");
+					if(body.attr("total") % body.attr("size") === 0) current++;
+					sendAjaxToGetUser({current: current});
+                },
+                error: function(json){
+
+					// 提示错误消息
+					json = JSON.parse(json.responseText);
+                    updateFormGroup(false, json.message, $("#ipt-loginAcct"));
+                }
+            });
+
+		});
 	});
 
 	// 统一发送GET:/admin/main/user的请求
 	function sendAjaxToGetUser(data){
 
 		$.ajax({
-			url: "/admin/main/user",
+			url: ajaxReqURL,
 			type: "GET",
 			data: data,
 			success: updateUser,
@@ -174,11 +303,11 @@
 
 	// 获取json后更新表单内容
 	function updateUser(json){
-		var user_tbl = $("#users").children("tbody");
+		var user_tbl = $("#tbl-users").children("tbody");
 		user_tbl.empty();
 		var page = json.data.adminPage;
 
-        for(var i=0; i<page.size && i<page.total; i++){
+        for(var i=0; i<page.records.length; i++){
             var admin = page.records[i];
 
             $("<tr>\n" +
@@ -194,6 +323,9 @@
                 "</td>\n" +
             "</tr>").appendTo(user_tbl);
         }
+
+		user_tbl.attr("size", page.size);
+		user_tbl.attr("total", page.total);
 
 		$("<tr><td colspan='6' style='text-align: center'>" + json.message + "</td></tr>").appendTo(user_tbl);
 
@@ -213,9 +345,23 @@
 
 	// 分页条回调函数
 	function paginationCallback(pageIndex, jQuery){
-		var keyword = $("#keyword").val();
+		var keyword = $("#ipt-keyword").val();
 		sendAjaxToGetUser({current: pageIndex + 1, keyword: keyword});
 		return false;
+    }
+
+	// 表单验证状态改变
+    function updateFormGroup(state, message, inputEle){
+		var formGroupEle = inputEle.parent(".form-group");
+		if(!state){
+			formGroupEle.removeClass("has-success");
+			formGroupEle.addClass("has-error");
+			formGroupEle.children("p").text(message);
+        }else{
+			formGroupEle.removeClass("has-error");
+			formGroupEle.addClass("has-success");
+			formGroupEle.children("p").empty();
+        }
     }
 </script>
 </body>

@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -32,6 +33,7 @@ import javax.sql.DataSource;
 @MapperScan("com.crux.crowd.admin.component.mapper")
 @EnableConfigurationProperties(AdminComponentProperties.class)
 @AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class AdminComponentAutoConfiguration{
 
 	@Bean

@@ -1,6 +1,6 @@
 package com.crux.crowd.admin.component.interceptor;
 
-import com.crux.crowd.common.AccessDeniedException;
+import com.crux.crowd.admin.component.service.AccessDeniedException;
 import com.crux.crowd.common.util.CrowdConstant;
 import org.springframework.web.servlet.HandlerInterceptor;
 

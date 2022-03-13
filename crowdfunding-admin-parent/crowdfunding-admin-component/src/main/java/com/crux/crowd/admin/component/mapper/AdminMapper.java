@@ -11,6 +11,6 @@ import com.crux.crowd.admin.entity.Admin;
  * @author 作者
  * @since 2022-03-09
  */
-public interface AdminMapper extends BaseMapper<Admin> {
+public interface AdminMapper extends BaseMapper<Admin>{
 
 }

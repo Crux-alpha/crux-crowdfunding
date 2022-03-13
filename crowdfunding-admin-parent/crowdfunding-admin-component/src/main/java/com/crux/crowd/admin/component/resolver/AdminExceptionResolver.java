@@ -1,11 +1,13 @@
 package com.crux.crowd.admin.component.resolver;
 
-import com.crux.crowd.common.AccessDeniedException;
-import com.crux.crowd.common.LoginFailedException;
+import com.crux.crowd.admin.component.service.AccessDeniedException;
+import com.crux.crowd.admin.component.service.LoginAccountRepeatedException;
+import com.crux.crowd.admin.component.service.LoginFailedException;
 import com.crux.crowd.common.util.CrowdConstant;
 import com.crux.crowd.common.util.CrowdUtils;
 import com.crux.crowd.common.util.ResponseMessage;
 import com.google.gson.Gson;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -48,8 +50,16 @@ public class AdminExceptionResolver{
 	public ModelAndView accessDeniedHandler(AccessDeniedException e){
 		return responseToView(e, "admin-login");
 	}
+
+	@ExceptionHandler(LoginAccountRepeatedException.class)
+	public void saveAdminFailedHandler(LoginAccountRepeatedException e, HttpServletResponse response) throws IOException{
+		response.setStatus(500);
+		responseToJson(ResponseMessage.failure(e.getMessage()), response);
+	}
+
 	/**
 	 * JSON请求和普通请求分发处理
+	 * 如果不知道要响应视图还是回传JSON，使用此方法。
 	 * @param responseMessage 响应数据
 	 * @param e 异常
 	 * @return 如果是JSON请求，不返回ModelAndView，而是直接根据<code>responseMessage</code>输出JSON数据
@@ -65,6 +75,7 @@ public class AdminExceptionResolver{
 
 	private static void responseToJson(ResponseMessage<?,?> responseMessage, HttpServletResponse response) throws IOException{
 		String json = gson.toJson(responseMessage);
+		response.setContentType("text/html;charset=UTF-8");
 		response.getWriter().write(json);
 	}
 

@@ -1,5 +1,7 @@
 package com.crux.crowd.common.util;
 
+import java.time.format.DateTimeFormatter;
+
 /**
  * 筹钱吧项目常量池
  * @since 2022/03/11
@@ -10,6 +12,7 @@ public final class CrowdConstant{
 	public static final String STATUS = "status";
 	public static final String ADMIN_LOGIN_ACCOUNT = "loginAccount_admin";
 	public static final String JSON_RESULT = "result_json";
+	public static final DateTimeFormatter DEFAULT_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
 	/**
 	 * 与HTTP属性有关的常量池

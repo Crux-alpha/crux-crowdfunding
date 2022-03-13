@@ -73,4 +73,10 @@ class CrowdfundingAdminWebuiApplicationTests{
 		}
 		log.info("保存{}", adminService.saveBatch(list) ? "成功" : "失败");
 	}
+
+	@Test
+	void save(){
+		boolean save = adminService.save(new Admin("admin", "crux_alpha", "SAIERHAO123", "1992980352@qq.com"));
+		log.info("{}", save);
+	}
 }

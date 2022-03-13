@@ -11,6 +11,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 
+/**
+ * 管理员后台管理系统的处理器<br/><br/>
+ * 目前处理了：
+ * <ul>
+ *     <li>登录：{@link #toLogin()}，{@link #login(String, String, HttpSession)}</li>
+ *     <li>主页面：{@link #main()}</li>
+ *     <li>登出：{@link #logout(HttpSession)}</li>
+ *     <li>管理员维护：
+ *     <ul>
+ *         <li>查询。包括分页、模糊：{@link #getAdminPage(String, int, int)}</li>
+ *         <li>单个删除：{@link #deleteAdmin(int)}</li>
+ *     </ul>
+ *     </li>
+ * </ul>
+ */
 @Controller
 @RequestMapping("/admin")
 public class AdminController{
@@ -58,6 +73,13 @@ public class AdminController{
 		long total = adminPage.getTotal();
 		String message = total > 0 ? "查询到" + total + "条数据" : "没有查询到任何数据";
 		return ResponseMessage.success(message, Collections.singletonMap("adminPage", adminPage));
+	}
+
+	@PostMapping("/main/user")
+	@ResponseBody
+	public ResponseMessage<?,?> saveAdmin(Admin admin){
+		service.save(admin);
+		return ResponseMessage.success("保存成功！");
 	}
 
 	@DeleteMapping("/main/user/{id}")
