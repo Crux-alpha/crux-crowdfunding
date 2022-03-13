@@ -33,7 +33,6 @@ import javax.sql.DataSource;
 @MapperScan("com.crux.crowd.admin.component.mapper")
 @EnableConfigurationProperties(AdminComponentProperties.class)
 @AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
-@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class AdminComponentAutoConfiguration{
 
 	@Bean

@@ -75,10 +75,24 @@ public class AdminController{
 		return ResponseMessage.success(message, Collections.singletonMap("adminPage", adminPage));
 	}
 
+	@GetMapping("/main/user/{id}")
+	@ResponseBody
+	public ResponseMessage<String,Admin> getAdmin(@PathVariable("id") int id){
+		Admin admin = service.getById(id);
+		return ResponseMessage.success(Collections.singletonMap("admin", admin));
+	}
+
 	@PostMapping("/main/user")
 	@ResponseBody
 	public ResponseMessage<?,?> saveAdmin(Admin admin){
 		service.save(admin);
+		return ResponseMessage.success("保存成功！");
+	}
+
+	@PutMapping("/main/user/{id}")
+	@ResponseBody
+	public ResponseMessage<?,?> updateAdmin(@PathVariable("id") int id, String username, String email){
+		service.update(id, username, email);
 		return ResponseMessage.success("保存成功！");
 	}
 

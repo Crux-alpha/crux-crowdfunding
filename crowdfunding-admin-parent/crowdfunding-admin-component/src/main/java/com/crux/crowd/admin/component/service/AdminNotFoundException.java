@@ -1,9 +1,11 @@
-package com.crux.crowd.admin.entity;
+package com.crux.crowd.admin.component.service;
+
+import com.crux.crowd.common.util.CrowdConstant;
 
 /**
  * 找不到Admin异常
  */
-public class AdminNotFoundException extends AdminException{
+public class AdminNotFoundException extends ServiceException{
 
 	public AdminNotFoundException(){
 		super();

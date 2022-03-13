@@ -1,6 +1,7 @@
 package com.crux.crowd.admin.component.resolver;
 
 import com.crux.crowd.admin.component.service.AccessDeniedException;
+import com.crux.crowd.admin.component.service.AdminNotFoundException;
 import com.crux.crowd.admin.component.service.LoginAccountRepeatedException;
 import com.crux.crowd.admin.component.service.LoginFailedException;
 import com.crux.crowd.common.util.CrowdConstant;
@@ -53,6 +54,12 @@ public class AdminExceptionResolver{
 
 	@ExceptionHandler(LoginAccountRepeatedException.class)
 	public void saveAdminFailedHandler(LoginAccountRepeatedException e, HttpServletResponse response) throws IOException{
+		response.setStatus(500);
+		responseToJson(ResponseMessage.failure(e.getMessage()), response);
+	}
+
+	@ExceptionHandler(AdminNotFoundException.class)
+	public void adminNotFoundHandler(AdminNotFoundException e, HttpServletResponse response) throws IOException{
 		response.setStatus(500);
 		responseToJson(ResponseMessage.failure(e.getMessage()), response);
 	}
