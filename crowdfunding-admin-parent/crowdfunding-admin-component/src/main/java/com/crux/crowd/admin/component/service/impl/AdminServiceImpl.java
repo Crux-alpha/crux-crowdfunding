@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -62,10 +59,32 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper,Admin> implements 
 	}
 
 	@Override
-	public boolean save(Admin entity){
+	public boolean save(final Admin entity){
 		return execute(() -> super.save(entity));
 	}
 
+	@Override
+	public boolean updateById(final Admin entity){
+		return execute(() -> super.updateById(entity));
+	}
+
+	@Override
+	public boolean update(final Wrapper<Admin> updateWrapper){
+		return execute(() -> super.update(updateWrapper));
+	}
+
+	@Override
+	public boolean update(final Admin entity, final Wrapper<Admin> updateWrapper){
+		return execute(() -> super.update(entity, updateWrapper));
+	}
+
+	/**
+	 * 统一包装save/update方法抛出的异常
+	 * @param method save/update方法
+	 * @param <T> 返回值类型
+	 * @return method的返回值
+	 * @throws LoginAccountRepeatedException 如果账号已存在
+	 */
 	private static <T> T execute(Supplier<T> method) throws LoginAccountRepeatedException{
 		try{
 			return method.get();
