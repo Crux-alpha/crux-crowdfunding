@@ -347,7 +347,7 @@
 					$("#modal-admin-save").modal("hide");
 
 					// 跳转到最后一页
-					if(!window.total % window.size) window.current++;
+					window.current = Math.floor(window.total / window.size + 1);
 					generateData();
 				},
 				error: function(json){
