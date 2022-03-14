@@ -15,13 +15,10 @@ import java.util.Collections;
  * 管理员后台管理系统的处理器<br/><br/>
  * 目前处理了：
  * <ul>
- *     <li>登录：{@link #toLogin()}，{@link #login(String, String, HttpSession)}</li>
- *     <li>主页面：{@link #main()}</li>
- *     <li>登出：{@link #logout(HttpSession)}</li>
  *     <li>管理员维护：
  *     <ul>
- *         <li>查询。包括分页、模糊：{@link #getAdminPage(String, int, int)}</li>
- *         <li>单个删除：{@link #deleteAdmin(int)}</li>
+ *         <li>查询。包括分页、模糊</li>
+ *         <li>单个删除</li>
  *     </ul>
  *     </li>
  * </ul>
@@ -36,21 +33,11 @@ public class AdminController{
 		this.service = service;
 	}
 
-	@GetMapping("/login")
-	public String toLogin(){
-		return "admin-login";
-	}
-
-	@PostMapping("/login")
+	@PostMapping(path = "/login", params = {"account", "password"})
 	public String login(String account, String password, HttpSession session){
 		final Admin admin = service.login(account, password);
 		session.setAttribute(CrowdConstant.ADMIN_LOGIN_ACCOUNT, admin);
 		return "redirect:/admin/main";
-	}
-
-	@RequestMapping("/main")
-	public String main(){
-		return "main";
 	}
 
 	@RequestMapping("/logout")
@@ -59,22 +46,22 @@ public class AdminController{
 		return "redirect:/index";
 	}
 
-	@RequestMapping("/main/user")
-	public String user(){
-		return "main-user";
-	}
-
 	@GetMapping(path = "/main/user", params = "current")
 	@ResponseBody
 	public ResponseMessage<String,Page<Admin>> getAdminPage(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
 							   @RequestParam(name = "current") int current,
 							   @RequestParam(name = "size", required = false, defaultValue = "10") int size){
-		Page<Admin> adminPage = service.pageFuzzy(keyword, current, size);
+		Page<Admin> adminPage = service.pageFuzzy(current, size, keyword);
 		long total = adminPage.getTotal();
 		String message = total > 0 ? "查询到" + total + "条数据" : "没有查询到任何数据";
-		return ResponseMessage.success(message, Collections.singletonMap("adminPage", adminPage));
+		return ResponseMessage.success(message, Collections.singletonMap("page", adminPage));
 	}
 
+	/**
+	 * 通过id查询admin
+	 * @param id id
+	 * @return 如果能够查询到，则返回admin数据
+	 */
 	@GetMapping("/main/user/{id}")
 	@ResponseBody
 	public ResponseMessage<String,Admin> getAdmin(@PathVariable("id") int id){
@@ -82,6 +69,11 @@ public class AdminController{
 		return ResponseMessage.success(Collections.singletonMap("admin", admin));
 	}
 
+	/**
+	 * 添加一个admin
+	 * @param admin 请求参数封装后的admin
+	 * @return 如果保存成功
+	 */
 	@PostMapping("/main/user")
 	@ResponseBody
 	public ResponseMessage<?,?> saveAdmin(Admin admin){
@@ -89,6 +81,13 @@ public class AdminController{
 		return ResponseMessage.success("保存成功！");
 	}
 
+	/**
+	 * 根据id修改一个admin
+	 * @param id id
+	 * @param username 昵称
+	 * @param email 邮箱
+	 * @return 如果保存成功
+	 */
 	@PutMapping("/main/user/{id}")
 	@ResponseBody
 	public ResponseMessage<?,?> updateAdmin(@PathVariable("id") int id, String username, String email){
@@ -96,6 +95,11 @@ public class AdminController{
 		return ResponseMessage.success("保存成功！");
 	}
 
+	/**
+	 * 根据id删除指定admin
+	 * @param id id
+	 * @return 如果admin存在，并且允许删除，则删除成功
+	 */
 	@DeleteMapping("/main/user/{id}")
 	@ResponseBody
 	public ResponseMessage<?,?> deleteAdmin(@PathVariable("id") int id){

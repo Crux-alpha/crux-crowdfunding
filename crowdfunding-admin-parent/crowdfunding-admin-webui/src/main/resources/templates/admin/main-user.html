@@ -68,11 +68,11 @@
                         <table class="table table-bordered" id="tbl-users">
                             <thead>
                             <tr>
-                                <th width="30">#</th>
+                                <th width="30" id="data-id">#</th>
                                 <th width="30"><input type="checkbox"></th>
-                                <th>账号</th>
-                                <th>名称</th>
-                                <th>邮箱地址</th>
+                                <th id="data-loginAcct">账号</th>
+                                <th id="data-userName">名称</th>
+                                <th id="data-email">邮箱地址</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
@@ -95,7 +95,7 @@
                             </tbody>
                             -->
                             <!-- 在此显示用户信息 -->
-                            <tbody size="0" total="0">
+                            <tbody id="tbody-data">
                             </tbody>
                             <tfoot>
                             <tr>
@@ -205,12 +205,18 @@
     </div>
 </div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
+<script type="text/javascript" th:src="@{/static/js/table-data-generator.js}"></script>
 <script type="text/javascript">
     ajaxReqURL = "/admin/main/user";
 
 	$(function(){
 		// 页面初始化
-		sendAjaxToGetUser({current: 1});
+		window.current = 1;
+		window.size = 10;
+		window.keyword = "";
+		window.pageURL = "user";
+		window.total = 0;
+		generateData();
 
 		// 查询框单击事件
 		$("#btn-keyword-select").click(function(){
@@ -221,7 +227,9 @@
 				return false;
 			}
 
-			sendAjaxToGetUser({current: 1, keyword: keyword});
+			window.current = 1;
+			window.keyword = keyword;
+			generateData();
         });
 
         // 删除单条记录
@@ -232,17 +240,15 @@
 			if(!confirm("确定删除" + acct + "？")) return false;
 
 			$.ajax({
-				url: ajaxReqURL + id,
+				url: "user/" + id,
 				type: "POST",
 				data: {_method: "DELETE"},
 				success: function(json){
-					var current = $("#Pagination").children("span[class=current]").text();
-					var keyword = $("#ipt-keyword").val();
-					sendAjaxToGetUser({current: current, keyword: keyword});
-					alert(json.message);
+					generateData();
+					layer.msg(json.message)
 				},
 				error: function(json){
-					alert("删除失败！原因：" + json.message);
+					layer.msg("删除失败！原因：" + json.message)
 				},
 				dataType: "json",
 			});
@@ -256,15 +262,31 @@
 		// 修改按钮单击弹出模态框
         $("tbody").on("click", "i[class*=glyphicon-pencil]", function(){
 			var id = $(this).parents("tr").children(":first").text();
-			$.getJSON(ajaxReqURL + "/" + id, null, function(json){
-				var loginAcct = json.data.admin.loginAcct;
-				var username = json.data.admin.userName;
-				var email = json.data.admin.email;
-				$("#ipt-update-loginAcct").val(loginAcct);
-				$("#ipt-update-username").val(username);
-				$("#ipt-update-email").val(email);
-				$("#ipt-update-id").val(id);
-            });
+			/*$.getJSON(ajaxReqURL + "/" + id, null, function(json){
+                var loginAcct = json.data.admin.loginAcct;
+                var username = json.data.admin.userName;
+                var email = json.data.admin.email;
+                $("#ipt-update-loginAcct").val(loginAcct);
+                $("#ipt-update-username").val(username);
+                $("#ipt-update-email").val(email);
+                $("#ipt-update-id").val(id);
+            });*/
+			// 同步请求回显数据
+			$.ajax({
+				url: "user" + "/" + id,
+				type: "GET",
+				dataType: "json",
+				async: false,
+				success: function(json){
+					var loginAcct = json.data.admin.loginAcct;
+					var username = json.data.admin.userName;
+					var email = json.data.admin.email;
+					$("#ipt-update-loginAcct").val(loginAcct);
+					$("#ipt-update-username").val(username);
+					$("#ipt-update-email").val(email);
+					$("#ipt-update-id").val(id);
+				}
+			})
 			$("#modal-admin-update").modal({backdrop: false});
         })
 
@@ -291,7 +313,7 @@
 			var state = false;
 			var message = "";
 
-			if(password.length < 1) message = "请输入密码！";
+			if(!password) message = "请输入密码！";
 			else if(passwordCfm !== password) message = "确认密码与密码不一致！";
 			else state = true;
 
@@ -301,45 +323,43 @@
 			var email = $(this).val();
 			var regex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 			updateFormGroup(regex.test(email), "邮箱格式不正确！", $(this));
-        })
+		})
 
-        // 新增admin表单提交
-        $("#modal-admin-save .modal-footer").children(".btn-success").click(function(){
+		// 新增admin表单提交
+		$("#modal-admin-save .modal-footer").children(".btn-success").click(function(){
 			var form = $("#modal-admin-save form");
-            var formGroup = form.children("div[class*=form-group]");
+			var formGroup = form.children("div[class*=form-group]");
 			formGroup.children("input").blur();
 			var hasSuccess = form.children("div[class*=has-success]");
 
 			// 如果表单项与成功项数量不一致，阻止提交
 			if(formGroup.length !== hasSuccess.length){
 				return false;
-            }
+			}
 
 			// 发送请求，添加admin
 			$.ajax({
-                url: ajaxReqURL,
+				url: "user",
 				type: "POST",
-                data: form.serialize(),
-                success: function(json){
+				data: form.serialize(),
+				success: function(json){
 					alert(json.message);
 					$("#modal-admin-save").modal("hide");
 
 					// 跳转到最后一页
-					var current = $("#Pagination").children(":eq(-2)").text();
-					var body = $("#tbl-users>tbody");
-					if(body.attr("total") % body.attr("size") === 0) current++;
-					sendAjaxToGetUser({current: current});
-                },
-                error: function(json){
+					if(!window.total % window.size) window.current++;
+					generateData();
+				},
+				error: function(json){
 
 					// 提示错误消息
 					json = JSON.parse(json.responseText);
-                    updateFormGroup(false, json.message, $("#ipt-save-loginAcct"));
-                }
-            });
+					updateFormGroup(false, json.message, $("#ipt-save-loginAcct"));
+				}
+			});
 
 		});
-		
+
 		// 修改admin表单提交
 		$("#modal-admin-update .modal-footer").children(".btn-success").click(function(){
 			var form = $("#modal-admin-update form");
@@ -353,9 +373,9 @@
 			}
 
 			// 发送请求，修改admin
-            var id = $("#ipt-update-id").val();
+			var id = $("#ipt-update-id").val();
 			$.ajax({
-				url: ajaxReqURL + "/" + id,
+				url: "user" + "/" + id,
 				type: "POST",
 				data: form.serialize() + "&_method=PUT",
 				success: function(json){
@@ -363,9 +383,7 @@
 					$("#modal-admin-update").modal("hide");
 
 					// 跳转到当前页
-					var current = $("#Pagination").children("span[class=current]").text();
-					var keyword = $("#ipt-keyword").val();
-					sendAjaxToGetUser({current: current, keyword: keyword});
+					generateData();
 				},
 				error: function(json){
 
@@ -376,84 +394,22 @@
 			});
 
 		});
-        
+
 	});
 
-	// 统一发送GET:/admin/main/user的请求
-	function sendAjaxToGetUser(data){
-
-		$.ajax({
-			url: ajaxReqURL,
-			type: "GET",
-			data: data,
-			success: updateUser,
-			dataType: "json"
-		});
-
-    }
-
-	// 获取json后更新表单内容
-	function updateUser(json){
-		var user_tbl = $("#tbl-users").children("tbody");
-		user_tbl.empty();
-		var page = json.data.adminPage;
-
-        for(var i=0; i<page.records.length; i++){
-            var admin = page.records[i];
-
-            $("<tr>\n" +
-                "<td>" + admin.id + "</td>\n" +
-                "<td><input type=\"checkbox\"></td>\n" +
-                "<td>" + admin.loginAcct + "</td>\n" +
-                "<td>" + admin.userName + "</td>\n" +
-                "<td>" + admin.email + "</td>\n" +
-                "<td>\n" +
-                "<button type=\"button\" class=\"btn btn-success btn-xs\"><i class=\" glyphicon glyphicon-check\"></i></button>\n" +
-                "<button type=\"button\" class=\"btn btn-primary btn-xs\"><i class=\" glyphicon glyphicon-pencil\"></i></button>\n" +
-                "<button type=\"button\" class=\"btn btn-danger btn-xs\"><i class=\" glyphicon glyphicon-remove\"></i></button>\n" +
-                "</td>\n" +
-            "</tr>").appendTo(user_tbl);
-        }
-
-		user_tbl.attr("size", page.size);
-		user_tbl.attr("total", page.total);
-
-		$("<tr><td colspan='6' style='text-align: center'>" + json.message + "</td></tr>").appendTo(user_tbl);
-
-		if(page.total > 0){
-			var opts = {
-				num_edge_entries: 1,
-				num_display_entries: 5,
-				callback: paginationCallback,
-				items_per_page: page.size,
-				current_page: page.current - 1,
-				prev_text: "上一页",
-				next_text: "下一页"
-			}
-			$("#Pagination").pagination(page.total, opts);
-        }
-    }
-
-	// 分页条回调函数
-	function paginationCallback(pageIndex, jQuery){
-		var keyword = $("#ipt-keyword").val();
-		sendAjaxToGetUser({current: pageIndex + 1, keyword: keyword});
-		return false;
-    }
-
 	// 表单验证状态改变
-    function updateFormGroup(state, message, inputEle){
+	function updateFormGroup(state, message, inputEle){
 		var formGroupEle = inputEle.parent(".form-group");
 		if(!state){
 			formGroupEle.removeClass("has-success");
 			formGroupEle.addClass("has-error");
 			formGroupEle.children("p").text(message);
-        }else{
+		}else{
 			formGroupEle.removeClass("has-error");
 			formGroupEle.addClass("has-success");
 			formGroupEle.children("p").empty();
-        }
-    }
+		}
+	}
 </script>
 </body>
 </html>

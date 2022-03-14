@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>角色维护</title>
+
+    <link th:replace="~{/common/admin-main-common::head}"/>
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 角色维护</a></div>
+        </div>
+		<div th:replace="~{/common/admin-main-common::main-menu-head}"></div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+		<div class="col-sm-3 col-md-2 sidebar" th:insert="~{/common/admin-main-common::main-menu-left}"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form" style="float:left;">
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">查询条件</div>
+                                <input class="form-control has-success" type="text" placeholder="请输入查询条件">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-warning">
+							<i class="glyphicon glyphicon-search"></i> 查询
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                            class=" glyphicon glyphicon-remove"></i> 删除
+                    </button>
+                    <button type="button" class="btn btn-primary" style="float:right;">
+						<i class="glyphicon glyphicon-plus"></i> 新增
+                    </button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th id="data-id" width="30">#</th>
+                                <th width="30"><input type="checkbox"></th>
+                                <th id="data-name">名称</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody-data">
+
+							</tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="6" align="center">
+									<!-- 在此标签内显示分页数据 -->
+									<div id="Pagination" class="pagination">
+
+									</div>
+                                </td>
+                            </tr>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{/common/admin-main-common::script}"></div>
+<script type="text/javascript" th:src="@{/static/js/table-data-generator.js}"></script>
+<script type="text/javascript">
+    $(function(){
+		window.current = 1;
+		window.size = 10;
+		window.keyword = "";
+		window.pageURL = "role";
+		window.total = 0;
+		generateData();
+    });
+</script>
+</body>
+</html>

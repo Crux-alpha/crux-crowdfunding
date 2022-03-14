@@ -3,7 +3,9 @@ package com.crux.crowd.admin.webui;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crux.crowd.admin.component.service.AdminService;
+import com.crux.crowd.admin.component.service.RoleService;
 import com.crux.crowd.admin.entity.Admin;
+import com.crux.crowd.admin.entity.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,9 @@ class CrowdfundingAdminWebuiApplicationTests{
 
 	@Autowired
 	AdminService adminService;
+
+	@Autowired
+	RoleService roleService;
 
 	@Test
 	void contextLoads(){
@@ -55,13 +60,7 @@ class CrowdfundingAdminWebuiApplicationTests{
 	}
 
 	@Test
-	void mybatisPlusInterceptor(){
-		Page<Admin> page = adminService.pageFuzzy("8903", 1, 5);
-		page.getRecords().forEach(a -> log.info(a.toString()));
-	}
-
-	@Test
-	void insert255Total(){
+	void insert255Admin(){
 		List<Admin> list = new ArrayList<>();
 		for(int i=0; i<255; i++){
 			String uuid = UUID.randomUUID().toString();
@@ -72,6 +71,18 @@ class CrowdfundingAdminWebuiApplicationTests{
 			list.add(admin);
 		}
 		log.info("保存{}", adminService.saveBatch(list) ? "成功" : "失败");
+	}
+
+	@Test
+	void insert255Role(){
+		List<Role> list = new ArrayList<>();
+		for(int i=0; i<255; i++){
+			String uuid = UUID.randomUUID().toString();
+			String name = uuid.substring(0, 10);
+			Role role = new Role(name);
+			list.add(role);
+		}
+		log.info("保存{}", roleService.saveBatch(list) ? "成功" : "失败");
 	}
 
 	@Test

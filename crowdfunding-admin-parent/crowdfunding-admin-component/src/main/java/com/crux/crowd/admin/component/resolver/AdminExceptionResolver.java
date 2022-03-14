@@ -52,6 +52,9 @@ public class AdminExceptionResolver{
 		return responseToView(e, "admin-login");
 	}
 
+	/**
+	 * 新增admin账号重复处理。
+	 */
 	@ExceptionHandler(LoginAccountRepeatedException.class)
 	public void saveAdminFailedHandler(LoginAccountRepeatedException e, HttpServletResponse response) throws IOException{
 		response.setStatus(500);

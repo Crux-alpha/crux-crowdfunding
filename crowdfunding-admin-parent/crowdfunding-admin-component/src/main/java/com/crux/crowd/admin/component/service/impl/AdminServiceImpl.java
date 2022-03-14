@@ -3,12 +3,9 @@ package com.crux.crowd.admin.component.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.crux.crowd.admin.component.service.LoginAccountRepeatedException;
-import com.crux.crowd.admin.component.service.LoginFailedException;
+import com.crux.crowd.admin.component.service.*;
 import com.crux.crowd.admin.entity.Admin;
 import com.crux.crowd.admin.component.mapper.AdminMapper;
-import com.crux.crowd.admin.component.service.AdminService;
 import com.crux.crowd.common.util.CrowdConstant;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -27,7 +24,7 @@ import java.util.function.Supplier;
  * @since 2022-03-09
  */
 @Service("adminService")
-public class AdminServiceImpl extends ServiceImpl<AdminMapper,Admin> implements AdminService{
+public class AdminServiceImpl extends AbstractService<AdminMapper,Admin> implements AdminService{
 
 	@Override
 	public Admin login(String account, String password){
@@ -45,7 +42,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper,Admin> implements 
 	}
 
 	@Override
-	public Page<Admin> pageFuzzy(String keyword, int current, int size){
+	public Page<Admin> pageFuzzy(int current, int size, String keyword){
 		LambdaQueryWrapper<Admin> wrapper = lambdaQueryWrapper();
 		if(StringUtils.hasLength(keyword)){
 			wrapper = wrapper.like(Admin::getLoginAcct, keyword).or().like(Admin::getUserName, keyword).or().like(Admin::getEmail, keyword);
@@ -59,33 +56,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper,Admin> implements 
 	}
 
 	@Override
-	public boolean save(final Admin entity){
-		return execute(() -> super.save(entity));
-	}
-
-	@Override
-	public boolean updateById(final Admin entity){
-		return execute(() -> super.updateById(entity));
-	}
-
-	@Override
-	public boolean update(final Wrapper<Admin> updateWrapper){
-		return execute(() -> super.update(updateWrapper));
-	}
-
-	@Override
-	public boolean update(final Admin entity, final Wrapper<Admin> updateWrapper){
-		return execute(() -> super.update(entity, updateWrapper));
-	}
-
-	/**
-	 * 统一包装save/update方法抛出的异常
-	 * @param method save/update方法
-	 * @param <T> 返回值类型
-	 * @return method的返回值
-	 * @throws LoginAccountRepeatedException 如果账号已存在
-	 */
-	private static <T> T execute(Supplier<T> method) throws LoginAccountRepeatedException{
+	protected <R> R execute(Supplier<R> method) throws LoginAccountRepeatedException{
 		try{
 			return method.get();
 		}catch(DuplicateKeyException e){
