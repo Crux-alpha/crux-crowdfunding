@@ -117,95 +117,12 @@
 
 <div>
     <!-- 新增admin模态框 -->
-    <div class="modal fade" id="modal-admin-save" tabindex="-1" role="dialog" aria-labelledby="admin-save">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="admin-save">新增用户</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="ipt-save-username">用户昵称</label>
-                                <input type="text" class="form-control" id="ipt-save-username" name="userName" placeholder="请输入用户昵称">
-                                <p class="help-block"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="ipt-save-loginAcct">登录账号</label>
-                                <input type="text" class="form-control" id="ipt-save-loginAcct" name="loginAcct" placeholder="请输入账号">
-                                <p class="help-block"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="ipt-save-password">登录密码</label>
-                                <input type="password" class="form-control" id="ipt-save-password" name="userPswd" placeholder="请输入密码">
-                                <p class="help-block"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="ipt-save-password-cfm">确认密码</label>
-                                <input type="password" class="form-control" id="ipt-save-password-cfm" placeholder="请输入确认密码">
-                                <p class="help-block"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="ipt-save-email">邮箱地址</label>
-                                <input type="email" class="form-control" id="ipt-save-email" name="email" placeholder="请输入邮箱。注意邮箱格式">
-                                <p class="help-block"></p>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 确定</button>
-                    <button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div th:replace="~{/common/modal-common::modal-admin-save}"></div>
     <!-- 修改admin模态框 -->
-    <div class="modal fade" id="modal-admin-update" tabindex="-1" role="dialog" aria-labelledby="admin-update">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="admin-update">修改用户</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="panel-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="ipt-update-loginAcct">账号</label>
-                                <input type="text" class="form-control" id="ipt-update-loginAcct" disabled>
-                                <p class="help-block"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="ipt-update-username">用户昵称</label>
-                                <input type="text" class="form-control" id="ipt-update-username" name="username">
-                                <p class="help-block"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="ipt-update-email">邮箱地址</label>
-                                <input type="email" class="form-control" id="ipt-update-email" name="email">
-                                <p class="help-block"></p>
-                            </div>
-                            <div>
-                                <input type="hidden" id="ipt-update-id">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 确定</button>
-                    <button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div th:replace="~{/common/modal-common::modal-admin-update}"></div>
 </div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
-<script type="text/javascript" th:src="@{/static/js/table-data-generator.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/table-data-generator.js}"></script>
 <script type="text/javascript">
     ajaxReqURL = "/admin/main/user";
 
@@ -221,12 +138,6 @@
 		// 查询框单击事件
 		$("#btn-keyword-select").click(function(){
 			var keyword = $("#ipt-keyword").val();
-
-			if(keyword == null || keyword.length === 0){
-				alert("请输入查询条件！");
-				return false;
-			}
-
 			window.current = 1;
 			window.keyword = keyword;
 			generateData();
@@ -328,14 +239,7 @@
 		// 新增admin表单提交
 		$("#modal-admin-save .modal-footer").children(".btn-success").click(function(){
 			var form = $("#modal-admin-save form");
-			var formGroup = form.children("div[class*=form-group]");
-			formGroup.children("input").blur();
-			var hasSuccess = form.children("div[class*=has-success]");
-
-			// 如果表单项与成功项数量不一致，阻止提交
-			if(formGroup.length !== hasSuccess.length){
-				return false;
-			}
+			if(!checkFormData(form)) return;
 
 			// 发送请求，添加admin
 			$.ajax({
@@ -363,14 +267,7 @@
 		// 修改admin表单提交
 		$("#modal-admin-update .modal-footer").children(".btn-success").click(function(){
 			var form = $("#modal-admin-update form");
-			var formGroup = form.children("div[class*=form-group]").not(":first");
-			formGroup.children("input").blur();
-			var hasSuccess = form.children("div[class*=has-success]");
-
-			// 如果表单项与成功项数量不一致，阻止提交
-			if(formGroup.length !== hasSuccess.length){
-				return false;
-			}
+			if(!checkFormData(form)) return;
 
 			// 发送请求，修改admin
 			var id = $("#ipt-update-id").val();
@@ -396,20 +293,6 @@
 		});
 
 	});
-
-	// 表单验证状态改变
-	function updateFormGroup(state, message, inputEle){
-		var formGroupEle = inputEle.parent(".form-group");
-		if(!state){
-			formGroupEle.removeClass("has-success");
-			formGroupEle.addClass("has-error");
-			formGroupEle.children("p").text(message);
-		}else{
-			formGroupEle.removeClass("has-error");
-			formGroupEle.addClass("has-success");
-			formGroupEle.children("p").empty();
-		}
-	}
 </script>
 </body>
 </html>

@@ -44,6 +44,8 @@ function generateTableBody(json){
 	var page = json.data.page;
 	var tbody = $("#tbody-data");
 	tbody.empty();
+	// 取消全选框
+	$("#th-check-all").children().prop("checked", false);
 	var records = page.records;
 	var thead_tr = tbody.prev().children();
 
@@ -62,7 +64,7 @@ function generateTableBody(json){
 		var params = [];
 
 		// 将th中id为data-"属性名"的属性名从attr中提取，用来收集这些属性的键值对
-		var ths$id = thead_tr.children("th[id]");
+		var ths$id = thead_tr.children("th[id^=data-]");
 		for(var a=0; a<ths$id.length; a++){
 			var param = ths$id.eq(a).attr("id").substring(5);
 			for(var b=0; b<attr.length; b++){
@@ -150,3 +152,43 @@ function paginationCallback(index, jQuery){
 	return false;
 }
 
+function updateFormGroup(state, message, inputEle){
+	var formGroupEle = inputEle.parent(".form-group");
+	if(!state){
+		formGroupEle.removeClass("has-success");
+		formGroupEle.addClass("has-error");
+		formGroupEle.children("p").text(message);
+	}else{
+		formGroupEle.removeClass("has-error");
+		formGroupEle.addClass("has-success");
+		formGroupEle.children("p").empty();
+	}
+}
+
+function checkFormData(form){
+	var formGroup = form.children("div[class*=form-group]");
+	formGroup.children("input").blur();
+	var hasSuccess = form.children("div[class*=has-success]");
+
+	// 如果表单项与成功项数量不一致，阻止提交
+	return formGroup.length === hasSuccess.length;
+}
+
+function getOne(id, url){
+	return $.ajax({
+		url: url + "/" + id,
+		type: "GET",
+		dataType: "json",
+		async: false
+	});
+}
+
+function getList(ids, url){
+	return $.ajax({
+		url: url,
+		type: "GET",
+		data: {ids: ids},
+		dataType: "json",
+		async: false
+	});
+}

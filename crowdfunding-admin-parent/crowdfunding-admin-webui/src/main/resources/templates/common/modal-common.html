@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="modal fade" id="modal-admin-save" tabindex="-1" role="dialog" aria-labelledby="admin-save" th:fragment="modal-admin-save">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="admin-save">新增用户</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="ipt-save-username">用户昵称</label>
+                            <input type="text" class="form-control" id="ipt-save-username" name="userName" placeholder="请输入用户昵称">
+                            <p class="help-block"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipt-save-loginAcct">登录账号</label>
+                            <input type="text" class="form-control" id="ipt-save-loginAcct" name="loginAcct" placeholder="请输入账号">
+                            <p class="help-block"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipt-save-password">登录密码</label>
+                            <input type="password" class="form-control" id="ipt-save-password" name="userPswd" placeholder="请输入密码">
+                            <p class="help-block"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipt-save-password-cfm">确认密码</label>
+                            <input type="password" class="form-control" id="ipt-save-password-cfm" placeholder="请输入确认密码">
+                            <p class="help-block"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipt-save-email">邮箱地址</label>
+                            <input type="email" class="form-control" id="ipt-save-email" name="email" placeholder="请输入邮箱。注意邮箱格式">
+                            <p class="help-block"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-admin-update" tabindex="-1" role="dialog" aria-labelledby="admin-update" th:fragment="modal-admin-update">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="admin-update">修改用户</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="ipt-update-loginAcct">账号</label>
+                            <input type="text" class="form-control" id="ipt-update-loginAcct" disabled>
+                            <p class="help-block"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipt-update-username">用户昵称</label>
+                            <input type="text" class="form-control" id="ipt-update-username" name="username">
+                            <p class="help-block"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="ipt-update-email">邮箱地址</label>
+                            <input type="email" class="form-control" id="ipt-update-email" name="email">
+                            <p class="help-block"></p>
+                        </div>
+                        <div>
+                            <input type="hidden" id="ipt-update-id">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-role" tabindex="-1" role="dialog" aria-labelledby="role" th:fragment="modal-role">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="role">新增角色</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="ipt-role-name">角色名称</label>
+                            <input type="text" class="form-control" id="ipt-role-name" name="name" placeholder="请输入角色名称">
+                            <p class="help-block"></p>
+                        </div>
+                        <input type="hidden" name="id" disabled/>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-remove" tabindex="-1" role="dialog" aria-labelledby="remove" th:fragment="modal-remove">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="remove">请确认是否要删除以下数据：</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> 取消</button>
+                <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i> 确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

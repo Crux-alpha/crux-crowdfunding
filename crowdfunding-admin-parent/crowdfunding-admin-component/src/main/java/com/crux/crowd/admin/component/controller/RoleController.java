@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crux.crowd.admin.component.service.RoleService;
 import com.crux.crowd.admin.entity.Role;
 import com.crux.crowd.common.util.ResponseMessage;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 处理角色请求
@@ -38,5 +36,30 @@ public class RoleController{
 		Page<Role> rolePage = roleService.pageFuzzy(current, size, keyword);
 		String message = "查询到" + rolePage.getTotal() + "条数据";
 		return ResponseMessage.success(message, Collections.singletonMap("page", rolePage));
+	}
+
+	@GetMapping("/{id}")
+	public ResponseMessage<String,Role> getRole(@PathVariable("id") int id){
+		Role role = roleService.getById(id);
+		return ResponseMessage.success(Collections.singletonMap("role", role));
+	}
+
+	@GetMapping(params = "ids[]")
+	public ResponseMessage<String,List<Role>> getRoleList(@RequestParam("ids[]") List<Integer> ids){
+		List<Role> roles = roleService.listByIds(ids);
+		return roles.isEmpty() ? ResponseMessage.failure("没有查询到数据", Collections.emptyMap())
+							   : ResponseMessage.success(Collections.singletonMap("roles", roles));
+	}
+
+	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+	public ResponseMessage<?,?> saveOrUpdateRole(Role role){
+		roleService.saveOrUpdate(role);
+		return ResponseMessage.success("保存成功");
+	}
+
+	@DeleteMapping
+	public ResponseMessage<?,?> deleteRole(@RequestParam("ids[]") List<Integer> ids){
+		roleService.removeBatchByIds(ids);
+		return ResponseMessage.success("删除成功");
 	}
 }

@@ -52,24 +52,24 @@
                                 <input class="form-control has-success" type="text" placeholder="请输入查询条件">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-warning">
+                        <button type="button" class="btn btn-warning" id="btn-keyword-select">
 							<i class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;" id="btn-role-remove"><i
                             class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
-                    <button type="button" class="btn btn-primary" style="float:right;">
+                    <button type="button" class="btn btn-primary" style="float:right;" id="btn-role-save">
 						<i class="glyphicon glyphicon-plus"></i> 新增
                     </button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
-                        <table class="table  table-bordered">
+                        <table class="table table-bordered">
                             <thead>
                             <tr>
                                 <th id="data-id" width="30">#</th>
-                                <th width="30"><input type="checkbox"></th>
+                                <th width="30" id="th-check-all"><input type="checkbox"></th>
                                 <th id="data-name">名称</th>
                                 <th width="100">操作</th>
                             </tr>
@@ -95,8 +95,13 @@
         </div>
     </div>
 </div>
+
+<div>
+    <div th:replace="~{/common/modal-common::modal-role}"></div>
+    <div th:replace="~{/common/modal-common::modal-remove}"></div>
+</div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
-<script type="text/javascript" th:src="@{/static/js/table-data-generator.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/table-data-generator.js}"></script>
 <script type="text/javascript">
     $(function(){
 		window.current = 1;
@@ -105,7 +110,166 @@
 		window.pageURL = "role";
 		window.total = 0;
 		generateData();
+		
+		var tbody = $("#tbody-data");
+
+		// 查询框单击事件
+		$("#btn-keyword-select").click(function(){
+			window.keyword = $(this).text();
+			window.current = 1;
+			generateData();
+        });
+
+        // 新增单击事件
+        $("#btn-role-save").click(function(){
+			toggleModal(true);
+			$("#ipt-role-name").val(null);
+			$("#modal-role").modal({backdrop: false});
+        });
+
+		//修改单击事件
+		tbody.on("click", "i[class*=glyphicon-pencil]", function(){
+			var id = $(this).parents("tr").children(":first").text();
+            var role = toggleModal(false, id);
+			var id_ipt = $("#modal-role form input[type=hidden]");
+			id_ipt.prop("disabled", false);
+			id_ipt.val(role.id);
+			$("#ipt-role-name").val(role.name);
+			$("#modal-role").modal({backdrop: false});
+		})
+
+		// 模态框保存按钮单击事件
+		$("#modal-role").find(".modal-footer").children("button[class*=btn-success]").click(function(){
+			var form = $("#modal-role form");
+			if(!checkFormData(form)) return;
+			var data = form.serialize();
+			if($("#role").text() === "新增角色"){
+				$.ajax({
+                    url: "role",
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function(json){
+						window.current = Math.floor(window.total / window.size + 1);
+						$("#modal-role").modal("hide");
+						layer.msg(json.message);
+						generateData();
+                    },
+                    error: error
+				})
+            }else{
+				$.ajax({
+                    url: "role",
+                    type: "POST",
+                    data: data + "&_method=PUT",
+                    dataType: "json",
+                    success: function(json){
+						$("#modal-role").modal("hide");
+						layer.msg(json.message);
+						generateData();
+                    },
+                    error: error
+                })
+            }
+			function error(json){updateFormGroup(false, json.message, $("#ipt-role-name"));}
+        });
+
+		// 表单项检查失去焦点事件
+        $("#ipt-role-name").blur(function(){
+			var name = $(this).val();
+            var regex = /^[\u4E00-\u9FA5A-Za-z0-9_]+$/;
+			updateFormGroup(regex.test(name), "角色名只能由字母、数字、下划线或汉字组成！", $(this));
+        });
+
+		// 要删除的role的id集合
+        var roleIds = [];
+
+		// 单条删除单击事件
+		tbody.on("click", "i[class*=glyphicon-remove]", function(){
+            var id = $(this).parents("tr").children("td:first").text();
+			var role = getOne(id, "role").responseJSON.data.role;
+            roleIds = popRemoveModal([role]);
+		});
+
+		// 全选/全不选框单击事件
+        var checkAll = $("#th-check-all").children();
+		checkAll.click(function(){
+			tbody.find("input[type=checkbox]").prop("checked", $(this).prop("checked"));
+        })
+        // 选择框单击事件
+		tbody.on("click", "input[type=checkbox]", function(){
+			var checked = tbody.find("input[type=checkbox]");
+			checkAll.prop("checked", checked.length === checked.filter(":checked").length);
+        })
+
+        // 批量删除单击事件
+        $("#btn-role-remove").click(function(){
+			var checked = tbody.find("input[type=checkbox]:checked");
+
+			if(!checked.length){
+				layer.msg("请选择要删除的角色！");
+				return false;
+			}
+
+			var ids = [];
+			checked.each(function(index, element){
+				var tr = $(element).parents("tr");
+				var id = tr.children().first().text();
+				ids.push(id);
+            });
+			var json = getList(ids, "role").responseJSON;
+			if(json.result === "FAILURE"){
+				layer.msg(json.message);
+				return false;
+            }
+			roleIds = popRemoveModal(json.data.roles);
+        })
+
+        // 确认删除单击事件
+		$("#modal-remove").find(".modal-footer").children("button[class*=btn-success]").click(function(){
+			$.ajax({
+                url: "role",
+				type: "POST",
+                data: {ids: roleIds, _method: "DELETE"},
+                success: function(json){
+                    layer.msg(json.message);
+					$("#modal-remove").modal("hide");
+					if($("#Pagination").children(":last").hasClass("current") && checkAll.prop("checked")){
+						window.current--;
+                    }
+					generateData();
+				},
+                error: function(json){
+					layer.msg(json.responseJSON.message);
+                }
+            })
+			roleIds = [];
+        });
     });
+
+	// 切换模态框
+	function toggleModal(isSave, id){
+		$("#role").text(isSave ? "新增角色" : "修改角色");
+		if(!isSave){
+			return getOne(id, "role").responseJSON.data.role;
+        }
+    }
+
+	function popRemoveModal(roles){
+		var roleIds = [];
+
+		var modal = $("#modal-remove");
+		var ul = modal.find(".modal-body").children();
+		ul.empty();
+
+		for(var i=0; i<roles.length; i++){
+			var name = roles[i].name;
+            $("<li class='list-group-item'>"+ name +"</li>").appendTo(ul);
+			roleIds.push(roles[i].id);
+        }
+		modal.modal();
+		return roleIds;
+    }
 </script>
 </body>
 </html>
