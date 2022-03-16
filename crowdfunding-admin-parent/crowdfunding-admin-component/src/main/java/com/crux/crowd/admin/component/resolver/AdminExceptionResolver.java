@@ -71,7 +71,7 @@ public class AdminExceptionResolver{
 	 * JSON请求和普通请求分发处理
 	 * 如果不知道要响应视图还是回传JSON，使用此方法。
 	 * @param responseMessage 响应数据
-	 * @param e 异常
+	 * @param e 被处理的异常
 	 * @return 如果是JSON请求，不返回ModelAndView，而是直接根据<code>responseMessage</code>输出JSON数据
 	 * @throws IOException 如果不能正常输出JSON数据
 	 */

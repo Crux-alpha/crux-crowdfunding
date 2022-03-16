@@ -4,39 +4,47 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<div class="modal fade" id="modal-admin-save" tabindex="-1" role="dialog" aria-labelledby="admin-save" th:fragment="modal-admin-save">
+<!-- 添加admin模态框 -->
+<div class="modal fade" id="modal-admin-save" tabindex="-1" role="dialog" aria-labelledby="modal-title-admin-save"
+     th:fragment="modal-admin-save">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="admin-save">新增用户</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modal-title-admin-save">新增用户</h4>
             </div>
             <div class="modal-body">
                 <div class="panel-body">
                     <form>
                         <div class="form-group">
                             <label for="ipt-save-username">用户昵称</label>
-                            <input type="text" class="form-control" id="ipt-save-username" name="userName" placeholder="请输入用户昵称">
+                            <input type="text" class="form-control" id="ipt-save-username" name="userName"
+                                   placeholder="请输入用户昵称">
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
                             <label for="ipt-save-loginAcct">登录账号</label>
-                            <input type="text" class="form-control" id="ipt-save-loginAcct" name="loginAcct" placeholder="请输入账号">
+                            <input type="text" class="form-control" id="ipt-save-loginAcct" name="loginAcct"
+                                   placeholder="请输入账号">
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
                             <label for="ipt-save-password">登录密码</label>
-                            <input type="password" class="form-control" id="ipt-save-password" name="userPswd" placeholder="请输入密码">
+                            <input type="password" class="form-control" id="ipt-save-password" name="userPswd"
+                                   placeholder="请输入密码">
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
                             <label for="ipt-save-password-cfm">确认密码</label>
-                            <input type="password" class="form-control" id="ipt-save-password-cfm" placeholder="请输入确认密码">
+                            <input type="password" class="form-control" id="ipt-save-password-cfm"
+                                   placeholder="请输入确认密码">
                             <p class="help-block"></p>
                         </div>
                         <div class="form-group">
                             <label for="ipt-save-email">邮箱地址</label>
-                            <input type="email" class="form-control" id="ipt-save-email" name="email" placeholder="请输入邮箱。注意邮箱格式">
+                            <input type="email" class="form-control" id="ipt-save-email" name="email"
+                                   placeholder="请输入邮箱。注意邮箱格式">
                             <p class="help-block"></p>
                         </div>
                     </form>
@@ -49,13 +57,15 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="modal-admin-update" tabindex="-1" role="dialog" aria-labelledby="admin-update" th:fragment="modal-admin-update">
+<!-- 修改admin模态框 -->
+<div class="modal fade" id="modal-admin-update" tabindex="-1" role="dialog" aria-labelledby="modal-title-admin-update"
+     th:fragment="modal-admin-update">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="admin-update">修改用户</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modal-title-admin-update">修改用户</h4>
             </div>
             <div class="modal-body">
                 <div class="panel-body">
@@ -88,20 +98,23 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="modal-role" tabindex="-1" role="dialog" aria-labelledby="role" th:fragment="modal-role">
+<!-- 编辑role模态框 -->
+<div class="modal fade" id="modal-role" tabindex="-1" role="dialog" aria-labelledby="modal-title-role"
+     th:fragment="modal-role">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="role">新增角色</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modal-title-role">新增角色</h4>
             </div>
             <div class="modal-body">
                 <div class="panel-body">
                     <form>
                         <div class="form-group">
                             <label for="ipt-role-name">角色名称</label>
-                            <input type="text" class="form-control" id="ipt-role-name" name="name" placeholder="请输入角色名称">
+                            <input type="text" class="form-control" id="ipt-role-name" name="name"
+                                   placeholder="请输入角色名称">
                             <p class="help-block"></p>
                         </div>
                         <input type="hidden" name="id" disabled/>
@@ -115,20 +128,126 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-remove" tabindex="-1" role="dialog" aria-labelledby="remove" th:fragment="modal-remove">
+<!-- 删除确认模态框 -->
+<div class="modal fade" id="modal-remove" tabindex="-1" role="dialog" aria-labelledby="modal-title-remove"
+     th:fragment="modal-remove">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="remove">请确认是否要删除以下数据：</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modal-title-remove">请确认是否要删除以下数据：</h4>
             </div>
             <div class="modal-body">
                 <ul class="list-group"></ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i> 取消</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i
+                        class="glyphicon glyphicon-remove"></i> 取消
+                </button>
                 <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i> 确定</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增/编辑节点模态框 -->
+<div class="modal fade" id="modal-node" tabindex="-1" role="dialog" aria-labelledby="modal-title-node"
+     th:fragment="modal-node">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modal-title-node">新增节点</h4>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        节点名称：<input type="text" id="ipt-node-name" class="form-control" name="name"/>
+                        <p class="help-block"></p>
+                    </div>
+                    <div class="form-group">
+                        节点URL：<input type="text" id="ipt-node-url" class="form-control" name="url"/>
+                        <p class="help-block"></p>
+                    </div>
+                    <div class="form-group" id="ipt-node-icon">
+                        <i class="glyphicon glyphicon-th-list"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-th-list"/>
+                        &nbsp;
+                        <i class="glyphicon glyphicon-dashboard"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-dashboard"/>
+                        &nbsp;
+                        <i class="glyphicon glyphicon glyphicon-tasks"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon glyphicon-tasks"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-user"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-user"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-king"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-king"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-lock"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-lock"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-ok"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-ok"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-check"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-check"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-th-large"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-th-large"/>
+                        <br/>
+
+                        <i class="glyphicon glyphicon-picture"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-picture"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-equalizer"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-equalizer"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-random"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-random"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-hdd"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-hdd"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-comment"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-comment"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-list"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-list"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-tags"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-tags"/>
+                        &nbsp;
+
+                        <i class="glyphicon glyphicon-list-alt"></i>
+                        <input type="radio" name="icon" value="glyphicon glyphicon-list-alt"/>
+                        &nbsp;
+                        <p class="help-block"></p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-node-save" type="button" class="btn btn-default"><i
+                        class="glyphicon glyphicon-plus"></i> 保存
+                </button>
+            </div>
+
         </div>
     </div>
 </div>

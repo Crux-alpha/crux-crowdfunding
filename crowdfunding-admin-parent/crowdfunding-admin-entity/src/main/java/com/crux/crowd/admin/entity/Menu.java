@@ -32,9 +32,11 @@ public class Menu implements Serializable {
     private String url;
     private String icon;
 
-    // 以下非数据库字段
+    /* ------以下为非数据库字段----- */
+    // 该节点所有子节点
     @TableField(exist = false)
     private List<Menu> children = new ArrayList<>();
+    // 是否默认打开
     @TableField(exist = false)
     private volatile boolean open = true;
 

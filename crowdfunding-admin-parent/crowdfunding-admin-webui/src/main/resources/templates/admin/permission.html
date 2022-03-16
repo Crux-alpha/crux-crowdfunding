@@ -40,7 +40,7 @@
                             class="glyphicon glyphicon-question-sign"></i></div>
                 </div>
                 <div class="panel-body">
-                    <ul id="treeDemo" class="ztree"></ul>
+                    <ul id="tree-data" class="ztree"></ul>
                 </div>
             </div>
         </div>
@@ -73,9 +73,11 @@
         </div>
     </div>
 </div>
+<div th:replace="~{/common/modal-common::modal-node}"></div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
 <script type="text/javascript" th:src="@{/static/ztree/jquery.ztree.all-3.5.min.js}"></script>
-<script type="text/javascript" th:src="@{/static/script/zTree-settings.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/zTree-generator.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
 <script type="text/javascript">
 	$(function(){
 		// 菜单设置项
@@ -96,6 +98,36 @@
 				}
 			}
 		}
+		generateTree();
+
+		// 保存要添加子节点的节点的id作为子节点的pid
+		var pid = null;
+		// 新增子节点单击事件
+		$("#tree-data").on("click", ".btn-node-add", function(){
+			pid = this.id.substring(5);
+			$("#modal-node").modal({backdrop: false});
+			return false;
+        });
+
+		// 检查表单项
+        $("#ipt-node-name").blur(function(){
+			var name = $(this).val();
+			updateFormGroup(name.length, "请输入节点名称！", $(this));
+        })
+        $("#ipt-node-url").blur(function(){
+			var url = $(this).val();
+			updateFormGroup(url.length, "请输入节点URL！", $(this));
+        });
+		$("#ipt-node-icon").children("input").blur(function(){
+			var checked = $("#ipt-node-icon").children("input:checked");
+			updateFormGroup(checked.length > 0, "请选择节点图标！", $(this));
+        })
+
+		// 保存子节点单击事件
+        $("#btn-node-save").click(function(){
+			var form = $("#modal-node").find("form");
+            if(!checkFormData(form)) return;
+        })
 	});
 </script>
 </body>

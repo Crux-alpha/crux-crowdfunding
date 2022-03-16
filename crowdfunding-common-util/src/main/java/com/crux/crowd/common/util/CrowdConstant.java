@@ -3,7 +3,7 @@ package com.crux.crowd.common.util;
 import java.time.format.DateTimeFormatter;
 
 /**
- * 筹钱吧项目常量池
+ * 众筹平台项目常量池
  * @since 2022/03/11
  */
 public final class CrowdConstant{

@@ -104,6 +104,7 @@
 <div th:replace="~{/common/admin-main-common::script}"></div>
 <script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/table-data-generator.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
 <script type="text/javascript">
     $(function(){
 		window.current = 1;
@@ -251,7 +252,7 @@
 
 	// 切换模态框
 	function toggleModal(isSave, id){
-		$("#role").text(isSave ? "新增角色" : "修改角色");
+		$("#modal-title-role").text(isSave ? "新增角色" : "修改角色");
 		if(!isSave){
 			return getOne(id, "role").responseJSON.data.role;
         }

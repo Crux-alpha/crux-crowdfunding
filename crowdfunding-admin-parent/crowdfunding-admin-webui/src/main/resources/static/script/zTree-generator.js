@@ -12,7 +12,7 @@ function generateTree(){
 		success: function(json){
 			var root = json.data.root;
 			var nodes = [root];
-			$.fn.zTree.init($("#treeDemo"), settings, nodes);
+			$.fn.zTree.init($("#tree-data"), settings, nodes);
 		},
 		error: function(response){
 			layer.msg(response.responseJSON.error);
@@ -49,9 +49,10 @@ function addHoverDomCallback(treeId, treeNode){
 	// 创建初始的按钮组
 	var groupBtn = $("<span id='"+ btnId +"'></span>");
 	// 创建编辑按钮、新增按钮、删除按钮
-	var editBtn = $("<a class='btn btn-info dropdown-toggle btn-xs btn-node-edit' style='margin-left:10px;padding-top:0;' href='#' title='编辑节点'>&nbsp;&nbsp;<i class='fa fa-fw fa-edit rbg'></i></a>");
-	var addBtn = $("<a class='btn btn-info dropdown-toggle btn-xs btn-node-add' style='margin-left:10px;padding-top:0;' href='#' title='添加子节点'>&nbsp;&nbsp;<i class='fa fa-fw fa-plus rbg'></i></a>");
-	var removeBtn = $("<a class='btn btn-info dropdown-toggle btn-xs btn-node-remove' style='margin-left:10px;padding-top:0;' href='#' title='删除节点'>&nbsp;&nbsp;<i class='fa fa-fw fa-times rbg'></i></a>");
+	var nodeId = treeNode.id;
+	var editBtn = $("<a id='node_"+ nodeId +"' class='btn btn-info dropdown-toggle btn-xs btn-node-edit' style='margin-left:10px;padding-top:0;' href='#' title='编辑节点'>&nbsp;&nbsp;<i class='fa fa-fw fa-edit rbg'></i></a>");
+	var addBtn = $("<a id='node_"+ nodeId +"' class='btn btn-info dropdown-toggle btn-xs btn-node-add' style='margin-left:10px;padding-top:0;' href='#' title='添加子节点'>&nbsp;&nbsp;<i class='fa fa-fw fa-plus rbg'></i></a>");
+	var removeBtn = $("<a id='node_"+ nodeId +"' class='btn btn-info dropdown-toggle btn-xs btn-node-remove' style='margin-left:10px;padding-top:0;' href='#' title='删除节点'>&nbsp;&nbsp;<i class='fa fa-fw fa-times rbg'></i></a>");
 
 	// 节点有一个level属性，表示当前节点的级别。0为根节点
 	var level = treeNode.level;

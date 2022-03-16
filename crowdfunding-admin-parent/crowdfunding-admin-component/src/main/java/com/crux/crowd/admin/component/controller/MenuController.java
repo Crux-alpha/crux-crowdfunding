@@ -3,6 +3,7 @@ package com.crux.crowd.admin.component.controller;
 import com.crux.crowd.admin.component.service.MenuService;
 import com.crux.crowd.admin.entity.Menu;
 import com.crux.crowd.common.util.ResponseMessage;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +30,10 @@ public class MenuController{
 	public ResponseMessage<String,Menu> getWholeTree(){
 		Menu root = menuService.getRootMenu();
 		return ResponseMessage.success(Collections.singletonMap("root", root));
+	}
+
+	@PostMapping
+	public ResponseMessage<?,?> saveNode(Menu menu){
+		return null;
 	}
 }

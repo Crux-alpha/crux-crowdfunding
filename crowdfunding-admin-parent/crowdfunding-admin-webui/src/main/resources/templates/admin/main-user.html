@@ -124,6 +124,7 @@
 </div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
 <script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/table-data-generator.js}"></script>
 <script type="text/javascript">
     ajaxReqURL = "/admin/main/user";
@@ -147,8 +148,8 @@
 
         // 删除单条记录
         $("tbody").on("click", "i[class*=glyphicon-remove]", function(){
-			var id = $(this).parents("tr").children("td:first").text();
-			var acct = $(this).parents("tr").children("td:eq(2)").text();
+			var id = $(this).closest("tr").children("td:first").text();
+			var acct = $(this).closest("tr").children("td:eq(2)").text();
 
 			if(!confirm("确定删除" + acct + "？")) return false;
 
@@ -174,7 +175,7 @@
 		
 		// 修改按钮单击弹出模态框
         $("tbody").on("click", "i[class*=glyphicon-pencil]", function(){
-			var id = $(this).parents("tr").children(":first").text();
+			var id = $(this).closest("tr").children(":first").text();
 			/*$.getJSON(ajaxReqURL + "/" + id, null, function(json){
                 var loginAcct = json.data.admin.loginAcct;
                 var username = json.data.admin.userName;

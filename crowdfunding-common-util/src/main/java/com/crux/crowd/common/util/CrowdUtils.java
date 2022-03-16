@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 /**
- * 筹钱吧项目统一工具类
+ * 众筹平台项目统一工具类
  * @author crux
  * @version 2022/03/10
  */
