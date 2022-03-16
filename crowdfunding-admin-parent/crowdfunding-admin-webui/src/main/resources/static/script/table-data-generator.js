@@ -48,6 +48,9 @@ function generateTableBody(json){
 	$("#th-check-all").children().prop("checked", false);
 	var records = page.records;
 	var thead_tr = tbody.prev().children();
+	var thead_ths = thead_tr.children("th");
+	// 将th中id为data-"属性名"的属性名从attr中提取，用来收集这些属性的键值对
+	var ths$id = thead_tr.children("th[id^=data-]");
 
 	for(var i=0; i<records.length; i++){
 		var entity = records[i];
@@ -59,12 +62,9 @@ function generateTableBody(json){
 		// json中得到的所有属性
 		var attr = str.split(",");
 
-		var thead_ths = thead_tr.children("th");
 		// 用以展示数据的属性
 		var params = [];
 
-		// 将th中id为data-"属性名"的属性名从attr中提取，用来收集这些属性的键值对
-		var ths$id = thead_tr.children("th[id^=data-]");
 		for(var a=0; a<ths$id.length; a++){
 			var param = ths$id.eq(a).attr("id").substring(5);
 			for(var b=0; b<attr.length; b++){

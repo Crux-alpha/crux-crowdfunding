@@ -13,7 +13,7 @@
             <h1><img alt="" th:src="@{/static/img/404-error.png}" src="/static/img/404-error.png"></h1>
             <h2 th:text="${error}"></h2>
             <!--<h2>page not found</h2>-->
-            <p class="nrml-txt" th:text="|您要访问的请求路径${path}不存在|"></p>
+            <p class="nrml-txt" th:text="${message}"></p>
             <!--<h3>We Couldn’t Find This Page</h3>-->
             <a class="back-btn" href="/index">返回首页</a>
         </section>

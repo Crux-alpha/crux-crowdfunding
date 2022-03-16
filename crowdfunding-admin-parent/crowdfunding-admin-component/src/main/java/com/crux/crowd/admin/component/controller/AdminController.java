@@ -33,6 +33,13 @@ public class AdminController{
 		this.service = service;
 	}
 
+	/**
+	 * admin登录
+	 * @param account 账号
+	 * @param password 密码
+	 * @param session 将admin保存到session中
+	 * @return 重定向到后台管理页面
+	 */
 	@PostMapping(path = "/login", params = {"account", "password"})
 	public String login(String account, String password, HttpSession session){
 		final Admin admin = service.login(account, password);
@@ -40,12 +47,24 @@ public class AdminController{
 		return "redirect:/admin/main";
 	}
 
+	/**
+	 * admin登出
+	 * @param session 删除session中的admin
+	 * @return 重定向至主页
+	 */
 	@RequestMapping("/logout")
 	public String logout(HttpSession session){
 		session.invalidate();
 		return "redirect:/index";
 	}
 
+	/**
+	 * 分页+模糊查询
+	 * @param keyword 关键词
+	 * @param current 当前页码
+	 * @param size 分页大小
+	 * @return 查询到的admin的分页信息
+	 */
 	@GetMapping(path = "/main/user", params = "current")
 	@ResponseBody
 	public ResponseMessage<String,Page<Admin>> getAdminPage(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,

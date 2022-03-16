@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>菜单维护</title>
+
+    <link th:replace="~{/common/admin-main-common::head}"/>
+    <link rel="stylesheet" th:href="@{/static/ztree/zTreeStyle.css}">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 菜单维护</a></div>
+        </div>
+        <div th:replace="~{/common/admin-main-common::main-menu-head}"></div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{/common/admin-main-common::main-menu-left}"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="glyphicon glyphicon-th-list"></i> 权限菜单列表
+                    <div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i
+                            class="glyphicon glyphicon-question-sign"></i></div>
+                </div>
+                <div class="panel-body">
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">帮助</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bs-callout bs-callout-info">
+                    <h4>没有默认类</h4>
+                    <p>警告框没有默认类，只有基类和修饰类。默认的灰色警告框并没有多少意义。所以您要使用一种有意义的警告类。目前提供了成功、消息、警告或危险。</p>
+                </div>
+                <div class="bs-callout bs-callout-info">
+                    <h4>没有默认类</h4>
+                    <p>警告框没有默认类，只有基类和修饰类。默认的灰色警告框并没有多少意义。所以您要使用一种有意义的警告类。目前提供了成功、消息、警告或危险。</p>
+                </div>
+            </div>
+            <!--
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+<div th:replace="~{/common/admin-main-common::script}"></div>
+<script type="text/javascript" th:src="@{/static/ztree/jquery.ztree.all-3.5.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/zTree-settings.js}"></script>
+<script type="text/javascript">
+	$(function(){
+		// 菜单设置项
+        window.treeSettings = {
+			// 视图设置
+			view: {
+				// 自定义节点样式
+				addDiyDom: addDiyDomCallback,
+				addHoverDom: addHoverDomCallback,
+				removeHoverDom: removeHoverDomCallback,
+			},
+			// 节点数据设置
+			data: {
+				// 所有的键在此json中声明
+				key: {
+					// url地址。取消跳转
+					url: "#"
+				}
+			}
+		}
+	});
+</script>
+</body>
+</html>

@@ -35,13 +35,19 @@ import javax.sql.DataSource;
 @AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
 public class AdminComponentAutoConfiguration{
 
+	/**
+	 * 开启MybatisPlus插件
+	 * @param componentProperties 配置信息
+	 */
 	@Bean
 	@ConditionalOnMissingBean(MybatisPlusInterceptor.class)
 	public MybatisPlusInterceptor mybatisPlusInterceptor(AdminComponentProperties componentProperties){
 		MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+		// 开启分页插件
 		if(componentProperties.isPaginationInnerInterceptorEnabled()){
 			interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
 		}
+		// 开启防止全表更新操作插件
 		if(componentProperties.isBlockAttackInnerInterceptorEnabled()){
 			interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
 		}
@@ -54,6 +60,9 @@ public class AdminComponentAutoConfiguration{
 		return configuration -> configuration.setUseGeneratedShortKey(false);
 	}
 
+	/**
+	 * 服务层事务配置
+	 */
 	@Configuration(proxyBeanMethods = false)
 	@EnableTransactionManagement
 	static class ServiceTransactionConfiguration{

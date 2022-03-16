@@ -9,6 +9,7 @@
     <title>角色维护</title>
 
     <link th:replace="~{/common/admin-main-common::head}"/>
+    <link rel="stylesheet" th:href="@{/static/css/pagination.css}">
     <style>
         .tree li {
             list-style-type: none;
@@ -101,6 +102,7 @@
     <div th:replace="~{/common/modal-common::modal-remove}"></div>
 </div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
+<script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/table-data-generator.js}"></script>
 <script type="text/javascript">
     $(function(){

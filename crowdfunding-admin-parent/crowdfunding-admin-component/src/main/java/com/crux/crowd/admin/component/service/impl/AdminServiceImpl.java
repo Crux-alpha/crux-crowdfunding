@@ -1,6 +1,5 @@
 package com.crux.crowd.admin.component.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crux.crowd.admin.component.service.*;
@@ -16,11 +15,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
- * @author 作者
+ * admin业务层
  * @since 2022-03-09
  */
 @Service("adminService")
