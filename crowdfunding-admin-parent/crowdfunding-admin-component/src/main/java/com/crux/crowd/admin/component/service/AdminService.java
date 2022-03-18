@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.crux.crowd.admin.entity.Admin;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -42,6 +43,14 @@ public interface AdminService extends IService<Admin>{
 	 * @return 如果修改成功，返回true
 	 */
 	boolean update(int id, String username, String email);
+
+	/**
+	 * 根据id更新admin的角色分配
+	 * @param id admin id
+	 * @param roleIds 要分配的角色id集合
+	 * @return 如果保存成功，返回true
+	 */
+	boolean updateRolesAssigned(Integer id, List<Integer> roleIds);
 
 	default Admin getById(final Serializable id){
 		return Optional.ofNullable(IService.super.getById(id)).orElseThrow(() -> new AdminNotFoundException("没有找到id为" + id + "的用户"));

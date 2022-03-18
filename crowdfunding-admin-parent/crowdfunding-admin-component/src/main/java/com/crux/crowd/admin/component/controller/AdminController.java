@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 管理员后台管理系统的处理器<br/><br/>
@@ -27,10 +28,10 @@ import java.util.Collections;
 @RequestMapping("/admin")
 public class AdminController{
 
-	private final AdminService service;
+	private final AdminService adminService;
 
-	public AdminController(AdminService service){
-		this.service = service;
+	public AdminController(AdminService adminService){
+		this.adminService = adminService;
 	}
 
 	/**
@@ -42,7 +43,7 @@ public class AdminController{
 	 */
 	@PostMapping(path = "/login", params = {"account", "password"})
 	public String login(String account, String password, HttpSession session){
-		final Admin admin = service.login(account, password);
+		final Admin admin = adminService.login(account, password);
 		session.setAttribute(CrowdConstant.ADMIN_LOGIN_ACCOUNT, admin);
 		return "redirect:/admin/main";
 	}
@@ -70,7 +71,7 @@ public class AdminController{
 	public ResponseMessage<String,Page<Admin>> getAdminPage(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
 							   @RequestParam(name = "current") int current,
 							   @RequestParam(name = "size", required = false, defaultValue = "10") int size){
-		Page<Admin> adminPage = service.pageFuzzy(current, size, keyword);
+		Page<Admin> adminPage = adminService.pageFuzzy(current, size, keyword);
 		long total = adminPage.getTotal();
 		String message = total > 0 ? "查询到" + total + "条数据" : "没有查询到任何数据";
 		return ResponseMessage.success(message, Collections.singletonMap("page", adminPage));
@@ -83,9 +84,17 @@ public class AdminController{
 	 */
 	@GetMapping("/main/user/{id}")
 	@ResponseBody
-	public ResponseMessage<String,Admin> getAdmin(@PathVariable("id") int id){
-		Admin admin = service.getById(id);
+	public ResponseMessage<String,Admin> getAdmin(@PathVariable("id") Integer id){
+		Admin admin = adminService.getById(id);
 		return ResponseMessage.success(Collections.singletonMap("admin", admin));
+	}
+
+	@GetMapping(path = "/main/user", params = "ids[]")
+	@ResponseBody
+	public ResponseMessage<String,List<Admin>> getAdminList(@RequestParam("ids[]") List<Integer> ids){
+		List<Admin> admins = adminService.listByIds(ids);
+		return admins.isEmpty() ? ResponseMessage.failure("没有查询到数据", Collections.emptyMap())
+								: ResponseMessage.success(Collections.singletonMap("admins", admins));
 	}
 
 	/**
@@ -96,7 +105,7 @@ public class AdminController{
 	@PostMapping("/main/user")
 	@ResponseBody
 	public ResponseMessage<?,?> saveAdmin(Admin admin){
-		service.save(admin);
+		adminService.save(admin);
 		return ResponseMessage.success("保存成功！");
 	}
 
@@ -109,8 +118,8 @@ public class AdminController{
 	 */
 	@PutMapping("/main/user/{id}")
 	@ResponseBody
-	public ResponseMessage<?,?> updateAdmin(@PathVariable("id") int id, String username, String email){
-		service.update(id, username, email);
+	public ResponseMessage<?,?> updateAdmin(@PathVariable("id") Integer id, String username, String email){
+		adminService.update(id, username, email);
 		return ResponseMessage.success("保存成功！");
 	}
 
@@ -121,9 +130,18 @@ public class AdminController{
 	 */
 	@DeleteMapping("/main/user/{id}")
 	@ResponseBody
-	public ResponseMessage<?,?> deleteAdmin(@PathVariable("id") int id){
-		boolean result = service.removeById(id);
+	public ResponseMessage<?,?> deleteAdmin(@PathVariable("id") Integer id){
+		boolean result = adminService.removeById(id);
 		if(result) return ResponseMessage.success("删除成功！");
 		return ResponseMessage.failure("删除失败！");
 	}
+
+	@DeleteMapping("/main/user")
+	@ResponseBody
+	public ResponseMessage<?,?> deleteAdmin(@RequestParam("ids[]") List<Integer> ids){
+		adminService.removeBatchByIds(ids);
+		return ResponseMessage.success("删除成功！");
+	}
+
+
 }

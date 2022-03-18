@@ -55,3 +55,7 @@ function getList(ids, url){
 		async: false
 	});
 }
+
+function defaultErrorCallback(response){
+	layer.msg(response.responseJSON.message);
+}

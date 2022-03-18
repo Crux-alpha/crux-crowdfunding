@@ -3,9 +3,7 @@ package com.crux.crowd.admin.component.controller;
 import com.crux.crowd.admin.component.service.MenuService;
 import com.crux.crowd.admin.entity.Menu;
 import com.crux.crowd.common.util.ResponseMessage;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -26,14 +24,21 @@ public class MenuController{
 	 * 获取菜单树型结构
 	 * @return 根节点
 	 */
-	@RequestMapping("/whole_tree")
+	@GetMapping("/whole_tree")
 	public ResponseMessage<String,Menu> getWholeTree(){
 		Menu root = menuService.getRootMenu();
 		return ResponseMessage.success(Collections.singletonMap("root", root));
 	}
 
-	@PostMapping
-	public ResponseMessage<?,?> saveNode(Menu menu){
-		return null;
+	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+	public ResponseMessage<?,?> saveOrUpdateNode(Menu menu){
+		menuService.saveOrUpdate(menu);
+		return ResponseMessage.success("保存成功！");
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseMessage<?,?> deleteNode(@PathVariable("id") Integer id){
+		menuService.removeById(id);
+		return ResponseMessage.success("删除成功！");
 	}
 }

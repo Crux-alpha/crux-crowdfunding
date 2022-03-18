@@ -10,6 +10,7 @@ import com.crux.crowd.admin.entity.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 @Service("roleService")
@@ -22,6 +23,12 @@ public class RoleServiceImpl extends AbstractService<RoleMapper,Role> implements
 			wrapper = wrapper.like(Role::getName, keyword);
 		}
 		return page(new Page<>(current, size), wrapper);
+	}
+
+	@Override
+	public List<Role> getRolesAssigned(Integer adminId, boolean assigned){
+		RoleMapper mapper = getBaseMapper();
+		return mapper.selectRolesAssignedByAdminId(adminId, assigned);
 	}
 
 	@Override

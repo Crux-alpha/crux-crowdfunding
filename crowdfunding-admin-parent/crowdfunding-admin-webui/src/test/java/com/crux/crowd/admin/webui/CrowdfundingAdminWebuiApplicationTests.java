@@ -90,4 +90,16 @@ class CrowdfundingAdminWebuiApplicationTests{
 		boolean save = adminService.save(new Admin("admin", "crux_alpha", "SAIERHAO123", "1992980352@qq.com"));
 		log.info("{}", save);
 	}
+
+	@Test
+	void selectRolesAssignedByAdminId(){
+		List<Role> rolesAssigned = roleService.getRolesAssigned(1, false);
+		log.info("1已分配角色：{}", rolesAssigned.toString());
+	}
+
+	@Test
+	void updateRolesAssignedByAdminId(){
+		boolean result = adminService.updateRolesAssigned(1, Arrays.asList(196,197,198,199,200));
+		log.info("保存{}", result);
+	}
 }

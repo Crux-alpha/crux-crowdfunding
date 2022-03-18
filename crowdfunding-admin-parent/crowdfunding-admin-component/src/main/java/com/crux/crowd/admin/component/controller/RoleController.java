@@ -44,7 +44,7 @@ public class RoleController{
 	 * @return 角色信息
 	 */
 	@GetMapping("/{id}")
-	public ResponseMessage<String,Role> getRole(@PathVariable("id") int id){
+	public ResponseMessage<String,Role> getRole(@PathVariable("id") Integer id){
 		Role role = roleService.getById(id);
 		return ResponseMessage.success(Collections.singletonMap("role", role));
 	}

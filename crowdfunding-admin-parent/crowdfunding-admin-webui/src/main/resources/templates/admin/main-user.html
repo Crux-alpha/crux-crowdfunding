@@ -57,7 +57,7 @@
                             <i class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                    <button type="button" class="btn btn-danger" id="btn-admin-remove" style="float:right;margin-left:10px;"><i
                             class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
                     <button type="button" class="btn btn-primary" style="float:right;" id="btn-admin-save">
@@ -70,31 +70,13 @@
                             <thead>
                             <tr>
                                 <th width="30" id="data-id">#</th>
-                                <th width="30"><input type="checkbox"></th>
+                                <th width="30" id="th-check-all"><input type="checkbox"></th>
                                 <th id="data-loginAcct">账号</th>
                                 <th id="data-userName">名称</th>
                                 <th id="data-email">邮箱地址</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
-                            <!--<tbody th:if="*{total != 0}">
-                            <tr th:each="admin : *{records}">
-                                <td th:text="${admin.id}"></td>
-                                <td><input type="checkbox"></td>
-                                <td th:text="${admin.loginAcct}"></td>
-                                <td th:text="${admin.userName}"></td>
-                                <td th:text="${admin.email}"></td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-xs"><i
-                                            class=" glyphicon glyphicon-check"></i></button>
-                                    <button type="button" class="btn btn-primary btn-xs"><i
-                                            class=" glyphicon glyphicon-pencil"></i></button>
-                                    <button type="button" class="btn btn-danger btn-xs"><i
-                                            class=" glyphicon glyphicon-remove"></i></button>
-                                </td>
-                            </tr>
-                            </tbody>
-                            -->
                             <!-- 在此显示用户信息 -->
                             <tbody id="tbody-data">
                             </tbody>
@@ -121,6 +103,8 @@
     <div th:replace="~{/common/modal-common::modal-admin-save}"></div>
     <!-- 修改admin模态框 -->
     <div th:replace="~{/common/modal-common::modal-admin-update}"></div>
+    <div th:replace="~{/common/modal-common::modal-remove}"></div>
+    <div th:replace="~{/common/modal-common::modal-assign-role}"></div>
 </div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
 <script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
@@ -137,6 +121,7 @@
 		window.pageURL = "user";
 		window.total = 0;
 		generateData();
+		var tbody = $("#tbody-data");
 
 		// 查询框单击事件
 		$("#btn-keyword-select").click(function(){
@@ -147,7 +132,7 @@
         });
 
         // 删除单条记录
-        $("tbody").on("click", "i[class*=glyphicon-remove]", function(){
+        tbody.on("click", "i[class*=glyphicon-remove]", function(){
 			var id = $(this).closest("tr").children("td:first").text();
 			var acct = $(this).closest("tr").children("td:eq(2)").text();
 
@@ -161,9 +146,7 @@
 					generateData();
 					layer.msg(json.message)
 				},
-				error: function(json){
-					layer.msg("删除失败！原因：" + json.message)
-				},
+				error: defaultErrorCallback,
 				dataType: "json",
 			});
         });
@@ -172,19 +155,13 @@
 		$("#btn-admin-save").click(function(){
             $("#modal-admin-save").modal({backdrop: false});
 		});
+
+		// 重置按钮
+		$("#btn-admin-reset").click(function(){$("#btn-admin-reset0").click()});
 		
 		// 修改按钮单击弹出模态框
-        $("tbody").on("click", "i[class*=glyphicon-pencil]", function(){
+        tbody.on("click", "i[class*=glyphicon-pencil]", function(){
 			var id = $(this).closest("tr").children(":first").text();
-			/*$.getJSON(ajaxReqURL + "/" + id, null, function(json){
-                var loginAcct = json.data.admin.loginAcct;
-                var username = json.data.admin.userName;
-                var email = json.data.admin.email;
-                $("#ipt-update-loginAcct").val(loginAcct);
-                $("#ipt-update-username").val(username);
-                $("#ipt-update-email").val(email);
-                $("#ipt-update-id").val(id);
-            });*/
 			// 同步请求回显数据
 			$.ajax({
 				url: "user" + "/" + id,
@@ -237,6 +214,40 @@
 			var email = $(this).val();
 			var regex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 			updateFormGroup(regex.test(email), "邮箱格式不正确！", $(this));
+		});
+
+		// 全选/全不选框单击事件
+		var checkAll = $("#th-check-all").children();
+		checkAll.click(function(){
+			tbody.find("input[type=checkbox]").prop("checked", $(this).prop("checked"));
+		})
+		// 选择框单击事件
+		tbody.on("click", "input[type=checkbox]", function(){
+			var checked = tbody.find("input[type=checkbox]");
+			checkAll.prop("checked", checked.length === checked.filter(":checked").length);
+		})
+
+		// 批量删除单击事件
+		$("#btn-admin-remove").click(function(){
+			var checked = tbody.find("input[type=checkbox]:checked");
+
+			if(!checked.length){
+				layer.msg("请选择要删除的管理员！");
+				return false;
+			}
+
+			var ids = [];
+			checked.each(function(index, element){
+				var tr = $(element).parents("tr");
+				var id = tr.children().first().text();
+				ids.push(id);
+			});
+			var result = getList(ids, "user");
+			if(result.status !== 200){
+				layer.msg(result.responseJSON.message);
+				return false;
+			}
+			popRemoveModal(result.responseJSON.data.admins);
 		})
 
 		// 新增admin表单提交
@@ -252,7 +263,7 @@
 				success: function(json){
 					alert(json.message);
 					$("#modal-admin-save").modal("hide");
-
+                    $("#btn-admin-reset0").click();
 					// 跳转到最后一页
 					window.current = Math.floor(window.total / window.size + 1);
 					generateData();
@@ -295,7 +306,131 @@
 
 		});
 
+		// 确认删除单击事件
+		$("#modal-remove").find(".modal-footer").children("button[class*=btn-success]").click(function(){
+			var adminIds = [];
+			$("#modal-remove .modal-body").find("li[class=list-group-item]").each(function(index, element){
+				var itemId = element.id.substring(8);
+				adminIds.push(itemId);
+			});
+
+			$.ajax({
+				url: "user",
+				type: "POST",
+				data: {ids: adminIds, _method: "DELETE"},
+                dataType: "json",
+				success: function(json){
+					layer.msg(json.message);
+					$("#modal-remove").modal("hide");
+					if($("#Pagination").children(":last").hasClass("current") && checkAll.prop("checked")){
+						window.current--;
+					}
+					generateData();
+				},
+				error: defaultErrorCallback
+			})
+		});
+
+		// 分配角色单击事件
+		tbody.on("click", "i[class*=glyphicon-check]", function(){
+			var select_assignedRoles = $("#select-assignedRoles");
+			var select_unassignedRoles = $("#select-unassignedRoles");
+			// 1、清空列表
+			select_assignedRoles.empty();
+			select_unassignedRoles.empty();
+
+			// 2、获取admin id，发送请求查询角色分配信息
+			var id = $(this).closest("tr").children(":first").text();
+			$("#ipt-assign-adminId").val(id);
+			$.ajax({
+                url: "assign/admin/" + id,
+                type: "GET",
+                dataType: "json",
+                async: false,
+                success: function(json){
+                    var assigned = json.data.assigned;
+					var unassigned = json.data.unassigned;
+					// 3、已分配角色回显
+					for(var i=0; i<assigned.length; i++){
+						var role1 = assigned[i];
+
+						var option1 = $("<option></option>");
+						option1.val(role1.id);
+						option1.text(role1.name);
+						option1.appendTo(select_assignedRoles);
+                    }
+					// 4、未分配角色回显
+                    for(var j=0; j<unassigned.length; j++){
+						var role2 = unassigned[j];
+
+						var option2 = $("<option></option>");
+						option2.val(role2.id);
+						option2.text(role2.name);
+						option2.appendTo(select_unassignedRoles);
+                    }
+				},
+                error: defaultErrorCallback
+            })
+
+			$("#modal-assign").modal({backdrop: false});
+        });
+
+		// 移动角色项
+        $("#btn-group-role-assigned").children("button[class*=glyphicon-chevron-right]").click(function(){
+			$("#select-unassignedRoles>option:selected").appendTo("#select-assignedRoles");
+        });
+		$("#btn-group-role-assigned").children("button[class*=glyphicon-chevron-left]").click(function(){
+			$("#select-assignedRoles>option:selected").appendTo("#select-unassignedRoles");
+        });
+
+		// 分配角色保存，提交数据
+		$("#modal-assign .modal-footer>.btn-success").click(function(){
+			var opt_assigned = $("#select-assignedRoles").children();
+
+			// 获取admin id
+            var adminId = $("#ipt-assign-adminId").val();
+
+			// 获取分配的角色id
+			var roleIds = [];
+			opt_assigned.each(function(index, element){roleIds.push(element.value);});
+
+			// 发送请求保存
+			$.ajax({
+                url: "assign/admin/" + adminId,
+                type: "POST",
+                data: {roleIds: roleIds},
+                dataType: "json",
+                success: function(json){
+					layer.msg(json.message);
+					$("#ipt-assign-adminId").val(null);
+					$("#modal-assign").modal("hide");
+					$("#select-assignedRoles").empty();
+					$("#select-unassignedRoles").empty();
+                },
+                error: defaultErrorCallback
+            })
+        })
+
 	});
+
+	function popRemoveModal(admins){
+		var modal = $("#modal-remove");
+		var ul = modal.find(".modal-body").children();
+		ul.empty();
+
+		for(var i=0; i<admins.length; i++){
+			var loginAcct = admins[i].loginAcct;
+			var id = admins[i].id;
+
+			var li = $("<li class='list-group-item'></li>");
+			// 将要删除的id绑定到标签上
+			li.attr("id", "item-id-" + id);
+			li.text(loginAcct);
+
+			li.appendTo(ul);
+		}
+		modal.modal();
+	}
 </script>
 </body>
 </html>

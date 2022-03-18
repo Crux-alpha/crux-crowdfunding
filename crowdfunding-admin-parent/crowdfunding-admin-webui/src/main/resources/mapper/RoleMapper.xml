@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.crux.crowd.admin.component.mapper.RoleMapper">
-
+    <!-- 查询admin的角色分配情况 -->
+    <select id="selectRolesAssignedByAdminId" resultType="com.crux.crowd.admin.entity.Role">
+        select id, name from t_role where id
+        <if test="!assigned">not</if>
+        in (select role_id from inner_admin_role where admin_id = #{adminId});
+    </select>
 </mapper>

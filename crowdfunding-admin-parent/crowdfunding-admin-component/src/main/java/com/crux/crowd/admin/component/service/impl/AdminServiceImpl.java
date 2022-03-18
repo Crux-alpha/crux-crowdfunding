@@ -2,15 +2,19 @@ package com.crux.crowd.admin.component.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.crux.crowd.admin.component.service.*;
 import com.crux.crowd.admin.entity.Admin;
 import com.crux.crowd.admin.component.mapper.AdminMapper;
 import com.crux.crowd.common.util.CrowdConstant;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -48,6 +52,19 @@ public class AdminServiceImpl extends AbstractService<AdminMapper,Admin> impleme
 	@Override
 	public boolean update(int id, String username, String email){
 		return update(lambdaUpdateWrapper().set(Admin::getUserName, username).set(Admin::getEmail, email).eq(Admin::getId, id));
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	public boolean updateRolesAssigned(Integer id, List<Integer> roleIds){
+		AdminMapper mapper = getBaseMapper();
+		// 1、先删除该admin所有分配的角色
+		mapper.deleteAssignRolesById(id);
+		// 2、如果没有分配角色，操作完成
+		if(roleIds == null || roleIds.isEmpty()) return true;
+
+		// 3、执行插入操作
+		return SqlHelper.retBool(mapper.insertAssignRolesById(id, roleIds));
 	}
 
 	@Override

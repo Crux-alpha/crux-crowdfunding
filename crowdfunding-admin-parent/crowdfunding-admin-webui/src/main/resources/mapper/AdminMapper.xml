@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.crux.crowd.admin.component.mapper.AdminMapper">
+    <!-- 删除该admin所有分配的角色 -->
+    <delete id="deleteAssignRolesById">
+        delete from inner_admin_role where admin_id = #{id}
+    </delete>
 
+    <!-- 为admin分配角色 -->
+    <insert id="insertAssignRolesById">
+        insert into inner_admin_role(admin_id, role_id) values
+        <foreach collection="roleIds" item="role_id" separator=",">
+            (#{id}, #{role_id})
+        </foreach>
+    </insert>
 </mapper>

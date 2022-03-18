@@ -184,14 +184,11 @@
 			updateFormGroup(regex.test(name), "角色名只能由字母、数字、下划线或汉字组成！", $(this));
         });
 
-		// 要删除的role的id集合
-        var roleIds = [];
-
 		// 单条删除单击事件
 		tbody.on("click", "i[class*=glyphicon-remove]", function(){
             var id = $(this).parents("tr").children("td:first").text();
 			var role = getOne(id, "role").responseJSON.data.role;
-            roleIds = popRemoveModal([role]);
+            popRemoveModal([role]);
 		});
 
 		// 全选/全不选框单击事件
@@ -225,11 +222,17 @@
 				layer.msg(json.message);
 				return false;
             }
-			roleIds = popRemoveModal(json.data.roles);
+			popRemoveModal(json.data.roles);
         })
 
         // 确认删除单击事件
 		$("#modal-remove").find(".modal-footer").children("button[class*=btn-success]").click(function(){
+			var roleIds = [];
+			$("#modal-remove .modal-body").find("li[class=list-group-item]").each(function(index, element){
+				var itemId = element.id.substring(8);
+				roleIds.push(itemId);
+            });
+
 			$.ajax({
                 url: "role",
 				type: "POST",
@@ -246,7 +249,6 @@
 					layer.msg(json.responseJSON.message);
                 }
             })
-			roleIds = [];
         });
     });
 
@@ -259,19 +261,22 @@
     }
 
 	function popRemoveModal(roles){
-		var roleIds = [];
-
 		var modal = $("#modal-remove");
 		var ul = modal.find(".modal-body").children();
 		ul.empty();
 
 		for(var i=0; i<roles.length; i++){
 			var name = roles[i].name;
-            $("<li class='list-group-item'>"+ name +"</li>").appendTo(ul);
-			roleIds.push(roles[i].id);
+			var id = roles[i].id;
+
+			var li = $("<li class='list-group-item'></li>");
+			// 将要删除的id绑定到标签上
+			li.attr("id", "item-id-" + id);
+			li.text(name);
+
+            li.appendTo(ul);
         }
 		modal.modal();
-		return roleIds;
     }
 </script>
 </body>

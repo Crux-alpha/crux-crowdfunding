@@ -75,6 +75,7 @@
 </div>
 <div th:replace="~{/common/modal-common::modal-node}"></div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
+<div th:replace="~{/common/modal-common::modal-remove}"></div>
 <script type="text/javascript" th:src="@{/static/ztree/jquery.ztree.all-3.5.min.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/zTree-generator.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
@@ -105,8 +106,44 @@
 		// 新增子节点单击事件
 		$("#tree-data").on("click", ".btn-node-add", function(){
 			pid = this.id.substring(5);
+			toggleModal(true);
 			$("#modal-node").modal({backdrop: false});
 			return false;
+        });
+
+		// 修改节点单击事件
+        $("#tree-data").on("click", ".btn-node-edit", function(){
+			var id = this.id.substring(5);
+            toggleModal(false, id);
+			// 4、打开模态框
+			$("#modal-node").modal({backdrop: false});
+			return false;
+        });
+
+		// 删除节点单击事件
+        $("#tree-data").on("click", ".btn-node-remove", function(){
+			// 1、获取Node
+            var id = this.id.substring(5);
+			var node = getNode(id);
+
+			// 2、将node信息回显到模态框的ul列表中
+			var modal = $("#modal-remove");
+			var ul = modal.find(".modal-body").children();
+			ul.empty();
+
+			var li = $("<li class='list-group-item'></li>");
+			li.attr("id", "item-id-" + id);
+			li.html("<span class='"+ node.icon +"'>"+ node.name +"</span>");
+            li.appendTo(ul);
+
+			// 3、弹出模态框
+			modal.modal();
+			return false;
+        })
+
+		// 重置按钮
+		$("#btn-node-reset").click(function(){
+			$("#btn-node-reset0").click();
         });
 
 		// 检查表单项
@@ -121,14 +158,106 @@
 		$("#ipt-node-icon").children("input").blur(function(){
 			var checked = $("#ipt-node-icon").children("input:checked");
 			updateFormGroup(checked.length > 0, "请选择节点图标！", $(this));
-        })
+        });
 
-		// 保存子节点单击事件
+		// 保存节点单击事件
         $("#btn-node-save").click(function(){
 			var form = $("#modal-node").find("form");
             if(!checkFormData(form)) return;
-        })
+			var data = form.serialize();
+
+			var title = $("#modal-title-node").text();
+			switch(title){
+				case "新增节点":data += "&pid=" + pid;break;
+				case "修改节点": data += "&_method=PUT";break;
+				default: layer.msg("请求异常，请稍后再试~");return;
+            }
+
+			$.ajax({
+                url: "menu",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function(json){
+                    layer.msg(json.message);
+					if(json.result === "SUCCESS"){
+						pid = null;
+						$("#btn-node-reset0").click();
+						$("#modal-node").modal("hide");
+						generateTree();
+                    }
+				},
+                error: function(json){
+					layer.msg(json.responseJSON.message);
+                }
+            });
+        });
+
+		// 点击确认，执行删除
+		$("#modal-remove").find(".modal-footer").children("button[class*=btn-success]").click(function(){
+			// 获取所有要删除的节点的id
+			var item = $("#modal-remove").find(".modal-body").find("li[class=list-group-item]");
+			var id = item.attr("id").substring(8);
+
+			$.ajax({
+                url: "menu/" + id,
+                type: "POST",
+                data: {_method: "DELETE"},
+                dataType: "json",
+                success: function(json){
+					layer.msg(json.message);
+					$("#modal-remove").modal("hide");
+					generateTree();
+                },
+                error: function(result){
+					layer.msg(result.responseJSON.message);
+                }
+            });
+        });
 	});
+
+	/**
+     * 切换模态框形态
+	 * @param isSave 是否新增
+	 * @param id 如果不是，传入当前节点id
+	 */
+	function toggleModal(isSave, id){
+		$("#modal-title-node").text(isSave ? "新增节点" : "修改节点");
+		$("#ipt-node-id").prop("disabled", isSave);
+
+		if(isSave){
+			$("#btn-node-reset0").click();
+		}else{
+			/* ---------使用zTree对象获取当前节点json数据--------- */
+			// 1、获取zTreeObj对象。需要给定树形结构的ul标签id
+			// var zTreeObj = $.fn.zTree.getZTreeObj("tree-data");
+
+			// 2、根据id属性查询节点对象
+			// var key = "id";
+			// var node = zTreeObj.getNodeByParam(key, id);
+            var node = getNode(id);
+
+			// 3、回显表单
+			$("#ipt-node-name").val(node.name);
+			$("#ipt-node-url").val(node.url);
+			// 单选或多选的回显可以将数据放在数组中
+			$("#ipt-node-icon").children("input:radio").val([node.icon]);
+			$("#ipt-node-id").val(id);
+        }
+    }
+
+	/**
+     * 使用zTree对象获取当前节点json数据
+	 * @param id nodeId
+	 * @returns {*|null} node节点
+	 */
+	function getNode(id){
+		// 1、获取zTreeObj对象。需要给定树形结构的ul标签id
+		var zTreeObj = $.fn.zTree.getZTreeObj("tree-data");
+		// 2、根据id属性查询节点对象
+		var key = "id";
+		return zTreeObj.getNodeByParam(key, id);
+    }
 </script>
 </body>
 </html>
