@@ -27,8 +27,7 @@ public class RoleServiceImpl extends AbstractService<RoleMapper,Role> implements
 
 	@Override
 	public List<Role> getRolesAssigned(Integer adminId, boolean assigned){
-		RoleMapper mapper = getBaseMapper();
-		return mapper.selectRolesAssignedByAdminId(adminId, assigned);
+		return baseMapper.selectRolesAssignedByAdminId(adminId, assigned);
 	}
 
 	@Override

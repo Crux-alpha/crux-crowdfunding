@@ -10,6 +10,7 @@
 
     <link th:replace="~{/common/admin-main-common::head}"/>
     <link rel="stylesheet" th:href="@{/static/css/pagination.css}">
+    <link rel="stylesheet" th:href="@{/static/ztree/zTreeStyle.css}">
     <style>
         .tree li {
             list-style-type: none;
@@ -100,11 +101,14 @@
 <div>
     <div th:replace="~{/common/modal-common::modal-role}"></div>
     <div th:replace="~{/common/modal-common::modal-remove}"></div>
+    <div th:replace="~{/common/modal-common::modal-assign}"></div>
 </div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
 <script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/table-data-generator.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
+<script type="text/javascript" th:src="@{/static/ztree/jquery.ztree.all-3.5.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/zTree-generator.js}"></script>
 <script type="text/javascript">
     $(function(){
 		window.current = 1;
@@ -112,6 +116,8 @@
 		window.keyword = "";
 		window.pageURL = "role";
 		window.total = 0;
+		$("#modal-title-assign").text("分配权限");
+		$("#form-assign-auth").appendTo($("#modal-assign .modal-body"));
 		generateData();
 		
 		var tbody = $("#tbody-data");
@@ -249,6 +255,82 @@
 					layer.msg(json.responseJSON.message);
                 }
             })
+        });
+
+		// 树形结构的选项
+		var treeSettings = {
+            data: {
+				simpleData: {
+					// 开启自动组装
+					enable: true,
+                    // 父id属性名默认是pid，修改为categoryId
+                    pIdKey: "categoryId"
+                },
+                key: {
+					// 展示名默认是name，修改为title
+					name: "title"
+                }
+            },
+			check: {
+				// 在节点前开启选择框
+				enable: true
+			}
+        }
+		var treeURL = "assign/role";
+		var roleId = null;
+        // 权限分配树形结构生成，打开模态框
+		tbody.on("click", "i[class*=glyphicon-check]", function(){
+			// 获取当前操作角色的id
+			roleId = $(this).closest("tr").children("td:first").text();
+
+			// 生成树形结构
+			generateTree(treeURL, treeSettings);
+
+			var zTreeObj = $.fn.zTree.getZTreeObj("tree-data");
+			// 展开全部节点
+			zTreeObj.expandAll(true);
+
+			// 选中已分配的权限
+            // 1、发送请求，获取该角色分配的所有权限id
+            var authIds = getAuthIds(roleId, treeURL);
+			for(var i=0; i<authIds.length; i++){
+				var authId = authIds[i];
+                // 2、获取选中的节点node
+				var node = getNodeById(authId);
+				// 3、通过该函数选中节点。其中node表示操作的节点；true表示是否勾选；false表示不联动父节点
+				zTreeObj.checkNode(node, true, false);
+            }
+
+			// 打开模态框
+			$("#modal-assign").modal({backdrop: false});
+        });
+
+		// 执行保存分配
+        $("#modal-assign .modal-footer").children(".btn-success").click(function(){
+            // 1、使用zTreeObj的getCheckedNodes()获取所有选中的节点
+			var zTreeObj = $.fn.zTree.getZTreeObj("tree-data");
+			var nodes = zTreeObj.getCheckedNodes();
+
+			// 2、保存所有选中的权限id
+            var authIds = [];
+			for(var i=0; i<nodes.length; i++){
+                var authId = nodes[i].id;
+				authIds.push(authId);
+			}
+
+			// 3、发送请求，执行保存
+			$.ajax({
+                url: treeURL + '/' + roleId + "/auth_ids",
+                type: "POST",
+                data: {authIds: authIds},
+                dataType: "json",
+                success: function(json){
+					layer.msg(json.message);
+					if(json.result === "FAILURE") return;
+					$("#modal-assign").modal("hide");
+                },
+                error: defaultErrorCallback
+            });
         });
     });
 

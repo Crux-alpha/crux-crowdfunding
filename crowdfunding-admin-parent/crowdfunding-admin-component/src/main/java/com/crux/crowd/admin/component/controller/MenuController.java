@@ -5,7 +5,9 @@ import com.crux.crowd.admin.entity.Menu;
 import com.crux.crowd.common.util.ResponseMessage;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
+import static java.util.Collections.singletonMap;
+import static java.util.Collections.singletonList;
+import java.util.List;
 
 /**
  * 菜单维护处理器
@@ -22,12 +24,12 @@ public class MenuController{
 
 	/**
 	 * 获取菜单树型结构
-	 * @return 根节点
+	 * @return 根节点。已替换为包含根节点的集合
 	 */
 	@GetMapping("/whole_tree")
-	public ResponseMessage<String,Menu> getWholeTree(){
+	public ResponseMessage<String,List<Menu>> getWholeTree(){
 		Menu root = menuService.getRootMenu();
-		return ResponseMessage.success(Collections.singletonMap("root", root));
+		return ResponseMessage.success(singletonMap("nodes", singletonList(root)));
 	}
 
 	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})

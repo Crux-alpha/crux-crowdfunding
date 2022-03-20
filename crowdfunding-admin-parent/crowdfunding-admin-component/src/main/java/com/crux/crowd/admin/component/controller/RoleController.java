@@ -6,7 +6,8 @@ import com.crux.crowd.admin.entity.Role;
 import com.crux.crowd.common.util.ResponseMessage;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
+import static java.util.Collections.singletonMap;
+import static java.util.Collections.emptyMap;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class RoleController{
 											@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword){
 		Page<Role> rolePage = roleService.pageFuzzy(current, size, keyword);
 		String message = "查询到" + rolePage.getTotal() + "条数据";
-		return ResponseMessage.success(message, Collections.singletonMap("page", rolePage));
+		return ResponseMessage.success(message, singletonMap("page", rolePage));
 	}
 
 	/**
@@ -46,7 +47,7 @@ public class RoleController{
 	@GetMapping("/{id}")
 	public ResponseMessage<String,Role> getRole(@PathVariable("id") Integer id){
 		Role role = roleService.getById(id);
-		return ResponseMessage.success(Collections.singletonMap("role", role));
+		return ResponseMessage.success(singletonMap("role", role));
 	}
 
 	/**
@@ -57,8 +58,8 @@ public class RoleController{
 	@GetMapping(params = "ids[]")
 	public ResponseMessage<String,List<Role>> getRoleList(@RequestParam("ids[]") List<Integer> ids){
 		List<Role> roles = roleService.listByIds(ids);
-		return roles.isEmpty() ? ResponseMessage.failure("没有查询到数据", Collections.emptyMap())
-							   : ResponseMessage.success(Collections.singletonMap("roles", roles));
+		return roles.isEmpty() ? ResponseMessage.failure("没有查询到数据", emptyMap())
+							   : ResponseMessage.success(singletonMap("roles", roles));
 	}
 
 	/**

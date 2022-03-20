@@ -1,22 +1,22 @@
 /**
  * 生成树形结构
  */
-function generateTree(){
+function generateTree(url, settings){
 	// 获取tree设置项
-	var settings = window.treeSettings;
 
 	// 发送请求，获取根节点
 	$.ajax({
-		url: "menu/whole_tree",
+		url: url,
 		dataType: "json",
 		success: function(json){
-			var root = json.data.root;
-			var nodes = [root];
+			var nodes = json.data.nodes;
+			// 生成树形结构
 			$.fn.zTree.init($("#tree-data"), settings, nodes);
 		},
 		error: function(response){
 			layer.msg(response.responseJSON.error);
-		}
+		},
+		async: false
 	})
 }
 
@@ -79,4 +79,35 @@ function addHoverDomCallback(treeId, treeNode){
 function removeHoverDomCallback(treeId, treeNode){
 	var btnId = treeNode.tId + "_btn_group";
 	$("#" + btnId).remove();
+}
+
+/**
+ * 使用zTree对象获取当前节点json数据
+ * @param id nodeId
+ * @returns {*|null} node节点
+ */
+function getNodeById(id){
+	// 1、获取zTreeObj对象。需要给定树形结构的ul标签id
+	var zTreeObj = $.fn.zTree.getZTreeObj("tree-data");
+	// 2、根据id属性查询节点对象
+	var key = "id";
+	return zTreeObj.getNodeByParam(key, id);
+}
+
+/**
+ * 根据角色id获取具有的权限id
+ * @param roleId 权限id集合
+ * @param url 请求地址
+ */
+function getAuthIds(roleId, url){
+	var result = $.ajax({
+		url: url + '/' + roleId + "/auth_ids",
+		dataType: "json",
+		async: false
+	});
+	if(result.status !== 200 || result.responseJSON.result === "FAILURE"){
+		layer.msg(result.responseJSON.message);
+		return null;
+	}
+	return result.responseJSON.data.authIds;
 }

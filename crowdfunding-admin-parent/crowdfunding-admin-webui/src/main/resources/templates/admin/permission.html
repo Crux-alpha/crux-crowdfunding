@@ -82,7 +82,7 @@
 <script type="text/javascript">
 	$(function(){
 		// 菜单设置项
-        window.treeSettings = {
+        var treeSettings = {
 			// 视图设置
 			view: {
 				// 自定义节点样式
@@ -99,7 +99,7 @@
 				}
 			}
 		}
-		generateTree();
+		generateTree("menu/whole_tree", treeSettings);
 
 		// 保存要添加子节点的节点的id作为子节点的pid
 		var pid = null;
@@ -124,7 +124,7 @@
         $("#tree-data").on("click", ".btn-node-remove", function(){
 			// 1、获取Node
             var id = this.id.substring(5);
-			var node = getNode(id);
+			var node = getNodeById(id);
 
 			// 2、将node信息回显到模态框的ul列表中
 			var modal = $("#modal-remove");
@@ -184,7 +184,7 @@
 						pid = null;
 						$("#btn-node-reset0").click();
 						$("#modal-node").modal("hide");
-						generateTree();
+						generateTree("menu/whole_tree", treeSettings);
                     }
 				},
                 error: function(json){
@@ -207,7 +207,7 @@
                 success: function(json){
 					layer.msg(json.message);
 					$("#modal-remove").modal("hide");
-					generateTree();
+					generateTree("menu/whole_tree", treeSettings);
                 },
                 error: function(result){
 					layer.msg(result.responseJSON.message);
@@ -235,7 +235,7 @@
 			// 2、根据id属性查询节点对象
 			// var key = "id";
 			// var node = zTreeObj.getNodeByParam(key, id);
-            var node = getNode(id);
+            var node = getNodeById(id);
 
 			// 3、回显表单
 			$("#ipt-node-name").val(node.name);
@@ -245,19 +245,7 @@
 			$("#ipt-node-id").val(id);
         }
     }
-
-	/**
-     * 使用zTree对象获取当前节点json数据
-	 * @param id nodeId
-	 * @returns {*|null} node节点
-	 */
-	function getNode(id){
-		// 1、获取zTreeObj对象。需要给定树形结构的ul标签id
-		var zTreeObj = $.fn.zTree.getZTreeObj("tree-data");
-		// 2、根据id属性查询节点对象
-		var key = "id";
-		return zTreeObj.getNodeByParam(key, id);
-    }
+    
 </script>
 </body>
 </html>

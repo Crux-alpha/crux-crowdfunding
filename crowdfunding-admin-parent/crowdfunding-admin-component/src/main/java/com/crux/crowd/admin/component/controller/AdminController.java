@@ -8,6 +8,7 @@ import com.crux.crowd.common.util.ResponseMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static java.util.Collections.singletonMap;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
@@ -74,7 +75,7 @@ public class AdminController{
 		Page<Admin> adminPage = adminService.pageFuzzy(current, size, keyword);
 		long total = adminPage.getTotal();
 		String message = total > 0 ? "查询到" + total + "条数据" : "没有查询到任何数据";
-		return ResponseMessage.success(message, Collections.singletonMap("page", adminPage));
+		return ResponseMessage.success(message, singletonMap("page", adminPage));
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class AdminController{
 	@ResponseBody
 	public ResponseMessage<String,Admin> getAdmin(@PathVariable("id") Integer id){
 		Admin admin = adminService.getById(id);
-		return ResponseMessage.success(Collections.singletonMap("admin", admin));
+		return ResponseMessage.success(singletonMap("admin", admin));
 	}
 
 	@GetMapping(path = "/main/user", params = "ids[]")
@@ -94,7 +95,7 @@ public class AdminController{
 	public ResponseMessage<String,List<Admin>> getAdminList(@RequestParam("ids[]") List<Integer> ids){
 		List<Admin> admins = adminService.listByIds(ids);
 		return admins.isEmpty() ? ResponseMessage.failure("没有查询到数据", Collections.emptyMap())
-								: ResponseMessage.success(Collections.singletonMap("admins", admins));
+								: ResponseMessage.success(singletonMap("admins", admins));
 	}
 
 	/**

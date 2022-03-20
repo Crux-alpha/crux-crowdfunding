@@ -6,7 +6,7 @@
         <groupId>com.crux.crowd</groupId>
         <artifactId>crowdfunding-admin-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>crowdfunding-admin-component</artifactId>
     <packaging>jar</packaging>

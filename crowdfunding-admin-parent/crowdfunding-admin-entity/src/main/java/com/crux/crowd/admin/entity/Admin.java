@@ -24,7 +24,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 //@ApiModel(value = "Admin对象", description = "")
-public class Admin{
+public class Admin implements java.io.Serializable{
 
     @TableId(type = IdType.AUTO)
     private Integer id;

@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -21,7 +20,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("t_role")
-public class Role implements Serializable {
+public class Role implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 

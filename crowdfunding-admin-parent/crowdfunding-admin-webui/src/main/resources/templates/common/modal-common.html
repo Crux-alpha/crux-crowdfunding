@@ -259,36 +259,17 @@
     </div>
 </div>
 
-<!-- admin分配role模态框 -->
+<!-- 权限分配模态框 -->
 <div class="modal fade" id="modal-assign" tabindex="-1" role="dialog" aria-labelledby="modal-title-assign"
-     th:fragment="modal-assign-role">
+     th:fragment="modal-assign">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="modal-title-assign">分配角色</h4>
+                <h4 class="modal-title" id="modal-title-assign"></h4>
             </div>
             <div class="modal-body">
-                <form role="form" class="form-inline">
-                    <div class="form-group">
-                        <label for="select-unassignedRoles">未分配角色列表</label><br>
-                        <select id="select-unassignedRoles" class="form-control" multiple size="10" style="width:100px;overflow-y:auto;">
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-left:40px;">
-                        <div id="btn-group-role-assigned" class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                            <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right"></button>
-                            <button type="button" class="btn btn-default glyphicon glyphicon-chevron-left"></button>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-left:40px;">
-                        <label for="select-assignedRoles">已分配角色列表</label><br>
-                        <select id="select-assignedRoles" class="form-control" name="roleId" multiple size="10" style="width:100px;overflow-y:auto;">
-                        </select>
-                    </div>
-                    <input id="ipt-assign-adminId" type="hidden" name="adminId"/>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><i
@@ -297,6 +278,32 @@
                 <button type="button" class="btn btn-success"><i class="glyphicon glyphicon-ok"></i> 确定</button>
             </div>
         </div>
+    </div>
+
+    <div hidden>
+        <form id="form-assign-role" role="form" class="form-inline">
+            <div class="form-group">
+                <label for="select-unassignedRoles">未分配角色列表</label><br>
+                <select id="select-unassignedRoles" class="form-control" multiple size="10" style="width:100px;overflow-y:auto;">
+                </select>
+            </div>
+            <div class="form-group" style="margin-left:40px;">
+                <div id="btn-group-role-assigned" class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                    <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right"></button>
+                    <button type="button" class="btn btn-default glyphicon glyphicon-chevron-left"></button>
+                </div>
+            </div>
+            <div class="form-group" style="margin-left:40px;">
+                <label for="select-assignedRoles">已分配角色列表</label><br>
+                <select id="select-assignedRoles" class="form-control" name="roleId" multiple size="10" style="width:100px;overflow-y:auto;">
+                </select>
+            </div>
+            <input id="ipt-assign-adminId" type="hidden" name="adminId"/>
+        </form>
+
+        <form id="form-assign-auth">
+            <ul id="tree-data" class="ztree"></ul>
+        </form>
     </div>
 </div>
 </body>

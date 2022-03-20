@@ -56,15 +56,17 @@ public class AdminServiceImpl extends AbstractService<AdminMapper,Admin> impleme
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-	public boolean updateRolesAssigned(Integer id, List<Integer> roleIds){
-		AdminMapper mapper = getBaseMapper();
-		// 1、先删除该admin所有分配的角色
-		mapper.deleteAssignRolesById(id);
-		// 2、如果没有分配角色，操作完成
-		if(roleIds == null || roleIds.isEmpty()) return true;
+	public boolean updateRolesAssigned(final Integer id, List<Integer> roleIds){
+		synchronized(id){
+			// 1、先删除该admin所有分配的角色
+			baseMapper.deleteAssignRolesById(id);
 
-		// 3、执行插入操作
-		return SqlHelper.retBool(mapper.insertAssignRolesById(id, roleIds));
+			// 2、如果没有分配角色，操作完成
+			if(roleIds == null || roleIds.isEmpty()) return true;
+
+			// 3、执行插入操作
+			return SqlHelper.retBool(baseMapper.insertAssignRolesById(id, roleIds));
+		}
 	}
 
 	@Override

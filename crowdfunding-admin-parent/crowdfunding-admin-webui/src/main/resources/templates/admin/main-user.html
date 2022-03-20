@@ -104,7 +104,7 @@
     <!-- 修改admin模态框 -->
     <div th:replace="~{/common/modal-common::modal-admin-update}"></div>
     <div th:replace="~{/common/modal-common::modal-remove}"></div>
-    <div th:replace="~{/common/modal-common::modal-assign-role}"></div>
+    <div th:replace="~{/common/modal-common::modal-assign}"></div>
 </div>
 <div th:replace="~{/common/admin-main-common::script}"></div>
 <script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
@@ -121,6 +121,8 @@
 		window.pageURL = "user";
 		window.total = 0;
 		generateData();
+		$("#form-assign-role").appendTo($("#modal-assign .modal-body"));
+		$("#modal-title-assign").text("分配角色");
 		var tbody = $("#tbody-data");
 
 		// 查询框单击事件
