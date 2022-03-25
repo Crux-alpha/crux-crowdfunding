@@ -10,8 +10,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  * 对后台资源进行登录检查
+ * 已弃用，由SpringSecurity管理
  * @since 2022/03/11
  */
+@Deprecated
 public class LoginInterceptor implements HandlerInterceptor{
 
 	/**

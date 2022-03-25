@@ -24,6 +24,7 @@ public interface AdminService extends IService<Admin>{
 	 * @return 登录成功的Admin对象
 	 * @throws LoginFailedException 如果验证失败，则阻止登录，并提示失败信息 --> {@link LoginFailedException#getMessage()}。
 	 */
+	@Deprecated
 	Admin login(String account, String password) throws LoginFailedException;
 
 	/**

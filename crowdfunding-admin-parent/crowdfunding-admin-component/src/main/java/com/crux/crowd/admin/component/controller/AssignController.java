@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import static java.util.Collections.singletonMap;
 
 /**
@@ -69,8 +71,8 @@ public class AssignController{
 	}
 
 	@GetMapping("/role/{roleId}/auth_ids")
-	public ResponseMessage<String,List<Integer>> getAuthIdsAssigned(@PathVariable("roleId") Integer roleId){
-		List<Integer> authIds = authService.getAuthIds(roleId);
+	public ResponseMessage<String,Set<Integer>> getAuthIdsAssigned(@PathVariable("roleId") Integer roleId){
+		Set<Integer> authIds = authService.getAuthIds(roleId);
 		return ResponseMessage.success(singletonMap("authIds", authIds));
 	}
 

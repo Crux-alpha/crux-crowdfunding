@@ -10,15 +10,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 @Service("authService")
 public class AuthServiceImpl extends AbstractService<AuthMapper,Auth> implements AuthService{
 
 	@Override
-	public List<Integer> getAuthIds(Integer roleId){
-		return baseMapper.selectAuthIdsByRoleId(roleId);
+	public Set<Integer> getAuthIds(Integer roleId){
+		return baseMapper.selectAuthIdsByRoleId(Collections.singletonList(roleId));
+	}
+
+	@Override
+	public Set<Integer> listAuthIds(Collection<Integer> roleIds){
+		if(Optional.of(roleIds).filter(Collection::isEmpty).isPresent()){
+			throw new IllegalArgumentException("角色id不能为空！");
+		}
+		return baseMapper.selectAuthIdsByRoleId(roleIds);
 	}
 
 	@Override

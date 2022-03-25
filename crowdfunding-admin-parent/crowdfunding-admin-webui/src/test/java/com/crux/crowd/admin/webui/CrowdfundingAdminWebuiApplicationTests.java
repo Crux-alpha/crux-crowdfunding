@@ -102,4 +102,16 @@ class CrowdfundingAdminWebuiApplicationTests{
 		boolean result = adminService.updateRolesAssigned(1, Arrays.asList(196,197,198,199,200));
 		log.info("保存{}", result);
 	}
+
+	@Test
+	void passwordEncoded(){
+		List<Admin> adminList = adminService.list();
+		adminService.removeBatchByIds(adminList);
+		Admin crux = adminList.remove(0);
+		crux.setUserPswd("SAIERHAO123");
+		adminList.forEach(admin -> admin.setUserPswd("123456"));
+		adminList.add(crux);
+		adminService.saveBatch(adminList);
+		adminService.list().forEach(admin -> log.info(admin.toString()));
+	}
 }

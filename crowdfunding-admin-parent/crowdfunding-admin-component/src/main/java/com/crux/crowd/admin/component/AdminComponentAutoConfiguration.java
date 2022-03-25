@@ -8,13 +8,14 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -40,7 +41,7 @@ public class AdminComponentAutoConfiguration{
 	 * @param componentProperties 配置信息
 	 */
 	@Bean
-	@ConditionalOnMissingBean(MybatisPlusInterceptor.class)
+	@ConditionalOnMissingBean
 	public MybatisPlusInterceptor mybatisPlusInterceptor(AdminComponentProperties componentProperties){
 		MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 		// 开启分页插件
@@ -56,8 +57,14 @@ public class AdminComponentAutoConfiguration{
 	}
 
 	@Bean
+	@ConditionalOnBean(MybatisPlusInterceptor.class)
 	public ConfigurationCustomizer configurationCustomizer(){
 		return configuration -> configuration.setUseGeneratedShortKey(false);
+	}
+
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder(){
+		return new BCryptPasswordEncoder();
 	}
 
 	/**

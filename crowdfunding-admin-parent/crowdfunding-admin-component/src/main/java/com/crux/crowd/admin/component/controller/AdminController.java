@@ -42,7 +42,8 @@ public class AdminController{
 	 * @param session 将admin保存到session中
 	 * @return 重定向到后台管理页面
 	 */
-	@PostMapping(path = "/login", params = {"account", "password"})
+	@Deprecated
+	//@PostMapping(path = "/login", params = {"account", "password"})
 	public String login(String account, String password, HttpSession session){
 		final Admin admin = adminService.login(account, password);
 		session.setAttribute(CrowdConstant.ADMIN_LOGIN_ACCOUNT, admin);
@@ -54,7 +55,8 @@ public class AdminController{
 	 * @param session 删除session中的admin
 	 * @return 重定向至主页
 	 */
-	@RequestMapping("/logout")
+	@Deprecated
+	//@RequestMapping("/logout")
 	public String logout(HttpSession session){
 		session.invalidate();
 		return "redirect:/index";

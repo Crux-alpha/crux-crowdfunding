@@ -4,7 +4,10 @@
     
     <!-- 根据角色id在inner_role_auth表中查询具有的权限id -->
     <select id="selectAuthIdsByRoleId" resultType="integer">
-        select auth_id from inner_role_auth where role_id = #{roleId};
+        select auth_id from inner_role_auth where role_id in
+        <foreach collection="roleIds" item="role_id" separator="," open="(" close=")">
+            #{role_id}
+        </foreach>
     </select>
 
     <!-- 删除角色所有权限 -->

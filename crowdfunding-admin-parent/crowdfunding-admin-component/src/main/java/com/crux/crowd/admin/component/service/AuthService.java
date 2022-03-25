@@ -3,7 +3,9 @@ package com.crux.crowd.admin.component.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crux.crowd.admin.entity.Auth;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 权限业务层
@@ -17,7 +19,9 @@ public interface AuthService extends IService<Auth>{
 	 * @param roleId 角色id
 	 * @return 该角色具有的权限
 	 */
-	List<Integer> getAuthIds(Integer roleId);
+	Set<Integer> getAuthIds(Integer roleId);
+
+	Set<Integer> listAuthIds(Collection<Integer> roleIds);
 
 	boolean updateAuthsAssigned(Integer roleId, List<Integer> authIds);
 }
