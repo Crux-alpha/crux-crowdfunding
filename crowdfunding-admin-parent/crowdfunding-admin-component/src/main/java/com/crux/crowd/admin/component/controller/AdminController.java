@@ -5,6 +5,8 @@ import com.crux.crowd.admin.component.service.AdminService;
 import com.crux.crowd.admin.entity.Admin;
 import com.crux.crowd.common.util.CrowdConstant;
 import com.crux.crowd.common.util.ResponseMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,22 +16,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 管理员后台管理系统的处理器<br/><br/>
- * 目前处理了：
- * <ul>
- *     <li>管理员维护：
- *     <ul>
- *         <li>查询。包括分页、模糊</li>
- *         <li>单个删除</li>
- *     </ul>
- *     </li>
- * </ul>
+ * 管理员后台管理系统的处理器
  */
 @Controller
 @RequestMapping("/admin")
 public class AdminController{
 
 	private final AdminService adminService;
+	static final String hasAnyRole = "hasAnyRole('经理', '超级管理员')";
 
 	public AdminController(AdminService adminService){
 		this.adminService = adminService;
@@ -71,6 +65,7 @@ public class AdminController{
 	 */
 	@GetMapping(path = "/main/user", params = "current")
 	@ResponseBody
+	@PreAuthorize(hasAnyRole + " or hasAuthority('user:get')")
 	public ResponseMessage<String,Page<Admin>> getAdminPage(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword,
 							   @RequestParam(name = "current") int current,
 							   @RequestParam(name = "size", required = false, defaultValue = "10") int size){
@@ -87,6 +82,7 @@ public class AdminController{
 	 */
 	@GetMapping("/main/user/{id}")
 	@ResponseBody
+	@PreAuthorize(hasAnyRole + " or hasAuthority('user:get')")
 	public ResponseMessage<String,Admin> getAdmin(@PathVariable("id") Integer id){
 		Admin admin = adminService.getById(id);
 		return ResponseMessage.success(singletonMap("admin", admin));
@@ -94,6 +90,7 @@ public class AdminController{
 
 	@GetMapping(path = "/main/user", params = "ids[]")
 	@ResponseBody
+	@PreAuthorize(hasAnyRole + " or hasAuthority('user:get')")
 	public ResponseMessage<String,List<Admin>> getAdminList(@RequestParam("ids[]") List<Integer> ids){
 		List<Admin> admins = adminService.listByIds(ids);
 		return admins.isEmpty() ? ResponseMessage.failure("没有查询到数据", Collections.emptyMap())
@@ -107,6 +104,7 @@ public class AdminController{
 	 */
 	@PostMapping("/main/user")
 	@ResponseBody
+	@PreAuthorize(hasAnyRole + " or hasAuthority('user:save')")
 	public ResponseMessage<?,?> saveAdmin(Admin admin){
 		adminService.save(admin);
 		return ResponseMessage.success("保存成功！");
@@ -121,6 +119,7 @@ public class AdminController{
 	 */
 	@PutMapping("/main/user/{id}")
 	@ResponseBody
+	@PreAuthorize(hasAnyRole + " or hasAuthority('user:save')")
 	public ResponseMessage<?,?> updateAdmin(@PathVariable("id") Integer id, String username, String email){
 		adminService.update(id, username, email);
 		return ResponseMessage.success("保存成功！");
@@ -133,6 +132,7 @@ public class AdminController{
 	 */
 	@DeleteMapping("/main/user/{id}")
 	@ResponseBody
+	@PreAuthorize(hasAnyRole + " or hasAuthority('user:delete')")
 	public ResponseMessage<?,?> deleteAdmin(@PathVariable("id") Integer id){
 		boolean result = adminService.removeById(id);
 		if(result) return ResponseMessage.success("删除成功！");
@@ -141,10 +141,20 @@ public class AdminController{
 
 	@DeleteMapping("/main/user")
 	@ResponseBody
+	@PreAuthorize(hasAnyRole + " or hasAuthority('user:delete')")
 	public ResponseMessage<?,?> deleteAdmin(@RequestParam("ids[]") List<Integer> ids){
 		adminService.removeBatchByIds(ids);
 		return ResponseMessage.success("删除成功！");
 	}
 
-
+	/**
+	 * 获取当前使用的用户(主体)
+	 * @return UserDetails
+	 */
+	@GetMapping("/main/user_details")
+	@ResponseBody
+	public Object getUserDetails(){
+		// 通过SecurityContextHolder.getContext().getAuthentication().getPrincipal()拿到UserDetails对象
+		return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 }

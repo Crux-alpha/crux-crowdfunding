@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+                   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>筹钱吧后台管理系统</title>
@@ -43,28 +44,28 @@
             <h1 class="page-header">控制面板</h1>
 
             <div class="row placeholders">
-                <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="col-xs-6 col-sm-3 placeholder" sec:authorize="hasAnyRole('经理', '超级管理员')">
                     <img data-src="holder.js/200x200/auto/sky" class="img-responsive"
                          alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
+                    <h4>经理</h4>
                     <span class="text-muted">Something else</span>
                 </div>
-                <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="col-xs-6 col-sm-3 placeholder" sec:authorize="hasAuthority('role:get') or hasRole('超级管理员')">
                     <img data-src="holder.js/200x200/auto/vine" class="img-responsive"
                          alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
+                    <h4>角色:获取</h4>
                     <span class="text-muted">Something else</span>
                 </div>
-                <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="col-xs-6 col-sm-3 placeholder" sec:authorize="hasAuthority('user:get') or hasRole('超级管理员')">
                     <img data-src="holder.js/200x200/auto/sky" class="img-responsive"
                          alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
+                    <h4>用户:获取</h4>
                     <span class="text-muted">Something else</span>
                 </div>
-                <div class="col-xs-6 col-sm-3 placeholder">
+                <div class="col-xs-6 col-sm-3 placeholder" sec:authorize="hasAnyRole('部长', '超级管理员')">
                     <img data-src="holder.js/200x200/auto/vine" class="img-responsive"
                          alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
+                    <h4>部长</h4>
                     <span class="text-muted">Something else</span>
                 </div>
             </div>

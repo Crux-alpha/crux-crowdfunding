@@ -18,6 +18,8 @@ public class AdminDetails extends User{
 
 	public AdminDetails(Admin original, Collection<? extends GrantedAuthority> authorities){
 		super(original.getUserName(), original.getUserPswd(), authorities);
+		// 密码擦除
+		original.setUserPswd(null);
 		this.original = original;
 	}
 

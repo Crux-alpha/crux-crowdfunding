@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<html lang="en" xmlns:th="http://www.thymeleaf.org/"
+                xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:fragment="head">
     <link th:replace="~{/common/common::head}"/>
     <link rel="stylesheet" th:href="@{/static/css/main.css}">
@@ -17,7 +18,7 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-success dropdown-toggle"
                                 data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i> [[${session.SPRING_SECURITY_LAST_USERNAME}]] <span
+                            <i class="glyphicon glyphicon-user"></i> <span sec:authentication="name"></span> <span
                                 class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
@@ -25,9 +26,10 @@
                             <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
                             <li class="divider"></li>
                             <li>
-                                <form th:action="@{/admin/logout}" method="post">
-                                    <button type="submit" class="btn btn-danger"><i class="glyphicon glyphicon-off"></i> 退出系统</button>
+                                <form method="post" th:action="@{/admin/logout}" hidden>
+                                    <button id="btn-logout" type="submit"></button>
                                 </form>
+                                <a href="#" onclick="$('#btn-logout').click()"><i class="glyphicon glyphicon-off"></i> 退出系统</a>
                             </li>
                         </ul>
                     </div>
@@ -125,6 +127,13 @@
                     }
                 }
             });
+
+			/*$.ajax({
+                url: "/admin/main/user_details",
+                type: "GET",
+                dataType: "json",
+                success: function(userDetails){$("#span-username").text(userDetails.username);}
+            })*/
         });
     </script>
 </div>

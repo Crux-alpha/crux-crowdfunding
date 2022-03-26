@@ -25,11 +25,11 @@ function updateFormGroup(state, message, input){
  */
 function checkFormData(form){
 	var formGroup = form.children("div[class*=form-group]");
-	formGroup.find("input").blur();
-	var hasSuccess = form.children("div[class*=has-success]");
+	formGroup.find("input").not(":disabled").blur();
+	var hasError = form.children("div[class*=has-error]");
 
 	// 如果表单项与成功项数量不一致，阻止提交
-	return formGroup.length === hasSuccess.length;
+	return hasError.length < 1;
 }
 
 /**

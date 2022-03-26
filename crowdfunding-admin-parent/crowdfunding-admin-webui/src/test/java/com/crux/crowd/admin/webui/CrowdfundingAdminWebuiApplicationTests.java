@@ -105,13 +105,14 @@ class CrowdfundingAdminWebuiApplicationTests{
 
 	@Test
 	void passwordEncoded(){
-		List<Admin> adminList = adminService.list();
-		adminService.removeBatchByIds(adminList);
-		Admin crux = adminList.remove(0);
-		crux.setUserPswd("SAIERHAO123");
-		adminList.forEach(admin -> admin.setUserPswd("123456"));
-		adminList.add(crux);
-		adminService.saveBatch(adminList);
-		adminService.list().forEach(admin -> log.info(admin.toString()));
+		adminService.save(new Admin("adminOperator", "admin操作员", "123456", "ao@ao.com"));
+		adminService.save(new Admin("roleOperator", "role操作员", "123456", "ro@ro.com"));
+		List<Admin> adminsTest = Arrays.asList(new Admin("admin01", "admin01", "123456", "test@test.com"),
+				new Admin("admin02", "admin02", "123456", "test@test.com"),
+				new Admin("admin03", "admin03", "123456", "test@test.com"));
+		adminService.saveBatch(adminsTest);
+
+		List<Role> roles = Arrays.asList(new Role("经理"), new Role("部长"), new Role("经理操作者"), new Role("部长操作者"));
+		roleService.saveBatch(roles);
 	}
 }

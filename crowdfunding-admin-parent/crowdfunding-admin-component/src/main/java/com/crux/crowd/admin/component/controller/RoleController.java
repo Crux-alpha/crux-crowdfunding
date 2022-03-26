@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crux.crowd.admin.component.service.RoleService;
 import com.crux.crowd.admin.entity.Role;
 import com.crux.crowd.common.util.ResponseMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static java.util.Collections.singletonMap;
@@ -18,6 +19,7 @@ import java.util.List;
 public class RoleController{
 
 	private final RoleService roleService;
+	static final String hasAnyRole = "hasAnyRole('部长', '超级管理员')";
 
 	public RoleController(RoleService roleService){
 		this.roleService = roleService;
@@ -31,6 +33,7 @@ public class RoleController{
 	 * @return role的分页信息
 	 */
 	@GetMapping(params = "current")
+	@PreAuthorize(hasAnyRole + " or hasAuthority('role:get')")
 	public ResponseMessage<String,Page<Role>> getRolePage(@RequestParam("current") int current,
 											@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 											@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword){
@@ -45,6 +48,7 @@ public class RoleController{
 	 * @return 角色信息
 	 */
 	@GetMapping("/{id}")
+	@PreAuthorize(hasAnyRole + " or hasAuthority('role:get')")
 	public ResponseMessage<String,Role> getRole(@PathVariable("id") Integer id){
 		Role role = roleService.getById(id);
 		return ResponseMessage.success(singletonMap("role", role));
@@ -56,6 +60,7 @@ public class RoleController{
 	 * @return 查询到的所有角色信息集合
 	 */
 	@GetMapping(params = "ids[]")
+	@PreAuthorize(hasAnyRole + " or hasAuthority('role:get')")
 	public ResponseMessage<String,List<Role>> getRoleList(@RequestParam("ids[]") List<Integer> ids){
 		List<Role> roles = roleService.listByIds(ids);
 		return roles.isEmpty() ? ResponseMessage.failure("没有查询到数据", emptyMap())
@@ -68,6 +73,7 @@ public class RoleController{
 	 * @return 如果保存成功
 	 */
 	@RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
+	@PreAuthorize(hasAnyRole + " or hasAuthority('role:save')")
 	public ResponseMessage<?,?> saveOrUpdateRole(Role role){
 		roleService.saveOrUpdate(role);
 		return ResponseMessage.success("保存成功");
@@ -79,6 +85,7 @@ public class RoleController{
 	 * @return 如果删除成功
 	 */
 	@DeleteMapping
+	@PreAuthorize(hasAnyRole + " or hasAuthority('role:delete')")
 	public ResponseMessage<?,?> deleteRole(@RequestParam("ids[]") List<Integer> ids){
 		roleService.removeBatchByIds(ids);
 		return ResponseMessage.success("删除成功");

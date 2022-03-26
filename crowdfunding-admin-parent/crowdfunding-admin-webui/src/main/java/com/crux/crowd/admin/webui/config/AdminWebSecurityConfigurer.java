@@ -3,6 +3,7 @@ package com.crux.crowd.admin.webui.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @since 2022/03/25
  */
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AdminWebSecurityConfigurer extends WebSecurityConfigurerAdapter{
 
 	private UserDetailsService userDetailsService;
@@ -35,9 +37,11 @@ public class AdminWebSecurityConfigurer extends WebSecurityConfigurerAdapter{
 	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-		http.authorizeRequests()
+		http.csrf().disable().authorizeRequests()
 				// 静态资源、首页、错误页、登录页无权限
 				.antMatchers("/static/**", "/", "/index", "/error/**", "/admin/login").permitAll()
+				// 用户管理需要经理角色或超级管理员角色。已使用注解配置代替
+				// .antMatchers("/admin/main/user/**").hasAnyRole(ROLE_经理, ROLE_超级管理员)
 				// 其他请求需登录
 				.anyRequest().authenticated().and()
 				// 登录表单设置

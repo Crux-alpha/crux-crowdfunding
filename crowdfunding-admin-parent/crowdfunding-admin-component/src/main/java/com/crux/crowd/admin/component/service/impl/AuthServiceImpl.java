@@ -31,17 +31,15 @@ public class AuthServiceImpl extends AbstractService<AuthMapper,Auth> implements
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-	public boolean updateAuthsAssigned(final Integer roleId, List<Integer> authIds){
-		synchronized(roleId){
-			// 1、删除角色所有权限
-			baseMapper.deleteAuthByRoleId(roleId);
+	public synchronized boolean updateAuthsAssigned(final Integer roleId, List<Integer> authIds){
+		// 1、删除角色所有权限
+		baseMapper.deleteAuthByRoleId(roleId);
 
-			// 2、如果没有新的权限，则完成操作
-			if(authIds == null || authIds.isEmpty()) return true;
+		// 2、如果没有新的权限，则完成操作
+		if(authIds == null || authIds.isEmpty()) return true;
 
-			// 3、重新赋予权限
-			return SqlHelper.retBool(baseMapper.insertAuthByRoleId(roleId, authIds));
-		}
+		// 3、重新赋予权限
+		return SqlHelper.retBool(baseMapper.insertAuthByRoleId(roleId, authIds));
 	}
 
 	@Override

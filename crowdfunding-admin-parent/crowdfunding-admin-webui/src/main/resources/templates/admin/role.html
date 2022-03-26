@@ -180,7 +180,15 @@
                     error: error
                 })
             }
-			function error(json){updateFormGroup(false, json.message, $("#ipt-role-name"));}
+			function error(resp){
+				var message = resp.responseJSON.message;
+				if(resp.status === 403){
+					$("#modal-role").modal("hide");
+					layer.msg(message);
+                }else{
+					updateFormGroup(false, message, $("#ipt-role-name"));
+				}
+			}
         });
 
 		// 表单项检查失去焦点事件
@@ -314,8 +322,10 @@
 			// 2、保存所有选中的权限id
             var authIds = [];
 			for(var i=0; i<nodes.length; i++){
-                var authId = nodes[i].id;
-				authIds.push(authId);
+				var node = nodes[i];
+                // 如果节点是根节点，即title是**模块，需要排除
+				if(node.categoryId == null) continue;
+				authIds.push(node.id);
 			}
 
 			// 3、发送请求，执行保存

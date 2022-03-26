@@ -21,7 +21,18 @@ public interface AuthService extends IService<Auth>{
 	 */
 	Set<Integer> getAuthIds(Integer roleId);
 
+	/**
+	 * 批量查找权限id
+	 * @param roleIds 角色id集合
+	 * @return 这些角色具有的权限
+	 */
 	Set<Integer> listAuthIds(Collection<Integer> roleIds);
 
+	/**
+	 * 修改指定角色的权限
+	 * @param roleId 角色id
+	 * @param authIds 权限id集合
+	 * @return 执行结果
+	 */
 	boolean updateAuthsAssigned(Integer roleId, List<Integer> authIds);
 }

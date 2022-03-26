@@ -1,5 +1,6 @@
 package com.crux.crowd.common.util;
 
+import javax.management.relation.Role;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -38,6 +39,13 @@ public final class CrowdConstant{
 		private TipsMessage(){}
 	}
 
+	public static final class RoleName{
+		public static final String ROLE_超级管理员 = "超级管理员";
+		public static final String ROLE_经理 = "经理";
+		public static final String ROLE_部长 = "部长";
+
+		private RoleName(){}
+	}
 
 	private CrowdConstant(){}
 }
