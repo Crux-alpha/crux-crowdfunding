@@ -28,6 +28,9 @@ import javax.sql.DataSource;
  *     <li>开启声明式事务</li>
  *     <li>分页插件</li>
  * </ul>
+ *
+ * @since 2022/03/15
+ * @author Crux
  */
 @Configuration(proxyBeanMethods = false)
 @ComponentScan("com.crux.crowd.admin.component")

@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <title>菜单维护</title>
 
-    <link th:replace="~{/common/admin-main-common::head}"/>
+    <link th:replace="~{common/admin-main-common::head}"/>
     <link rel="stylesheet" th:href="@{/static/ztree/zTreeStyle.css}">
     <style>
         .tree li {
@@ -25,13 +25,13 @@
         <div class="navbar-header">
             <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 菜单维护</a></div>
         </div>
-        <div th:replace="~{/common/admin-main-common::main-menu-head}"></div>
+        <div th:replace="~{common/admin-main-common::main-menu-head}"></div>
     </div>
 </nav>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{/common/admin-main-common::main-menu-left}"></div>
+        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{common/admin-main-common::main-menu-left}"></div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
             <div class="panel panel-default">
@@ -73,9 +73,9 @@
         </div>
     </div>
 </div>
-<div th:replace="~{/common/modal-common::modal-node}"></div>
-<div th:replace="~{/common/admin-main-common::script}"></div>
-<div th:replace="~{/common/modal-common::modal-remove}"></div>
+<div th:replace="~{common/modal-common::modal-node}"></div>
+<div th:replace="~{common/admin-main-common::script}"></div>
+<div th:replace="~{common/modal-common::modal-remove}"></div>
 <script type="text/javascript" th:src="@{/static/ztree/jquery.ztree.all-3.5.min.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/zTree-generator.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>

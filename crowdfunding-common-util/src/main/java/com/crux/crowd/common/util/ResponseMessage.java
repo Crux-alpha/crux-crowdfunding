@@ -8,6 +8,7 @@ import java.util.Map;
  * @param <K> 键的类型
  * @param <V> 值的类型
  */
+@Deprecated
 public class ResponseMessage<K,V>{
 	/**
 	 * 响应状态

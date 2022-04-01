@@ -1,0 +1,14 @@
+server:
+  port: 8003
+spring:
+  application:
+    name: crowd-redis
+  redis:
+    # 主机ip
+    host: 192.168.153.200
+    # 超时时长
+    timeout: 1800000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link th:replace="~{/common/admin-main-common::head}"/>
+    <link th:replace="~{common/admin-main-common::head}"/>
     <style>
         .tree li {
             list-style-type: none;
@@ -33,13 +33,13 @@
         <div class="navbar-header">
             <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 控制面板</a></div>
         </div>
-        <div th:replace="~{/common/admin-main-common::main-menu-head}"></div>
+        <div th:replace="~{common/admin-main-common::main-menu-head}"></div>
     </div>
 </nav>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{/common/admin-main-common::main-menu-left}"></div>
+        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{common/admin-main-common::main-menu-left}"></div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h1 class="page-header">控制面板</h1>
 
@@ -72,6 +72,6 @@
         </div>
     </div>
 </div>
-<div th:replace="~{/common/admin-main-common::script}"></div>
+<div th:replace="~{common/admin-main-common::script}"></div>
 </body>
 </html>

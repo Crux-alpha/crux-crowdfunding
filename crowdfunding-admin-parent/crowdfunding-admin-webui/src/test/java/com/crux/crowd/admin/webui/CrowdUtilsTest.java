@@ -2,6 +2,7 @@ package com.crux.crowd.admin.webui;
 
 import com.crux.crowd.common.util.CrowdUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.DigestUtils;
@@ -45,6 +46,7 @@ class CrowdUtilsTest{
 
 
 	@Test
+	@Disabled
 	void test01() throws InterruptedException{
 		Thread t1 = new Thread(() -> sync(0, Stream.of("A", "B", "C").collect(Collectors.toList())));
 		t1.setName("线程1");

@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <title>用户维护</title>
 
-    <link th:replace="~{/common/admin-main-common::head}"/>
+    <link th:replace="~{common/admin-main-common::head}"/>
     <link rel="stylesheet" th:href="@{/static/css/pagination.css}">
     <style>
         .tree li {
@@ -33,13 +33,13 @@
         <div class="navbar-header">
             <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 用户维护</a></div>
         </div>
-        <div th:replace="~{/common/admin-main-common::main-menu-head}"></div>
+        <div th:replace="~{common/admin-main-common::main-menu-head}"></div>
     </div>
 </nav>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{/common/admin-main-common::main-menu-left}"></div>
+        <div class="col-sm-3 col-md-2 sidebar" th:insert="~{common/admin-main-common::main-menu-left}"></div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -100,13 +100,13 @@
 
 <div>
     <!-- 新增admin模态框 -->
-    <div th:replace="~{/common/modal-common::modal-admin-save}"></div>
+    <div th:replace="~{common/modal-common::modal-admin-save}"></div>
     <!-- 修改admin模态框 -->
-    <div th:replace="~{/common/modal-common::modal-admin-update}"></div>
-    <div th:replace="~{/common/modal-common::modal-remove}"></div>
-    <div th:replace="~{/common/modal-common::modal-assign}"></div>
+    <div th:replace="~{common/modal-common::modal-admin-update}"></div>
+    <div th:replace="~{common/modal-common::modal-remove}"></div>
+    <div th:replace="~{common/modal-common::modal-assign}"></div>
 </div>
-<div th:replace="~{/common/admin-main-common::script}"></div>
+<div th:replace="~{common/admin-main-common::script}"></div>
 <script type="text/javascript" th:src="@{/static/js/jquery.pagination.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
 <script type="text/javascript" th:src="@{/static/script/table-data-generator.js}"></script>

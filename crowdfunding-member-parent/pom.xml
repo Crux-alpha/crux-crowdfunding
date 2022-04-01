@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.crux.crowd</groupId>
+    <artifactId>crowdfunding-member-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <!-- 注册中心 -->
+        <module>crowdfunding-member-eureka</module>
+        <!-- 实体模块 -->
+        <module>crowdfunding-member-entity</module>
+        <!-- 工具模块 -->
+        <module>../crowdfunding-common-util</module>
+        <!-- MySQL数据服务 -->
+        <module>crowdfunding-member-provider-mysql</module>
+        <!-- Redis数据服务 -->
+        <module>crowdfunding-member-provider-redis</module>
+        <!-- 项目维护 -->
+        <module>crowdfunding-member-consumer-project</module>
+        <!-- 会员系统 -->
+        <module>crowdfunding-member-consumer-authentication</module>
+        <!-- 订单系统 -->
+        <module>crowdfunding-member-consumer-order</module>
+        <!-- 支付系统 -->
+        <module>crowdfunding-member-consumer-pay</module>
+        <module>crowdfunding-member-gateway</module>
+        <module>crowdfunding-member-api</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- cloud环境 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2021.0.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- boot环境 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.6.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- mysql环境 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.49</version>
+            </dependency>
+            <!-- mybatis环境 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- druid环境 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>1.2.8</version>
+            </dependency>
+
+            <!-- 项目模块版本 -->
+            <dependency>
+                <groupId>com.crux.crowd</groupId>
+                <artifactId>crowdfunding-common-util</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crux.crowd</groupId>
+                <artifactId>crowdfunding-member-entity</artifactId>
+                <version>${crowd.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.crux.crowd</groupId>
+                <artifactId>crowdfunding-member-api</artifactId>
+                <version>${crowd.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+
+    <properties>
+        <crowd.version>1.0-SNAPSHOT</crowd.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+</project>

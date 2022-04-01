@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/"
                 xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:fragment="head">
-    <link th:replace="~{/common/common::head}"/>
+    <link th:replace="~{common/common::head}"/>
     <link rel="stylesheet" th:href="@{/static/css/main.css}">
     <link rel="stylesheet" th:href="@{/static/css/doc.min.css}">
 </head>
@@ -113,7 +113,7 @@
         </ul>
     </div>
 <div th:fragment="script">
-    <div th:replace="~{/common/common::script}"></div>
+    <div th:replace="~{common/common::script}"></div>
     <script th:src="@{/static/script/docs.min.js}"></script>
     <script type="text/javascript">
         $(function(){

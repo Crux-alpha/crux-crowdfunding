@@ -48,11 +48,12 @@ class CrowdfundingAdminWebuiApplicationTests{
 
 	@Test
 	void select(){
-		Admin admin = adminService.getOne(Wrappers.lambdaQuery(Admin.class).eq(Admin::getUserName, "admin"));
+		Admin admin = adminService.getOne(Wrappers.lambdaQuery(Admin.class).eq(Admin::getLoginAcct, "admin"));
 		log.info(admin.toString());
 	}
 
 	@Test
+	@Disabled
 	void transaction(){
 		boolean flag = adminService.saveBatch(Arrays.asList(new Admin("test", "555555", "test", "test@126.com"),
 				new Admin(4, "jerry", "123456", "jerry", "jerry@126.com", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")));
@@ -60,6 +61,7 @@ class CrowdfundingAdminWebuiApplicationTests{
 	}
 
 	@Test
+	@Disabled
 	void insert255Admin(){
 		List<Admin> list = new ArrayList<>();
 		for(int i=0; i<255; i++){
@@ -74,6 +76,7 @@ class CrowdfundingAdminWebuiApplicationTests{
 	}
 
 	@Test
+	@Disabled
 	void insert255Role(){
 		List<Role> list = new ArrayList<>();
 		for(int i=0; i<255; i++){
@@ -86,24 +89,28 @@ class CrowdfundingAdminWebuiApplicationTests{
 	}
 
 	@Test
+	@Disabled
 	void save(){
 		boolean save = adminService.save(new Admin("admin", "crux_alpha", "SAIERHAO123", "1992980352@qq.com"));
 		log.info("{}", save);
 	}
 
 	@Test
+	@Disabled
 	void selectRolesAssignedByAdminId(){
 		List<Role> rolesAssigned = roleService.getRolesAssigned(1, false);
 		log.info("1已分配角色：{}", rolesAssigned.toString());
 	}
 
 	@Test
+	@Disabled
 	void updateRolesAssignedByAdminId(){
 		boolean result = adminService.updateRolesAssigned(1, Arrays.asList(196,197,198,199,200));
 		log.info("保存{}", result);
 	}
 
 	@Test
+	@Disabled
 	void passwordEncoded(){
 		adminService.save(new Admin("adminOperator", "admin操作员", "123456", "ao@ao.com"));
 		adminService.save(new Admin("roleOperator", "role操作员", "123456", "ro@ro.com"));
