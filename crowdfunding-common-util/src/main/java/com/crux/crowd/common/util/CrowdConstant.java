@@ -1,6 +1,5 @@
 package com.crux.crowd.common.util;
 
-import javax.management.relation.Role;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -14,6 +13,9 @@ public final class CrowdConstant{
 	public static final String ADMIN_LOGIN_ACCOUNT = "loginAccount_admin";
 	public static final String JSON_RESULT = "result_json";
 	public static final DateTimeFormatter DEFAULT_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	public static final int DEFAULT_MESSAGE_TIMEOUT_MINUTES = 3;
+	public static final String REDIS_MESSAGE_CODE_PREFIX = "message-code:";
+	public static final String COOKIE_MESSAGE_CODE_INTERVAL = "message_code_interval";
 
 	/**
 	 * 与HTTP属性有关的常量池
@@ -35,6 +37,10 @@ public final class CrowdConstant{
 		public static final String ACCOUNT_NOT_FOUNT = "账号不存在";
 		public static final String ACCESS_FORBIDDEN = "您还没有登录，请重新登录！";
 		public static final String STRING_EMPTY = "字符串不能为空";
+		public static final String CODE_TIMEOUT = "验证码已过期，请重新发送！";
+		public static final String CODE_INCONSISTENT = "验证码不一致，请重试！";
+		public static final String SERVER_ERROR = "服务器出现异常，请稍后重试";
+		public static final String PHONE_IN_USE = "该手机号已经被注册";
 
 		private TipsMessage(){}
 	}

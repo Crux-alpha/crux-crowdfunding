@@ -4,9 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class ViewForwardController{
+public class IndexController{
 
-	@RequestMapping({"/", "/index"})
+	@RequestMapping({"/", "/index.html"})
 	public String index(){
 		/* -----加载首页数据----- */
 		return "index";

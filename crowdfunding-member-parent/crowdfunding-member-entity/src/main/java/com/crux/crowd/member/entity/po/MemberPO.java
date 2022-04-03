@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Member数据实体
+ * @since 2022/03/30
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,14 +21,17 @@ public class MemberPO{
 	private String loginAcct;
 	private String userName;
 	private String userPswd;
+	private String phone;
+	private String email;
 	private Integer authStatus;
 	private Integer userType;
 	private String realName;
 	private String cardNum;
 	private Integer acctType;
 
-	public MemberPO(String loginAcct, String userPswd){
+	public MemberPO(String loginAcct, String userPswd, String phone){
 		this.loginAcct = loginAcct;
 		this.userPswd = userPswd;
+		this.phone = phone;
 	}
 }

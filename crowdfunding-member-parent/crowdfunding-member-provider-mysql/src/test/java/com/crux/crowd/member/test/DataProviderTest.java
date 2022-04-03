@@ -33,7 +33,7 @@ class DataProviderTest{
 	@Test
 	@Disabled
 	void memberMapper(){
-		MemberPO member = new MemberPO("jack", passwordEncoder.encode("123456"));
+		MemberPO member = new MemberPO("jack", passwordEncoder.encode("123456"), "12345678900");
 		memberMapper.insert(member);
 		log.debug(member.toString());
 	}

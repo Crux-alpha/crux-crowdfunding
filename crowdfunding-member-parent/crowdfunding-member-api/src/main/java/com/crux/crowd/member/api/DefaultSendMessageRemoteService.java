@@ -29,6 +29,8 @@ public class DefaultSendMessageRemoteService implements SendMessageRemoteService
 	 */
 	@Override
 	public ResultEntity<String,String> sendMessage(String phone, String code, int minutes){
+		if(phone.length() != 11) return ResultEntity.failure("手机号码格式不正确");
+
 		String host = properties.getHost();
 		String path = properties.getPath();
 		String method = properties.getMethod();
@@ -56,7 +58,7 @@ public class DefaultSendMessageRemoteService implements SendMessageRemoteService
 		}catch(Exception e){
 			log.error(e.getMessage());
 			e.printStackTrace();
-			return ResultEntity.failure(e.getMessage());
+			return ResultEntity.failure("发送失败！原因：" + e.getMessage());
 		}
 	}
 

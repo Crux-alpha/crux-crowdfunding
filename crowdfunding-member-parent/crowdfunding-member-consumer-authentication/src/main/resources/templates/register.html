@@ -8,10 +8,10 @@
     <meta name="keys" content="">
     <meta name="author" content="">
     <title>会员注册</title>
-    <base href="/static/" th:href="@{/static/}">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/login.css">
+    <base href="/" th:href="@{/}">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{/static/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="css/login.css" th:href="@{/static/css/login.css}">
     <style>
 
     </style>
@@ -20,40 +20,167 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <div><a class="navbar-brand" href="index.html" style="font-size:32px;">尚筹网-创意产品众筹平台</a></div>
+            <div><a class="navbar-brand" href="index.html" th:href="@{/index.html}" style="font-size:32px;">尚筹网-创意产品众筹平台</a></div>
         </div>
     </div>
 </nav>
 
 <div class="container">
 
-    <form class="form-signin" role="form">
+    <form id="form-member-register" class="form-signin" role="form">
         <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户注册</h2>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="inputSuccess4" placeholder="请输入登录账号" autofocus>
+            <input type="text" class="form-control" id="ipt-account" name="loginAcct" placeholder="请输入登录账号" autofocus>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            <p class="help-block"></p>
         </div>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="inputSuccess4" placeholder="请输入登录密码" style="margin-top:10px;">
+            <input type="text" class="form-control" id="ipt-username" name="userName" placeholder="请输入昵称，可选的" autofocus>
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            <p class="help-block"></p>
+        </div>
+        <div class="form-group has-success has-feedback">
+            <input type="password" class="form-control" id="ipt-password" name="userPswd" placeholder="请输入登录密码" style="margin-top:10px;">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            <p class="help-block"></p>
         </div>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="inputSuccess4" placeholder="请输入邮箱地址" style="margin-top:10px;">
+            <input type="password" class="form-control" id="ipt-password-cfm" placeholder="确认密码" style="margin-top:10px;">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            <p class="help-block"></p>
+        </div>
+        <div class="form-group has-success has-feedback">
+            <input type="email" class="form-control" id="ipt-email" name="email" placeholder="请输入邮箱地址" style="margin-top:10px;">
             <span class="glyphicon glyphicon glyphicon-envelope form-control-feedback"></span>
+            <p class="help-block"></p>
         </div>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="inputSuccess4" placeholder="请输入手机号" style="margin-top:10px;">
+            <input type="tel" class="form-control" id="ipt-phone" name="phone" placeholder="请输入手机号" style="margin-top:10px;">
             <span class="glyphicon glyphicon glyphicon-earphone form-control-feedback"></span>
+            <p class="help-block"></p>
         </div>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="inputSuccess4" placeholder="请输入验证码" style="margin-top:10px;">
+            <input type="number" class="form-control" id="ipt-code" name="code" placeholder="请输入验证码" style="margin-top:10px;">
             <span class="glyphicon glyphicon glyphicon-comment form-control-feedback"></span>
+            <p class="help-block"></p>
         </div>
-        <button class="btn btn-lg btn-success btn-block"> 获取验证码</button>
-        <a class="btn btn-lg btn-success btn-block" href="login.html"> 注册</a>
+        <button id="btn-send-message" type="button" class="btn btn-lg btn-success btn-block"> 获取验证码</button>
+        <button id="btn-execute-register" type="button" class="btn btn-lg btn-success btn-block"> 注册</button>
     </form>
 </div>
-<script src="js/jquery-3.6.0.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="js/jquery-3.6.0.min.js" th:src="@{/static/js/jquery-3.6.0.min.js}"></script>
+<script src="bootstrap/js/bootstrap.min.js" th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/layer/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
+<script type="text/javascript">
+    $(function(){
+
+		// 账号校验
+        $("#ipt-account").change(function(){
+			const account = $(this).val();
+			const regex = /^[A-Za-z0-9]{8,16}$/;
+
+			updateFormGroup(regex.test(account), "账号只能由字母和数字组成，并且长度在8~16之间！", $(this));
+		});
+		// 昵称校验
+        $("#ipt-username").change(function(){
+			const username = $(this).val();
+			const regex = /^[\u4E00-\u9FA5A-Za-z0-9_]+$/;
+
+			updateFormGroup(username.length < 1 || regex.test(username), "昵称不能包含特殊字符！", $(this));
+        });
+		// 密码校验
+		$("#ipt-password").change(function(){
+			const password = $(this).val();
+			const regex = /^.{6,18}$/;
+			updateFormGroup(regex.test(password), "密码长度必须在6~18位之间！", $(this));
+		});
+		$("#ipt-password-cfm").change(function(){
+			const passwordCfm = $(this).val();
+			const password = $("#ipt-password").val();
+			let state = false;
+			let message;
+
+			if(!password) message = "请输入确认密码！";
+			else if(passwordCfm !== password) message = "确认密码与密码不一致！";
+			else state = true;
+
+			updateFormGroup(state, message, $(this));
+		});
+		// 邮箱校验
+		$("#ipt-email").add("#ipt-update-email").change(function(){
+			const email = $(this).val();
+			const regex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+			updateFormGroup(regex.test(email), "邮箱格式不正确！", $(this));
+		});
+		// 手机号校验
+		$("#ipt-phone").change(function(){
+			const phone = $("#ipt-phone").val();
+			const regex = /^\d{11}$/;
+
+			updateFormGroup(regex.test(phone), "请输入正确的手机号码", $(this));
+		});
+		// 验证码校验
+        $("#ipt-code").change(function(){
+            const code = $(this).val();
+			const regex = /^\d{6}$/;
+
+			updateFormGroup(regex.test(code), "请输入6位验证码", $(this));
+		})
+
+        // 发送短信验证码
+		$("#btn-send-message").click(function(){
+			let phoneIpt = $("#ipt-phone");
+			phoneIpt.change();
+			if(phoneIpt.parent().hasClass("has-error")){
+				layer.msg("请输入正确的手机号码");
+				return;
+			}
+
+            let phone = phoneIpt.val();
+			$.ajax({
+                url: "/member/register/sendMessage",
+                type: "POST",
+                data: {phone: phone},
+                dataType: "json",
+                success: function(json){
+					layer.msg(json.message);
+                },
+                error: defaultErrorCallback
+            })
+		})
+
+        // 执行注册
+        $("#btn-execute-register").click(function(){
+			let form = $("#form-member-register");
+			// 1、校验表单
+			if(!checkFormData(form)){
+				layer.msg("请检查您的注册信息是否正确！");
+				return;
+            }
+
+			// 2、发送请求
+			$.ajax({
+                url: "/member/register",
+                type: "POST",
+                data: form.serialize(),
+                dataType: "json",
+                success: function(json){
+					let message = json.message;
+					// 3、如果返回非成功结果，提示信息；否则5秒后跳转到登录页面
+					if(json.result !== "SUCCESS"){
+						layer.msg(message);
+                    }else{
+						layer.msg(message, {time: 5000}, function(){
+							location.href = "/member/login.html";
+						});
+                    }
+                },
+                error: defaultErrorCallback
+            });
+		});
+
+    })
+</script>
 </body>
 </html>

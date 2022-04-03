@@ -25,7 +25,7 @@ function updateFormGroup(state, message, input){
  */
 function checkFormData(form){
 	var formGroup = form.children("div[class*=form-group]");
-	formGroup.find("input").not(":disabled").blur();
+	formGroup.find("input").not(":disabled").change();
 	var hasError = form.children("div[class*=has-error]");
 
 	// 如果表单项与成功项数量不一致，阻止提交

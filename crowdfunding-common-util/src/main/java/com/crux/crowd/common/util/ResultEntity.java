@@ -61,6 +61,10 @@ public class ResultEntity<K,V>{
 		return failure(null, data);
 	}
 
+	public static <K,V> ResultEntity<K,V> error(String message){
+		return new ResultEntity<>(ResponseResult.ERROR, message, null);
+	}
+
 	@Override
 	public String toString(){
 		return "执行结果{" +

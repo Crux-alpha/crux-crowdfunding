@@ -4,14 +4,16 @@ import com.crux.crowd.common.util.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import static java.util.Collections.singletonMap;
+
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RestController
+@RequestMapping("/server/provider/redis")
 public class RedisProviderController{
 
 	private StringRedisTemplate redisTemplate;
@@ -22,8 +24,9 @@ public class RedisProviderController{
 	 * @param timeunit 时间单位。默认毫秒
 	 * @return 执行结果
 	 */
-	@RequestMapping("/set")
-	ResultEntity<?,?> set(String key, String value,
+	@PostMapping("/set")
+	ResultEntity<?,?> set(@RequestParam("key") String key,
+						  @RequestParam("value") String value,
 						  @RequestParam(name = "timeout", required = false, defaultValue = "-1") long timeout,
 						  @RequestParam(name = "timeunit", required = false, defaultValue = "MILLISECONDS") TimeUnit timeunit){
 
@@ -40,21 +43,26 @@ public class RedisProviderController{
 	 * get 'key'
 	 * @return value
 	 */
-	@RequestMapping("/get")
-	ResultEntity<String,String> get(String key){
+	@GetMapping("/get")
+	ResultEntity<String,String> get(@RequestParam("key") String key){
 		String value = valueOperations().get(key);
-		return ResultEntity.success(singletonMap(key, value));
+		if(Optional.ofNullable(value).filter(StringUtils::hasLength).isPresent()){
+			return ResultEntity.success(singletonMap(key, value));
+		}
+		return ResultEntity.failure("没有查询到数据");
 	}
 
 	/**
 	 * del 'key'
 	 * @return 执行结果
 	 */
-	@RequestMapping("/delete")
-	ResultEntity<?,?> delete(String key){
+	@DeleteMapping("/delete")
+	ResultEntity<?,?> delete(@RequestParam("key") String key){
 		Boolean result = redisTemplate.delete(key);
 		return Boolean.TRUE.equals(result) ? ResultEntity.success("删除成功") : ResultEntity.failure("删除失败");
 	}
+
+
 
 	private ValueOperations<String,String> valueOperations(){
 		return redisTemplate.opsForValue();

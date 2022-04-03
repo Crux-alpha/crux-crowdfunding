@@ -1,11 +1,15 @@
 package com.crux.crowd.common.util;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 众筹平台项目统一工具类
@@ -13,6 +17,7 @@ import java.util.Optional;
  * @version 2022/03/10
  */
 public final class CrowdUtils{
+
 	private CrowdUtils(){}
 
 	/**
@@ -44,5 +49,42 @@ public final class CrowdUtils{
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * 将VO转成PO<br/>
+	 * 根据同名属性转换
+	 * @param entityVO VO实体
+	 * @param <P> PO实体类型
+	 * @return PO实体
+	 * @throws ReflectiveOperationException 如果没有setter和getter，或者方法具有无法访问的权限，或者PO没有无参数构造方法
+	 */
+	public static <P> P entityTransition(Object entityVO, Class<P> POClass) throws ReflectiveOperationException{
+		Method[] VOMethods = entityVO.getClass().getMethods();
+		Method[] POMethods = POClass.getMethods();
+
+		P entityPO = POClass.getConstructor().newInstance();
+		Map<String,Method> VOSetter = new HashMap<>();
+		Map<String,Method> VOGetter = new HashMap<>();
+
+		for(Method method : VOMethods){
+			String name = method.getName();
+
+			if(name.startsWith("set")){
+				VOSetter.put(name, method);
+			}else if(name.startsWith("get")){
+				VOGetter.put(name, method);
+			}
+		}
+
+		for(Method method : POMethods){
+			String name = method.getName();
+
+			if(VOSetter.containsKey(name)){
+				Method getter = VOGetter.get(name.replace("set", "get"));
+				method.invoke(entityPO, getter.invoke(entityVO));
+			}
+		}
+		return entityPO;
 	}
 }

@@ -5,9 +5,7 @@ import com.crux.crowd.member.entity.po.MemberPO;
 import com.crux.crowd.member.service.MemberPOService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static java.util.Collections.singletonMap;
 
@@ -17,8 +15,8 @@ public class MemberPOProviderController{
 
 	private MemberPOService memberPOService;
 
-	@RequestMapping(path = "/member/get", params = "loginAcct")
-	public ResultEntity<String,MemberPO> getMemberByLoginAcct(@RequestParam("loginAcct") String loginAcct){
+	@GetMapping(path = "/member", params = "login_acct")
+	public ResultEntity<String,MemberPO> getMemberByLoginAcct(@RequestParam("login_acct") String loginAcct){
 		try{
 			MemberPO memberPO = memberPOService.getByLoginAcct(loginAcct);
 			return ResultEntity.success(singletonMap("memberPO", memberPO));
@@ -26,6 +24,12 @@ public class MemberPOProviderController{
 			log.warn(e.getMessage());
 			return ResultEntity.failure("查询失败。原因：" + e.getMessage());
 		}
+	}
+
+	@PostMapping("/member")
+	public ResultEntity<?,?> saveMember(@RequestBody MemberPO memberPO){
+		memberPOService.save(memberPO);
+		return ResultEntity.success("保存成功");
 	}
 
 	@Autowired
