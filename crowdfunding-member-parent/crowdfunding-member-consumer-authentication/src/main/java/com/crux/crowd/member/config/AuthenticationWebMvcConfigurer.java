@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @Configuration(proxyBeanMethods = false)
 @Import(BCryptPasswordEncoder.class)
@@ -42,5 +43,12 @@ public class AuthenticationWebMvcConfigurer implements WebMvcConfigurer{
 				request.getSession().removeAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO);
 			}
 		}).addPathPatterns("/member/logout.html");
+		registry.addInterceptor(new HandlerInterceptor(){
+			@Override
+			public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView){
+				if(Objects.nonNull(request.getSession().getAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO)))
+					modelAndView.setViewName("redirect:http://localhost/member/center.html");
+			}
+		}).addPathPatterns("/member/login.html");
 	}
 }

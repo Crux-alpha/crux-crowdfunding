@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -139,7 +140,8 @@ public class MemberController{
 		BeanUtils.copyProperties(memberPO, memberInfoVO);
 
 		// 4、存入Session
-		session.setAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO, memberInfoVO);
+		session.setAttribute(SESSION_ATTRIBUTE_MEMBER_INFO, memberInfoVO);
+		session.removeAttribute(MESSAGE);
 		return ResultEntity.success();
 	}
 

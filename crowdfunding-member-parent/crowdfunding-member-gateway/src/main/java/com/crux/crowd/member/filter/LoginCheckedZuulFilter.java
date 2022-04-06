@@ -69,7 +69,7 @@ public class LoginCheckedZuulFilter extends ZuulFilter{
 		RequestContext context = RequestContext.getCurrentContext();
 		// 1、拿到session，添加提示信息
 		HttpSession session = context.getRequest().getSession();
-		session.setAttribute(MESSAGE, TipsMessage.LOGIN_FAILED);
+		session.setAttribute(MESSAGE, TipsMessage.ACCESS_FORBIDDEN);
 		// 2、重定向到登录页面
 		HttpServletResponse response = context.getResponse();
 		try{
