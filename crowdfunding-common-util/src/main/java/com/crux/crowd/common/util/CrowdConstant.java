@@ -16,6 +16,7 @@ public final class CrowdConstant{
 	public static final int DEFAULT_MESSAGE_TIMEOUT_MINUTES = 3;
 	public static final String REDIS_MESSAGE_CODE_PREFIX = "message-code:";
 	public static final String COOKIE_MESSAGE_CODE_INTERVAL = "message_code_interval";
+	public static final String SESSION_ATTRIBUTE_MEMBER_INFO = "memberInfo";
 
 	/**
 	 * 与HTTP属性有关的常量池
@@ -32,7 +33,7 @@ public final class CrowdConstant{
 	 */
 	public static final class TipsMessage{
 
-		public static final String LOGIN_FAILED = "账号密码有误，请重新输入！";
+		public static final String LOGIN_FAILED = "用户名或密码错误";
 		public static final String ACCOUNT_IN_USE = "账号已被使用";
 		public static final String ACCOUNT_NOT_FOUNT = "账号不存在";
 		public static final String ACCESS_FORBIDDEN = "您还没有登录，请重新登录！";

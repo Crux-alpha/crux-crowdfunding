@@ -1,12 +1,15 @@
 package com.crux.crowd.member.controller;
 
 import static com.crux.crowd.common.util.CrowdConstant.*;
+
+import com.crux.crowd.common.util.CrowdConstant;
 import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.DataSourceRemoteService;
 import com.crux.crowd.member.api.RedisRemoteService;
 import com.crux.crowd.member.api.SendMessageRemoteService;
 import com.crux.crowd.member.entity.po.MemberPO;
+import com.crux.crowd.member.entity.vo.MemberInfoVO;
 import com.crux.crowd.member.entity.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -17,11 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -76,23 +78,17 @@ public class MemberController{
 		return ResultEntity.success("发送成功！请注意查收");
 	}
 
-	@GetMapping(params = "login_acct")
-	public ResultEntity<String,MemberPO> getByLoginAcct(@RequestParam("login_acct") String loginAcct){
-		return dataSourceRemoteService.getMemberByLoginAcct(loginAcct);
-	}
-
 	/**
 	 * 执行注册
 	 * @param memberVO member注册表单数据
 	 * @return 执行结果
 	 */
 	@PostMapping("/register")
-	public ResultEntity<?,?> register(MemberVO memberVO){
+	public ResultEntity<?,?> register(@RequestParam("code") String code, MemberVO memberVO){
 		// 1、获取手机号
 		String phone = memberVO.getPhone();
 		// 2、从redis中获取该手机号对应的验证码，并校验
 		String key = REDIS_MESSAGE_CODE_PREFIX + phone;
-		String code = memberVO.getCode();
 		ResultEntity<String,String> redisResult = redisRemoteService.get(key);
 		// 2.1、如果没有查询到数据，提示验证码已失效
 		if(redisResult.getResult() == ResponseResult.FAILURE){
@@ -116,6 +112,35 @@ public class MemberController{
 			saveResult = ResultEntity.success("注册成功！5秒后将跳转到登录页面");
 		}
 		return saveResult;
+	}
+
+	/**
+	 * 执行登录
+	 * @param account 账号或手机号
+	 * @param password 密码
+	 * @return 执行结果
+	 */
+	@PostMapping("/login")
+	public ResultEntity<?,?> login(@RequestParam("account_or_phone") String account,
+								   @RequestParam("password") String password,
+								   HttpSession session){
+		ResultEntity<?,?> failure = ResultEntity.failure(TipsMessage.LOGIN_FAILED);
+
+		// 1、检查账号是否存在
+		ResultEntity<String,MemberPO> getMemberResult = dataSourceRemoteService.getMemberByLoginAcctOrPhone(account);
+		if(getMemberResult.getResult() == ResponseResult.FAILURE) return failure;
+
+		// 2、验证密码
+		MemberPO memberPO = getMemberResult.getData().get("memberPO");
+		if(!passwordEncoder.matches(password, memberPO.getUserPswd())) return failure;
+
+		// 3、转换为MemberInfoVO
+		MemberInfoVO memberInfoVO = new MemberInfoVO();
+		BeanUtils.copyProperties(memberPO, memberInfoVO);
+
+		// 4、存入Session
+		session.setAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO, memberInfoVO);
+		return ResultEntity.success();
 	}
 
 	@Autowired

@@ -3,54 +3,35 @@ server:
 spring:
   application:
     name: crowd-gateway
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          # 通过注册中心服务名创建路由
-          enabled: true
-      # 路由（routes：路由，它由唯一标识（ID）、目标服务地址（uri）、一组断言（predicates）和一组过滤器组成（filters）。filters 不是必需参数。）
-      routes:
-        - id: crowd-redis
-          uri: lb://crowd-redis
-          predicates:
-            - Path=/server/provider/redis/**
-        # 路由标识（id：标识，具有唯一性）综合
-        - id: crowd-authenticaton
-          # 目标服务地址（uri：地址，请求转发后的地址）
-          # lb://服务名。使用负载均衡转发
-          uri: lb://crowd-authentication
-          # 路由条件（predicates：断言，匹配 HTTP 请求内容)
-          # 当下边的条件符合规则时，放行。否则404
-          predicates:
-            # 路径规则。等同zuul的path
-            - Path=/**
-            # 请求方式规则
-            # - Method=GET
-            # 请求参数
-            # Query=pageSize,\d+
-          # 过滤器（filters：过滤器，过滤规则）
-          # filters:
-            ## 截取路径位数
-            # - StripPrefix=1
-            ## 添加指定参数
-            # - AddRequestParameter=pass, yes
-            ## 熔断
-            # - name: Hystrix
-              # args:
-                # name: fallbackcmd
-                ### fallback 时调用的方法 http://localhost:8000/fallback
-                # fallbackUri: forward:/fallback
-            ## 限流
-            # - name: RequestRateLimiter
-              # args:
-                ### 限流过滤器的 Bean 名称
-                # key-resolver: '#{@uriKeyResolver}'
-                ### 希望允许用户每秒处理多少个请求
-                # redis-rate-limiter.replenishRate: 1
-                ### 用户允许在一秒钟内完成的最大请求数
-                # redis-rate-limiter.burstCapacity: 3
+  redis:
+    host: 192.168.153.200
+    timeout: 1800s
+  session:
+    store-type: redis
+zuul:
+  routes:
+    mysql:
+      service-id: crowd-mysql
+      path: /mysql/**
+    authenticaton:
+      service-id: crowd-authentication
+      path: /**
+  ignored-services: '*'
+  # 由于Session使用Cookie，必须设置此项。否则转发请求时请求头中的设置项会被拦截，导致session不能共享
+  # 默认拦截Cookie, Set-Cookie, Authorization
+  sensitive-headers: []
+  host:
+    connect-timeout-millis: 10000
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8001/eureka
+crowd:
+  login:
+    release-path:
+      - "/index.html"
+      - "/member/register.html"
+      - "/member/register/**"
+      - "/member/login.html"
+      - "/member/login/**"
+      - "/member/logout.html"

@@ -15,7 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("t_member")
-public class MemberPO{
+public class MemberPO implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+
 	@TableId(type = IdType.AUTO)
 	private Integer id;
 	private String loginAcct;

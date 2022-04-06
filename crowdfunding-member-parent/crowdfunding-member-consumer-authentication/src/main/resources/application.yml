@@ -10,6 +10,11 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  redis:
+    host: 192.168.153.200
+    timeout: 1800s
+  session:
+    store-type: redis
 eureka:
   client:
     service-url:

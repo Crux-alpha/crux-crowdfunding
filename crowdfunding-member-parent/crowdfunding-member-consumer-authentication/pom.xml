@@ -41,6 +41,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- redis操作环境(session-data-redis中已包含spring-data-redis) -->
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+        </dependency>
+        <!-- SpringSession，使用redis数据源 -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.crux.crowd</groupId>

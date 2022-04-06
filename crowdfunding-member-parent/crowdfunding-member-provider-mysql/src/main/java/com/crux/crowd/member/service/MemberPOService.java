@@ -5,5 +5,5 @@ import com.crux.crowd.member.entity.po.MemberPO;
 
 public interface MemberPOService extends IService<MemberPO>{
 
-	MemberPO getByLoginAcct(String loginAcct);
+	MemberPO getByLoginAcctOrPhone(String accountOrPhone);
 }

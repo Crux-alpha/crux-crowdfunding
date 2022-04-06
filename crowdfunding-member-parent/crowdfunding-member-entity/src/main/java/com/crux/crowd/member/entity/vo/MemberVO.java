@@ -11,12 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberVO{
+public class MemberVO implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	private String loginAcct;
 	private String userName;
 	private String userPswd;
 	private String email;
 	private String phone;
-	private String code;
 }

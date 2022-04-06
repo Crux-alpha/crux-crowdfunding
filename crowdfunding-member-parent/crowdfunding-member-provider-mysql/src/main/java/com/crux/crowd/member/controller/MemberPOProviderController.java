@@ -7,7 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static java.util.Collections.singletonMap;
+import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -15,15 +19,11 @@ public class MemberPOProviderController{
 
 	private MemberPOService memberPOService;
 
-	@GetMapping(path = "/member", params = "login_acct")
-	public ResultEntity<String,MemberPO> getMemberByLoginAcct(@RequestParam("login_acct") String loginAcct){
-		try{
-			MemberPO memberPO = memberPOService.getByLoginAcct(loginAcct);
-			return ResultEntity.success(singletonMap("memberPO", memberPO));
-		}catch(Exception e){
-			log.warn(e.getMessage());
-			return ResultEntity.failure("查询失败。原因：" + e.getMessage());
-		}
+	@GetMapping(path = "/member", params = "account_or_phone")
+	public ResultEntity<String,MemberPO> getMemberByLoginAcct(@RequestParam("account_or_phone") String account){
+		MemberPO memberPO = memberPOService.getByLoginAcctOrPhone(account);
+		return Optional.ofNullable(memberPO).map(m -> ResultEntity.success(Collections.singletonMap("memberPO", m)))
+				.orElse(ResultEntity.failure("没有查询到数据"));
 	}
 
 	@PostMapping("/member")

@@ -1,0 +1,84 @@
+package com.crux.crowd.member.filter;
+
+import com.crux.crowd.common.util.CrowdConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.RemoveRequestHeaderGatewayFilterFactory;
+import org.springframework.cloud.gateway.filter.factory.SaveSessionGatewayFilterFactory;
+import org.springframework.core.Ordered;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebSession;
+import reactor.core.publisher.Mono;
+
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * 登录检查过滤器
+ * @since 2022/04/04
+ */
+@Component
+public class LoginCheckedGlobalFilter implements GlobalFilter, Ordered{
+
+	private static final Logger log = LoggerFactory.getLogger(LoginCheckedGlobalFilter.class);
+
+	/**
+	 * 无需登录验证的资源路径
+	 */
+	static final Set<String> RELEASE_PATH;
+
+	static{
+		RELEASE_PATH = Stream.of("/static/**", "/favicon.ico", "/", "/error", "/index.html", "/member/register.html",
+				"/member/register/**", "/member/login.html", "/member/login/**", "/member/logout.html").collect(Collectors.toSet());
+	}
+
+	/**
+	 * 执行登录检查
+	 */
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain){
+		// 1、当前获取请求路径
+		String requestPath = exchange.getRequest().getPath().value();
+		log.info("request path: {}", requestPath);
+		// 2、如果请求路径与无需验证的资源路径匹配，可放行
+		if(RELEASE_PATH.contains(requestPath) ||
+				RELEASE_PATH.stream().filter(path -> path.endsWith("/**")).map(path -> path.substring(0, path.indexOf("/**")))
+						.anyMatch(requestPath::startsWith)){
+			return chain.filter(exchange);
+		}
+
+		// 3、获取Session的Mono
+		Mono<WebSession> session = exchange.getSession();
+		// 4、通过函数操作Session
+		return session.flatMap(s -> {
+			// 5、获取memberInfo对象
+			Object member = s.getAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO);
+			// 6、如果不存在，则禁止访问，并重定向到登录页面
+			if(Objects.isNull(member)){
+				// 添加提示信息
+				s.getAttributes().put(CrowdConstant.MESSAGE, CrowdConstant.TipsMessage.ACCESS_FORBIDDEN);
+				// 拿到response对象
+				ServerHttpResponse response = exchange.getResponse();
+				response.setStatusCode(HttpStatus.FOUND);
+				response.getHeaders().set("Location", "/member/login.html");
+				// 返回response的Mono序列
+				return s.save().then(response.setComplete());
+			}
+			// 7、存在，返回chain.filter()的Mono序列
+			return s.save().then(chain.filter(exchange));
+		});
+	}
+
+	@Override
+	public int getOrder(){
+		return 1;
+	}
+}

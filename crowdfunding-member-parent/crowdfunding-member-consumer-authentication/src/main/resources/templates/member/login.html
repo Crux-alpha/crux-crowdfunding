@@ -19,28 +19,64 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <div><a class="navbar-brand" href="index.html" style="font-size:32px;">尚筹网-创意产品众筹平台</a></div>
+            <div><a class="navbar-brand" href="index.html" th:href="@{/index.html}" style="font-size:32px;">尚筹网-创意产品众筹平台</a></div>
         </div>
     </div>
 </nav>
 
 <div class="container">
 
-    <form class="form-signin" role="form">
+    <form id="form-member-login" class="form-signin" role="form">
         <h2 class="form-signin-heading"><i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
+        <p th:text="${#session}"></p>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="ipt-account" placeholder="请输入登录账号或手机号" autofocus>
+            <input type="text" class="form-control" id="ipt-account" name="account_or_phone" placeholder="请输入登录账号或手机号" autofocus>
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-success has-feedback">
-            <input type="text" class="form-control" id="ipt-password" placeholder="请输入登录密码" style="margin-top:10px;">
+            <input type="password" class="form-control" id="ipt-password" name="password" placeholder="请输入登录密码" style="margin-top:10px;">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
         <div class="checkbox" style="text-align:right;">还没有账号？去<a href="reg.html" th:href="@{/member/register.html}">注册</a></div>
-        <a class="btn btn-lg btn-success btn-block" href="member.html"> 登录</a>
+        <button id="btn-login" type="submit" class="btn btn-lg btn-success btn-block"> 登录</button>
     </form>
 </div>
 <script type="text/javascript" src="js/jquery-3.6.0.min.js" th:src="@{/static/js/jquery-3.6.0.min.js}"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js" th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/layer/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
+<script type="text/javascript">
+    $(function(){
+
+        $("#form-member-login").submit(function(){
+
+			const accountOrPhone = $("#ipt-account").val();
+			const password = $("#ipt-password").val();
+
+			if(accountOrPhone.length < 1 || password.length < 1){
+				layer.msg("请输入用户名或密码！");
+				return false;
+            }
+
+            $.ajax({
+                url: "/member/login",
+                type: "POST",
+                data: {account_or_phone: accountOrPhone, password: password},
+                dataType: "json",
+                success: function(json){
+					if(json.result !== "SUCCESS"){
+						layer.msg(json.message);
+                        return;
+					}
+
+					location.href = "/member/center.html";
+                },
+                error: defaultErrorCallback
+            });
+
+			return false;
+		})
+	})
+</script>
 </body>
 </html>

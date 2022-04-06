@@ -14,8 +14,8 @@ import java.util.function.Supplier;
 public class MemberPOServiceImpl extends AbstractService<MemberPOMapper,MemberPO> implements MemberPOService{
 
 	@Override
-	public MemberPO getByLoginAcct(String loginAcct){
-		return getOne(lambdaQueryWrapper().eq(MemberPO::getLoginAcct, loginAcct));
+	public MemberPO getByLoginAcctOrPhone(String accountOrPhone){
+		return getOne(lambdaQueryWrapper().eq(MemberPO::getLoginAcct, accountOrPhone).or().eq(MemberPO::getPhone, accountOrPhone));
 	}
 
 	@Override

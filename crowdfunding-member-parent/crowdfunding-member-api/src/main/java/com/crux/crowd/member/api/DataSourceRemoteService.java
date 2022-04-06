@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 public interface DataSourceRemoteService{
 
 	/**
-	 * 通过账号获取会员信息
-	 * @param loginAcct 会员账号
+	 * 通过账号或手机号获取会员信息
+	 * @param account 会员账号或手机号
 	 * @return 执行结果
 	 */
-	@GetMapping(path = "/member", params = "login_acct")
-	ResultEntity<String,MemberPO> getMemberByLoginAcct(@RequestParam("login_acct") String loginAcct);
+	@GetMapping(path = "/member", params = "account_or_phone")
+	ResultEntity<String,MemberPO> getMemberByLoginAcctOrPhone(@RequestParam("account_or_phone") String account);
 
 	/**
 	 * 保存会员
