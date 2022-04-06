@@ -1,7 +1,9 @@
-package com.crux.crowd.member.api;
+package com.crux.crowd.member.api.defaultimpl;
 
 import com.crux.crowd.common.util.HttpUtils;
 import com.crux.crowd.common.util.ResultEntity;
+import com.crux.crowd.member.api.MessageProviderProperties;
+import com.crux.crowd.member.api.SendMessageRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;

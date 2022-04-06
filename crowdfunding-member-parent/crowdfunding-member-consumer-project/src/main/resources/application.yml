@@ -1,0 +1,26 @@
+server:
+  port: 8011
+spring:
+  application:
+    name: crowd.project
+  mvc:
+    static-path-pattern: /static/**
+    hiddenmethod:
+      filter:
+        enabled: true
+  redis:
+    host: 192.168.153.200
+    timeout: 1800s
+  session:
+    store-type: redis
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka
+aliyun:
+  oss:
+    access-key-id: LTAI5tRJW4CvJu3y2Y2sV1YU
+    access-key-secret: lX7iDvm3kzs9EQGUAsgYTRONtou4pO
+    bucket-name: crux-crowd
+    bucket-domain: https://crux-crowd.oss-cn-qingdao.aliyuncs.com
+    endpoint: https://oss-cn-qingdao.aliyuncs.com

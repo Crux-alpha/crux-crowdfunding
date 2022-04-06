@@ -1,13 +1,11 @@
 package com.crux.crowd.member.api;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Map;
 
-@Setter
-@Getter
+@Data
 @ConfigurationProperties("crowd.message-api")
 public class MessageProviderProperties{
 	/**
@@ -47,9 +45,8 @@ public class MessageProviderProperties{
 	 */
 	private Map<String,String> bodies;
 
-	@Getter
-	@Setter
-	static class Param{
+	@Data
+	public static class Param{
 		/**
 		 * 编辑验证码，有效时长的参数名
 		 */
