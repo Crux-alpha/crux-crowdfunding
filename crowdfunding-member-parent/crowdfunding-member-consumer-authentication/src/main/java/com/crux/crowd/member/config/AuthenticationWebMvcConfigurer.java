@@ -3,6 +3,7 @@ package com.crux.crowd.member.config;
 import com.crux.crowd.common.util.CrowdConstant;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,15 +40,19 @@ public class AuthenticationWebMvcConfigurer implements WebMvcConfigurer{
 		// 会员登出操作拦截器。将session保存的memberInfo删除
 		registry.addInterceptor(new HandlerInterceptor(){
 			@Override
-			public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView){
+			public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,@NonNull Object handler, ModelAndView modelAndView){
 				request.getSession().removeAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO);
 			}
 		}).addPathPatterns("/member/logout.html");
+		// 登录页面拦截器。如果已经登录，则重定向到个人中心页面
 		registry.addInterceptor(new HandlerInterceptor(){
 			@Override
-			public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView){
-				if(Objects.nonNull(request.getSession().getAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO)))
-					modelAndView.setViewName("redirect:http://localhost/member/center.html");
+			public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception{
+				if(Objects.nonNull(request.getSession().getAttribute(CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO))){
+					response.sendRedirect("http://localhost/member/center.html");
+					return false;
+				}
+				return true;
 			}
 		}).addPathPatterns("/member/login.html");
 	}

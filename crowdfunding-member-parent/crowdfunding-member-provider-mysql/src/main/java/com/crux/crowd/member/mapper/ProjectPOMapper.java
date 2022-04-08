@@ -1,7 +1,7 @@
-package com.crux.crowd.reverse.mapper;
+package com.crux.crowd.member.mapper;
 
-import com.crux.crowd.reverse.entity.Admin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.crux.crowd.member.entity.po.ProjectPO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,9 +10,9 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author 作者
- * @since 2022-03-09
+ * @since 2022-04-07
  */
 @Mapper
-public interface AdminMapper extends BaseMapper<Admin> {
+public interface ProjectPOMapper extends BaseMapper<ProjectPO> {
 
 }

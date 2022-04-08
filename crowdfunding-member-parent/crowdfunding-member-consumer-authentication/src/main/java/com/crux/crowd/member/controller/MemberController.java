@@ -2,7 +2,6 @@ package com.crux.crowd.member.controller;
 
 import static com.crux.crowd.common.util.CrowdConstant.*;
 
-import com.crux.crowd.common.util.CrowdConstant;
 import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.DataSourceRemoteService;
@@ -24,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @RestController

@@ -10,9 +10,11 @@ spring:
     store-type: redis
 zuul:
   routes:
-    mysql:
-      service-id: crowd-mysql
-      path: /mysql/**
+    # 项目系统网关
+    project:
+      service-id: crowd-project
+      path: /project/**
+    # 会员系统网关
     authenticaton:
       service-id: crowd-authentication
       path: /**
@@ -20,8 +22,12 @@ zuul:
   # 由于Session使用Cookie，必须设置此项。否则转发请求时请求头中的设置项会被拦截，导致session不能共享
   # 默认拦截Cookie, Set-Cookie, Authorization
   sensitive-headers: []
-  host:
-    connect-timeout-millis: 10000
+# Zuul的超时时间通过ribbon设置
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 10000
+  MaxAutoRetries: 2
+  MaxAutoRetriesNextServer: 1
 eureka:
   client:
     service-url:

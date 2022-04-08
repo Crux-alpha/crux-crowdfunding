@@ -8,11 +8,14 @@ import com.crux.crowd.common.util.ResultEntity;
  */
 public interface AliyunOSSRemoteService{
 
+	String DATA_OSS_FILE_ACCESS_PATH = "ossFileAccessPath";
+	String DATA_STATUS_CODE = "statusCode";
+	String DATA_ERROR_MESSAGE = "errorMessage";
 	/**
 	 * 使用阿里云OSS的SDK将文件上传到OSS服务器中
 	 * @param originalName 原始的文件名
 	 * @param body 文件输入流
-	 * @return 上传结果
+	 * @return 上传结果。结果有SUCCESS、ERROR、FAILURE
 	 */
 	ResultEntity<String,String> upload(String originalName, java.io.InputStream body);
 }

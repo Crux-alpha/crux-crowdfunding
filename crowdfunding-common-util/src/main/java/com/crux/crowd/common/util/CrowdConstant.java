@@ -17,6 +17,7 @@ public final class CrowdConstant{
 	public static final String REDIS_MESSAGE_CODE_PREFIX = "message-code:";
 	public static final String COOKIE_MESSAGE_CODE_INTERVAL = "message_code_interval";
 	public static final String SESSION_ATTRIBUTE_MEMBER_INFO = "memberInfo";
+	public static final String SESSION_ATTRIBUTE_PROJECT_DATA = "project_data";
 
 	/**
 	 * 与HTTP属性有关的常量池
@@ -42,6 +43,8 @@ public final class CrowdConstant{
 		public static final String CODE_INCONSISTENT = "验证码不一致，请重试！";
 		public static final String SERVER_ERROR = "服务器出现异常，请稍后重试";
 		public static final String PHONE_IN_USE = "该手机号已经被注册";
+		public static final String HEADER_IMAGE_NOT_UPLOAD = "没有上传头图，请检查！";
+		public static final String HEADER_IMAGE_UPLOAD_FAILED = "头图上传失败";
 
 		private TipsMessage(){}
 	}

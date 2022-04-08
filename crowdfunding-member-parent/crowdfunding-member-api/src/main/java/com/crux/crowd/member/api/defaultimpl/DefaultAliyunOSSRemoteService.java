@@ -61,7 +61,7 @@ public class DefaultAliyunOSSRemoteService implements AliyunOSSRemoteService{
 				// 拼接访问刚刚上传的文件的路径
 				String ossFileAccessPath = bucketDomain + "/" + objectName;
 				// 当前方法返回成功
-				return ResultEntity.success(Collections.singletonMap("ossFileAccessPath", ossFileAccessPath));
+				return ResultEntity.success(Collections.singletonMap(DATA_OSS_FILE_ACCESS_PATH, ossFileAccessPath));
 			}else{
 				// 获取响应状态码
 				int statusCode = responseMessage.getStatusCode();
@@ -69,14 +69,14 @@ public class DefaultAliyunOSSRemoteService implements AliyunOSSRemoteService{
 				String errorMessage = responseMessage.getErrorResponseAsString();
 				// 当前方法返回失败
 				Map<String,String> data = new HashMap<>();
-				data.put("statusCode", Integer.toString(statusCode));
-				data.put("errorMessage", errorMessage);
+				data.put(DATA_STATUS_CODE, Integer.toString(statusCode));
+				data.put(DATA_ERROR_MESSAGE, errorMessage);
 				return ResultEntity.failure("上传失败", data);
 			}
 		}catch(Exception e){
 			log.error("文件上传异常，原因：{}", e.getMessage());
 			e.printStackTrace();
-			return ResultEntity.failure(e.getMessage());
+			return ResultEntity.error(e.getMessage());
 		}finally{
 			// oss使用完毕后需要关闭
 			Optional.ofNullable(ossClient).ifPresent(OSS::shutdown);

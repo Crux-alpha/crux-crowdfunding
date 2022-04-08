@@ -15,4 +15,8 @@ public enum ResponseResult{
 	public String getResult(){
 		return result;
 	}
+
+	public boolean equalsResultEntity(ResultEntity<?,?> resultEntity){
+		return this == resultEntity.getResult();
+	}
 }
