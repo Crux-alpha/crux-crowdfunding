@@ -1,5 +1,6 @@
 package com.crux.crowd.member.entity.vo;
 
+import com.crux.crowd.member.entity.po.ReturnPO;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ public class ReturnVO implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 
 	// 回报类型
-	private ReturnType type;
+	private ReturnPO.ReturnType type;
 	// 支持金额
 	private BigDecimal supportMoney;
 	// 回报内容介绍
@@ -33,21 +34,4 @@ public class ReturnVO implements java.io.Serializable{
 	private Integer returnDate;
 	// 说明图片路径
 	private String describePicPath;
-
-	/**
-	 * 回报类型
-	 */
-	public enum ReturnType{
-		PRACTICAL("实物回报"), FICTITIOUS("虚拟回报");
-
-		private final String type;
-
-		ReturnType(String type){
-			this.type = type;
-		}
-
-		public String getType(){
-			return type;
-		}
-	}
 }

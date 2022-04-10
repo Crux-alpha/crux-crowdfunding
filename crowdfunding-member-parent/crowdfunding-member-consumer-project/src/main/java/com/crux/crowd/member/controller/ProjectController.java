@@ -6,6 +6,7 @@ import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.AliyunOSSRemoteService;
 import com.crux.crowd.member.entity.vo.ProjectVO;
+import com.crux.crowd.member.entity.vo.ReturnVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,36 +41,16 @@ public class ProjectController{
 	 * @return 处理结果
 	 */
 	@PostMapping("/start/project_submit")
-	public ResultEntity<?,?> projectSubmit(ProjectVO projectVO, MultipartFile headerPicture, List<MultipartFile> detailPicture, HttpSession session){
+	public ResultEntity<String,?> projectSubmit(ProjectVO projectVO, MultipartFile headerPicture, List<MultipartFile> detailPicture, HttpSession session){
 		// 1、上传头图
 		if(headerPicture.isEmpty()) return ResultEntity.failure(HEADER_IMAGE_NOT_UPLOAD);
-		ResultEntity<String,String> headerPictureUploadResult;
-		try(InputStream body = headerPicture.getInputStream()){
-			headerPictureUploadResult = ossRemoteService.upload(headerPicture.getOriginalFilename(), body);
-		}catch(IOException e){
-			log.warn("头图上传失败，原因：{}", e.getMessage());
-			e.printStackTrace();
-			return ResultEntity.error(SERVER_ERROR);
-		}
-		// 2、如果失败或错误，结束处理
-		if(ResponseResult.FAILURE.equalsResultEntity(headerPictureUploadResult)){
-			return ResultEntity.failure(HEADER_IMAGE_UPLOAD_FAILED + headerPictureUploadResult.getMessage());
-		}
-		if(ResponseResult.ERROR.equalsResultEntity(headerPictureUploadResult)){
-			return ResultEntity.error(SERVER_ERROR);
-		}
+		ResultEntity<String,String> uploadResult = ossRemoteService.uploadMultipartFile(headerPicture);
+		if(!ResponseResult.SUCCESS.equalsResultEntity(uploadResult)) return uploadResult;
 		// 3、获取OSS存储的图片URL保存
-		projectVO.setHeaderPicturePath(headerPictureUploadResult.getData().get(AliyunOSSRemoteService.DATA_OSS_FILE_ACCESS_PATH));
+		projectVO.setHeaderPicturePath(uploadResult.getData().get(AliyunOSSRemoteService.DATA_OSS_FILE_ACCESS_PATH));
 
 		// 4、上传详情图片
-		detailPicture.stream().filter(dp -> !dp.isEmpty()).map(dp -> {
-			try(InputStream body = dp.getInputStream()){
-				return ossRemoteService.upload(dp.getOriginalFilename(), body);
-			}catch(IOException e){
-				log.warn("项目详情图片上传失败，原因：{}", e.getMessage());
-				e.printStackTrace();
-				return ResultEntity.<String,String>failure("");
-			}}).filter(ResponseResult.SUCCESS::equalsResultEntity)
+		detailPicture.stream().filter(dp -> !dp.isEmpty()).map(ossRemoteService::uploadMultipartFile).filter(ResponseResult.SUCCESS::equalsResultEntity)
 				.map(result -> result.getData().get(AliyunOSSRemoteService.DATA_OSS_FILE_ACCESS_PATH))
 				.forEach(projectVO.getDetailPicturePathList()::add);
 		/* 传统foreach遍历
@@ -89,6 +70,36 @@ public class ProjectController{
 
 		// 5、保存到session，处理成功
 		session.setAttribute(SESSION_ATTRIBUTE_PROJECT_DATA, projectVO);
+		return ResultEntity.success();
+	}
+
+	/**
+	 * <h3>发起项目步骤3</h3>
+	 * 将回报设置信息收集，保存到projectVO中
+	 * @param returnVO 一个回报设置信息实体
+	 * @param describePicture 说明图片
+	 * @return 处理结果
+	 */
+	@PostMapping("/start/return_submit")
+	public ResultEntity<?,?> returnSubmit(ReturnVO returnVO, MultipartFile describePicture, HttpSession session){
+		// 1、获取projectVO
+		Object attribute = session.getAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);
+		// 2、如果session中不存在保存的projectVO。应当刷新页面
+		if(!(attribute instanceof ProjectVO)) return ResultEntity.failure(HTML_FAILURE);
+		ProjectVO projectVO = (ProjectVO)attribute;
+
+		// 3、上传说明图片
+		ResultEntity<String,String> uploadResult = ossRemoteService.uploadMultipartFile(describePicture);
+		// 如果上传失败，将projectVO的ReturnVOList清空
+		if(!ResponseResult.SUCCESS.equalsResultEntity(uploadResult)){
+			projectVO.getReturnVOList().clear();
+			return uploadResult;
+		}
+		// 4、如果上传成功，设置returnVO的path
+		returnVO.setDescribePicPath(uploadResult.getData().get(AliyunOSSRemoteService.DATA_OSS_FILE_ACCESS_PATH));
+		// 5、将returnVO添加到projectVO中
+		projectVO.getReturnVOList().add(returnVO);
+
 		return ResultEntity.success();
 	}
 }

@@ -70,5 +70,22 @@ public class ReturnPO implements Serializable {
      */
     private String describePicPath;
 
+    /**
+     * 回报类型
+     */
+    public enum ReturnType{
+        PRACTICAL("实物回报"), FICTITIOUS("虚拟回报");
+
+        private final String type;
+
+        ReturnType(String type){
+            this.type = type;
+        }
+
+        public String getType(){
+            return type;
+        }
+    }
+
 
 }

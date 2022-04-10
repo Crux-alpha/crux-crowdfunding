@@ -538,7 +538,6 @@
                                                 </button>
                                                 <input id="ipt-project-header-image" type="file" accept="image/png, image/jpeg, image/gif, image/jpg" name="headerPicture" style="display: none;"/>
                                                 <label class="control-label">图片上无文字,支持jpg、jpeg、png、gif格式，大小不超过2M，建议尺寸：740*457px</label><br/>
-                                                <img alt="" src="" id="img-project-header-picture" class="img-thumbnail" style="width: 140px; height: 140px;display: none"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -685,7 +684,7 @@
                                         <tr style="background-color:#ddd;">
                                             <td>序号</td>
                                             <td>支付金额</td>
-                                            <td>名额</td>
+                                            <td>回报数量</td>
                                             <td>单笔限购</td>
                                             <td>回报内容</td>
                                             <td>回报时间</td>
@@ -693,140 +692,131 @@
                                             <td>操作</td>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td scope="row">1</td>
-                                            <td>￥1.00</td>
-                                            <td>无限制</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>项目结束后的30天</td>
-                                            <td>包邮</td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary btn-xs"><i
-                                                        class=" glyphicon glyphicon-pencil"></i></button>
-                                                <button type="button" class="btn btn-danger btn-xs"><i
-                                                        class=" glyphicon glyphicon-remove"></i></button>
-                                            </td>
-                                        </tr>
+                                        <!-- 在此显示已提交的回报信息 -->
+                                        <tbody id="tbody-return-data">
                                         </tbody>
                                     </table>
-                                    <button type="button" class="btn btn-primary btn-lg" onclick="$('#div-return-body').toggle()"><i
-                                            class="glyphicon glyphicon-plus"></i> 添加回报
+                                    <button id="btn-return-add" type="button" class="btn btn-primary btn-lg">
+                                        <i class="glyphicon glyphicon-plus"></i> 添加回报
                                     </button>
                                     <div style="width:20px;margin-left:20px;
                                              border: 10px solid rgba(221, 221, 221, 0);border-bottom-color: #eceeef;">
                                     </div>
-                                    <!-- 添加回报表单内容 -->
-                                    <div id="div-return-body" class="panel panel-default"
-                                         style="border-style: dashed;background-color:#eceeef">
-                                        <div class="panel-body">
-                                            <div class="col-md-12 column">
-                                                <form class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">回报类型</label>
-                                                        <div class="col-sm-10">
-                                                            <label class="radio-inline">
-                                                                <input type="radio" name="type"
-                                                                       value="PRACTICAL"> 实物回报
-                                                            </label>
-                                                            <label class="radio-inline">
-                                                                <input type="radio" name="type"
-                                                                       value="FICTITIOUS"> 虚拟物品回报
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="ipt-return-support-money" class="col-sm-2 control-label">支持金额</label>
-                                                        <div class="col-sm-10">
-                                                            <input id="ipt-return-support-money" type="number" class="form-control" name="supportMoney"
-                                                                   style="width:100px;">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="textarea-return-content" class="col-sm-2 control-label">回报内容</label>
-                                                        <div class="col-sm-10">
-                                                            <textarea id="textarea-return-content" class="form-control" rows="5" name="content"
-                                                                      placeholder="简单描述回报内容，不超过200字"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">说明图片</label>
-                                                        <div class="col-sm-10">
-                                                            <button type="button" class="btn btn-primary btn-lg active" onclick="$('#ipt-return-describe-image').click()">
-                                                                上传图片
-                                                            </button>
-                                                            <input id="ipt-return-describe-image" type="file" name="describePicture" accept="image/png, image/jpeg, image/gif, image/jpg" style="display: none">
-                                                            <label class="control-label">支持jpg、jpeg、png、gif格式，大小不超过2M，建议尺寸：760*510px</label>
-                                                            <img alt="" src="" id="img-return-describe-image" class="img-thumbnail" style="width: 140px; height: 140px;display: none"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="ipt-return-count" class="col-sm-2 control-label">回报数量</label>
-                                                        <div class="col-sm-10">
-                                                            <input id="ipt-return-count" type="number" name="count" class="form-control"
-                                                                   style="width:100px;display:inline">
-                                                            <label class="control-label">“0”为不限回报数量</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="ipt-return-purchase"
-                                                               class="col-sm-2 control-label">单笔限购</label>
-                                                        <div class="col-sm-10">
-                                                            <label class="radio-inline">
-                                                                <input id="radio-return-not-purchase" type="radio" name="is-purchase" checked> 不限购
-                                                            </label>
-                                                            <label class="radio-inline">
-                                                                <input id="radio-return-purchase" type="radio" name="is-purchase"> 限购
-                                                            </label>
-                                                            <input id="ipt-return-purchase" type="number" class="form-control" name="purchase" value="1"
-                                                                   style="width:100px;display: inline" disabled>
-                                                            <label class="radio-inline" style="display: none">默认数量为1，且不超过上方已设置的回报数量</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="ipt-return-freight" class="col-sm-2 control-label">运费</label>
-                                                        <div class="col-sm-10">
-                                                            <input id="ipt-return-freight" type="number" class="form-control" name="freight"
-                                                                   style="width:100px;display:inline" value="0">
-                                                            <label class="control-label">“0”为包邮</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">发票</label>
-                                                        <div class="col-sm-10">
-                                                            <label class="radio-inline">
-                                                                <input type="radio" name="invoice" value="false"> 不可开发票
-                                                            </label>
-                                                            <label class="radio-inline">
-                                                                <input type="radio" name="invoice" value="true">
-                                                                可开发票（包括个人发票和自定义抬头发票）
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">回报时间</label>
-                                                        <div class="col-sm-10">
-                                                            <label for="ipt-return-return-date" class="radio-inline">
-                                                                项目结束后
-                                                            </label>
-                                                            <input id="ipt-return-return-date" type="number" class="form-control" name="returnDate"
-                                                                   style="width:100px;display:inline">
-                                                            <label class="radio-inline">天，向支持者发送回报</label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label"></label>
-                                                        <div class="col-sm-10">
-                                                            <button type="button" class="btn btn-primary">确定</button>
-                                                            <button type="button" class="btn btn-default">取消</button>
-                                                        </div>
-                                                    </div>
 
-                                                </form>
+                                    <!-- 回报模态框 -->
+                                    <div class="modal fade" id="modal-update-return-data" tabindex="-1" role="dialog" aria-labelledby="modal-title-update-return-data">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <h4 class="modal-title" id="modal-title-update-return-data">修改回报设置</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="panel-body">
+                                                        <div class="col-md-12 column">
+                                                            <form id="form-return" class="form-horizontal">
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2 control-label">回报类型</label>
+                                                                    <div class="col-sm-10">
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="type"
+                                                                                   value="PRACTICAL"> 实物回报
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="type"
+                                                                                   value="FICTITIOUS"> 虚拟物品回报
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipt-return-support-money" class="col-sm-2 control-label">支持金额</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input id="ipt-return-support-money" type="number" class="form-control" name="supportMoney"
+                                                                               style="width:100px;">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="textarea-return-content" class="col-sm-2 control-label">回报内容</label>
+                                                                    <div class="col-sm-10">
+                                                        <textarea id="textarea-return-content" class="form-control" rows="5" name="content"
+                                                                  placeholder="简单描述回报内容，不超过200字"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2 control-label">说明图片</label>
+                                                                    <div class="col-sm-10">
+                                                                        <button type="button" class="btn btn-primary btn-lg active" onclick="$('#ipt-return-describe-image').click()">
+                                                                            上传图片
+                                                                        </button>
+                                                                        <input id="ipt-return-describe-image" type="file" name="describePicture" accept="image/png, image/jpeg, image/gif, image/jpg" style="display: none">
+                                                                        <label class="control-label">支持jpg、jpeg、png、gif格式，大小不超过2M，建议尺寸：760*510px</label><br/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipt-return-count" class="col-sm-2 control-label">回报数量</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input id="ipt-return-count" type="number" name="count" class="form-control"
+                                                                               style="width:100px;display:inline">
+                                                                        <label class="control-label">“0”为不限回报数量</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipt-return-purchase"
+                                                                           class="col-sm-2 control-label">单笔限购</label>
+                                                                    <div class="col-sm-10">
+                                                                        <label class="radio-inline">
+                                                                            <input id="radio-return-not-purchase" type="radio" name="signalPurchase" value="false" checked> 不限购
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input id="radio-return-purchase" type="radio" name="signalPurchase" value="true"> 限购
+                                                                        </label>
+                                                                        <input id="ipt-return-purchase" type="number" class="form-control" name="purchase" value="1"
+                                                                               style="width:100px;display: inline" disabled>
+                                                                        <label class="radio-inline" style="display: none">默认数量为1，且不超过上方已设置的回报数量</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ipt-return-freight" class="col-sm-2 control-label">运费</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input id="ipt-return-freight" type="number" class="form-control" name="freight"
+                                                                               style="width:100px;display:inline" value="0">
+                                                                        <label class="control-label">“0”为包邮</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2 control-label">发票</label>
+                                                                    <div class="col-sm-10">
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="invoice" value="false"> 不可开发票
+                                                                        </label>
+                                                                        <label class="radio-inline">
+                                                                            <input type="radio" name="invoice" value="true" checked>
+                                                                            可开发票（包括个人发票和自定义抬头发票）
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="col-sm-2 control-label">回报时间</label>
+                                                                    <div class="col-sm-10">
+                                                                        <label for="ipt-return-return-date" class="radio-inline">
+                                                                            项目结束后
+                                                                        </label>
+                                                                        <input id="ipt-return-return-date" type="number" class="form-control" name="returnDate"
+                                                                               style="width:100px;display:inline">
+                                                                        <label class="radio-inline">天，向支持者发送回报</label>
+                                                                    </div>
+                                                                </div>
+                                                                <button id="btn-return-reset" type="reset" onclick="removeImage($('#ipt-return-describe-image').parent());$('#radio-return-not-purchase').click();" hidden></button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button id="btn-return-submit" class="btn btn-primary">确定</button>
+                                                    <button class="btn btn-default" data-dismiss="modal" onclick="$('#btn-return-reset').click()">取消</button>
+                                                </div>
                                             </div>
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -843,8 +833,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -852,8 +840,7 @@
                         <button type="button" class="btn  btn-default btn-lg"
                                 onclick="window.location.href='start-step-1.html'">上一步
                         </button>
-                        <button type="button" class="btn  btn-warning btn-lg"
-                                onclick="window.location.href='start-step-3.html'">下一步
+                        <button id="btn-next-step-04" type="button" class="btn  btn-warning btn-lg">下一步
                         </button>
                         <a class="btn"> 预览 </a>
                     </div>
@@ -1109,36 +1096,25 @@
 <script>
     $(function(){
 		changeStep($("#step-01"));
-		$("#div-return-body").hide();
-
 
 		// 项目头图预览
 		$("#ipt-project-header-image").change(function(){
-			// 1、获取当前input的files属性。它是一个数组，表示所有已选择的文件
-            let img = this.files[0];
-			// 2、通过window.URL.createObjectURL()生成该文件的url
-		    let src = window.URL.createObjectURL(img);
-			// 3、将url添加到img的src属性
-		    let picture = $("#img-project-header-picture");
-		    picture.attr("src", src);
-		    picture.show();
+			previewImage(this, $(this).parent());
 		});
 
 		// 项目详情图预览
 		$("#ipt-project-detail-image").change(function(){
-			$(this).nextAll("img").remove();
-			for(let i=0;i<this.files.length;i++){
-				let img = this.files[i];
-				let url = window.URL || window.webkitURL;
-				let src = url.createObjectURL(img);
-				$("<img alt='' src='"+ src +"' class='img-thumbnail' style='width: 140px; height: 140px;'>").appendTo($(this).parent());
-            }
+			previewImage(this, $(this).parent());
 		});
 
 		// 点击step-02:下一页，提交表单数据
 		$("#btn-next-step-03").click(function(){
 			// 1、检查表单项
-            /*if(!checkProjectFormData()) return;
+			let message = checkProjectFormData();
+            if(message != null){
+				layer.msg(message);
+				return;
+            }
 
 			// 2、使用FormData封装包含文件的表单数据
 			let projectData = new FormData(document.querySelector("#form-project"));
@@ -1155,17 +1131,20 @@
                 async: false
             });
 
-			// 4、检查结果，执行下一步
+			// 4、检查结果
 			let json = result.responseJSON;
 			if(result.status !== 200 || !json || json.result !== "SUCCESS"){
-				var message = json ? json.message : "服务器出现异常，请稍后再试~";
+				let message = json ? json.message : "服务器出现异常，请稍后再试~";
 				layer.msg(message);
 				return;
-			}*/
+			}
+
+			// 5、进入回报设置
             changeStep($("#step-03"));
 		});
 
-		let purchaseIpt = $("#ipt-return-purchase");
+		// 限购数量显示-隐藏切换
+		const purchaseIpt = $("#ipt-return-purchase");
 		purchaseIpt.hide();
 		$("#radio-return-not-purchase").click(function(){
 			purchaseIpt.hide();
@@ -1176,6 +1155,112 @@
             purchaseIpt.show();
 			purchaseIpt.next().show();
 			purchaseIpt.attr("disabled", false);
+		});
+
+		// 说明图片预览
+        $("#ipt-return-describe-image").change(function(){
+			previewImage(this, $(this).parent());
+		});
+
+
+        // 当前操作数据的索引
+		let tbodyIndex = 0;
+		// 已收集的回报数据
+		let returnFormDataArray = [];
+		const tbodyReturnData = $("#tbody-return-data");
+		// 点击添加回报
+		$("#btn-return-add").click(function(){
+			$("#modal-title-update-return-data").text("添加回报设置");
+			tbodyIndex = returnFormDataArray.length;
+			$("#modal-update-return-data").modal({backdrop: false});
+
+		});
+		// 确定回报设置后收集并显示表格数据
+		$("#btn-return-submit").click(function(){
+			// 1、拿到表单数据，添加到数组中
+            let returnData = new FormData(document.querySelector("#form-return"));
+			let result = checkReturnFormData(returnData);
+            if(result != null){
+				layer.msg(result);
+				return false;
+            }
+
+			// 2、将数据显示到表格中
+            showReturnData(tbodyIndex === returnFormDataArray.length, tbodyIndex, returnData);
+			returnFormDataArray[tbodyIndex] = returnData;
+
+			$("#modal-update-return-data").modal("hide");
+			$("#btn-return-reset").click();
+		});
+
+        // 修改回报设置
+		tbodyReturnData.on("click", ".i-update-return-data", function(){
+			// 拿到当前设置的回报数据
+            let index = $(this).closest("tr").children("td:first").text() - 1;
+			let returnData = returnFormDataArray[index];
+
+			// 回显数据，不会显图片数据
+			$("#form-return input[name=type][value="+ returnData.get("type") +"]").click();
+			$("#ipt-return-support-money").val(returnData.get("supportMoney"));
+			$("#textarea-return-content").val(returnData.get("content"));
+			$("#ipt-return-count").val(returnData.get("count"));
+			$("#form-return input[name=signalPurchase][value="+ returnData.get("signalPurchase") +"]").click();
+			$("#ipt-return-purchase").val(returnData.get("purchase"));
+			$("#ipt-return-freight").val(returnData.get("freight"));
+			$("#form-return input[name=invoice][value="+ returnData.get("invoice") +"]").click();
+			$("#ipt-return-return-date").val(returnData.get("returnDate"));
+
+			// 打开模态框
+            tbodyIndex = index;
+            $("#modal-title-update-return-data").text("修改回报设置")
+			$("#modal-update-return-data").modal({backdrop: false});
+		});
+		// 删除回报设置
+		tbodyReturnData.on("click", ".i-delete-return-data", function(){
+            if(!confirm("确定删除?")) return;
+
+			let tr = $(this).closest("tr");
+			let index = tr.children("td:first").text() - 1;
+			// 将该索引订单回报项删除
+			returnFormDataArray.splice(index, 1);
+			tr.remove();
+
+			// 更新表格的索引
+			let trs = tbodyReturnData.children();
+			for(let i=0; i<returnFormDataArray.length; i++){
+				trs.eq(i).children("td:first").text(i + 1);
+            }
+		});
+
+		// 回报设置数据提交
+		$("#btn-next-step-04").click(function(){
+			// 1、如果没有设置回报，退出
+            if(returnFormDataArray.length < 1){
+				layer.msg("请添加至少一个回报设置");
+				return;
+            }
+
+			// 2、遍历回报数据，上传到服务器
+			for(let i=0; i<returnFormDataArray.length; i++){
+				let result = $.ajax({
+					url: "/project/start/return_submit",
+					type: "POST",
+					data: returnFormDataArray[i],
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    async: false
+				});
+				let json = result.responseJSON;
+				if(result.status !== 200 || !json || json.result !== "SUCCESS"){
+					let message = json ? json.message : "服务器出现异常，请稍后再试";
+					layer.msg(message);
+					return;
+				}
+            }
+
+			// 3、所有数据上传完毕，进入步骤4
+			changeStep($("#step-04"));
 		});
     });
 
@@ -1188,13 +1273,27 @@
         showStep.attr("hidden", false);
     }
 
+	function previewImage(fileInput, parent){
+		removeImage(parent);
+		let files = fileInput.files;
+		for(let i=0; i<files.length; i++){
+			let image = files[i];
+			let url = window.URL || window.webkitURL;
+			let src = url.createObjectURL(image);
+			$("<img alt='' src='"+ src +"' class='img-thumbnail' style='width: 140px; height: 140px;'>").appendTo(parent);
+		}
+    }
+
+	function removeImage(parent){
+		parent.find("img").remove();
+    }
+
 	/**
      * 检查发起项目页表单数据
-	 * @returns {boolean} 检查结果
+	 * @returns {string|null} 如果检查失败，返回错误信息
 	 */
 	function checkProjectFormData(){
-		let state = false;
-		let message;
+		let message = null;
 		if($("#form-project input:checked[name=typeIdList]").length < 1){
 			message = "请选择分类信息";
         }else if($("#ipt-project-name").val().length < 1){
@@ -1213,13 +1312,75 @@
 			message = "请输入联系电话";
         }else if($("#ipt-member-launch-service").val().length < 1){
 			message = "请输入客服电话";
-        }else state = true;
+        }
 
-		if(!state){
-			layer.msg(message);
-		}
+		return message;
+    }
 
-		return state;
+	/**
+     * 检查回报表单项
+	 * @param returnData FormData数据
+	 * @returns {string|null} 如果有错误项，返回提示消息
+	 */
+	function checkReturnFormData(returnData){
+		let message = null;
+
+		let purchase = returnData.get("purchase");
+		let count = returnData.get("count");
+		if(!returnData.get("type")) message = "请选择回报类型";
+		else if(returnData.get("supportMoney").length < 1) message = "请设置支持金额";
+		else if(returnData.get("content").length < 1) message = "请输入回报内容";
+		else if(returnData.get("describePicture").size < 1) message = "请上传说明图片";
+		else if(returnData.get("count").length < 1) message = "请设置回报数量";
+		else if($("#radio-return-purchase").prop("checked")
+            && (purchase.length < 1 || (count > 0 && purchase > count))) message = "单笔限购不能超过回报数量";
+		else if(returnData.get("returnDate").length < 1) message = "请设置回报时间";
+
+		return message;
+    }
+
+	/**
+     * 添加表格数据，或者更新表格数据
+	 * @param isAdd 是否是新增的
+	 * @param index 序号
+	 * @param returnData FormData数据
+	 */
+	function showReturnData(isAdd, index, returnData){
+
+		let supportMoney = returnData.get("supportMoney");
+		let count = returnData.get("count");
+		if(count === "0") count = "无限制";
+		let purchase = $("#radio-return-purchase").prop("checked") ? returnData.get("purchase") : "不限购";
+		let content = returnData.get("content");
+		let returnDate = returnData.get("returnDate");
+		let freight = returnData.get("freight");
+		if(freight === "0") freight = "包邮";
+
+		if(isAdd){
+			index++;
+			$("<tr>" +
+				"<td>"+ index +"</td>" +
+				"<td>"+ supportMoney +"</td>" +
+				"<td>"+ count +"</td>" +
+				"<td>"+ purchase +"</td>" +
+				"<td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover'" +
+                "       data-placement='bottom' data-content='"+ content +"' onclick='$(this).popover()'>查看</button></td>" +
+				"<td>项目结束后"+ returnDate +"天</td>" +
+				"<td>"+ freight +"</td>" +
+				"<td><button type='button' class='btn btn-primary btn-xs'>" +
+				"<i class='glyphicon glyphicon-pencil i-update-return-data'></i></button>" +
+				"<button type='button' class='btn btn-danger btn-xs'>" +
+				"<i class=' glyphicon glyphicon-remove i-delete-return-data'></i></button></td>" +
+				"</tr>").appendTo($("#tbody-return-data"));
+        }else{
+			const tds = $("#tbody-return-data").children("tr").eq(index).children("td");
+			tds.eq(1).text(supportMoney);
+			tds.eq(2).text(count);
+			tds.eq(3).text(purchase);
+			tds.eq(4).children().attr("data-content", content);
+			tds.eq(5).text("项目结束后" + returnDate + "天");
+			tds.eq(6).text(freight);
+        }
     }
 </script>
 </body>

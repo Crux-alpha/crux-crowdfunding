@@ -37,7 +37,7 @@ public class ResultEntity<K,V>{
 		return success(message, Collections.emptyMap());
 	}
 
-	public static ResultEntity<?,?> success(){
+	public static <K,V> ResultEntity<K,V> success(){
 		return success(Collections.emptyMap());
 	}
 
@@ -53,7 +53,7 @@ public class ResultEntity<K,V>{
 		return failure(message, Collections.emptyMap());
 	}
 
-	public static ResultEntity<?,?> failure(){
+	public static <K,V> ResultEntity<K,V> failure(){
 		return failure(Collections.emptyMap());
 	}
 
@@ -62,7 +62,11 @@ public class ResultEntity<K,V>{
 	}
 
 	public static <K,V> ResultEntity<K,V> error(String message){
-		return new ResultEntity<>(ResponseResult.ERROR, message, null);
+		return error(message, null);
+	}
+
+	public static <K,V> ResultEntity<K,V> error(String message, Map<K,V> data){
+		return new ResultEntity<>(ResponseResult.ERROR, message, data);
 	}
 
 	@Override

@@ -45,6 +45,7 @@ public final class CrowdConstant{
 		public static final String PHONE_IN_USE = "该手机号已经被注册";
 		public static final String HEADER_IMAGE_NOT_UPLOAD = "没有上传头图，请检查！";
 		public static final String HEADER_IMAGE_UPLOAD_FAILED = "头图上传失败";
+		public static final String HTML_FAILURE = "当前页面已失效，请刷新后重试";
 
 		private TipsMessage(){}
 	}
