@@ -838,11 +838,10 @@
                     </div>
                     <div class="panel-footer" style="text-align:center;">
                         <button type="button" class="btn  btn-default btn-lg"
-                                onclick="window.location.href='start-step-1.html'">上一步
+                                onclick="changeStep($('#step-02'))">上一步
                         </button>
                         <button id="btn-next-step-04" type="button" class="btn  btn-warning btn-lg">下一步
                         </button>
-                        <a class="btn"> 预览 </a>
                     </div>
                 </div>
             </div>
@@ -935,24 +934,25 @@
 
                                     <div class="row clearfix">
                                         <div class="col-md-6 column">
-                                            <form role="form">
+                                            <form id="form-confirm" role="form">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1">易付宝企业账号：</label><input type="email"
-                                                                                                           class="form-control"
-                                                                                                           id="exampleInputEmail1"/>
+                                                    <label for="ipt-confirm-pay">易付宝企业账号：</label>
+                                                    <input id="ipt-confirm-pay" name="payNum" type="text" class="form-control"/>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleInputPassword1">法人身份证号：</label><input
-                                                        type="password" class="form-control"
-                                                        id="exampleInputPassword1"/>
+                                                    <label for="ipt-confirm-card">法人身份证号：</label>
+                                                    <input id="ipt-confirm-card" name="cardNum" type="password" class="form-control"/>
                                                 </div>
                                             </form>
                                         </div>
                                         <div class="col-md-6 column">
-                                            <div class="panel panel-default">
+                                            <div id="div-confirm-show-info" class="panel panel-default" style="display: none;">
                                                 <div class="panel-body" style="padding:40px;">
-                                                    <i class="glyphicon glyphicon-user"></i>
-                                                    易购账户名：18801282948<br><br><span style="margin-left:60px;">您正在使用该账号发起众筹项目</span>
+                                                    <div class="form-group has-success">
+                                                        <label for="ipt-confirm-show-pay" class="col-sm-4"><i class="glyphicon glyphicon-user"></i>易购账户名</label>
+                                                        <input type="text" id="ipt-confirm-show-pay" readonly/>
+                                                        <p class="col-sm-10 help-block">您正在使用该账号发起众筹项目</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -962,13 +962,10 @@
                         </div>
                     </div>
                     <div class="panel-footer" style="text-align:center;">
-                        <button type="button" class="btn  btn-default btn-lg"
-                                onclick="window.location.href='start-step-2.html'">上一步
+                        <button id="btn-prev-step-03" type="button" class="btn btn-default btn-lg">上一步
                         </button>
-                        <button type="button" class="btn  btn-warning btn-lg"
-                                onclick="window.location.href='start-step-4.html'">提交
+                        <button id="btn-next-step-05" type="button" class="btn btn-warning btn-lg">提交
                         </button>
-                        <a class="btn"> 保存草稿 </a>
                     </div>
                 </div>
             </div>
@@ -1077,7 +1074,7 @@
                     </div>
                     <div class="panel-footer" style="text-align:center;">
                         <button type="button" class="btn  btn-warning btn-lg"
-                                onclick="window.location.href='minecrowdfunding.html'">我的众筹
+                                onclick="location.href='/member/center.html'">我的众筹
                         </button>
                     </div>
                 </div>
@@ -1094,7 +1091,7 @@
 <script src="script/back-to-top.js" th:src="@{/static/script/back-to-top.js}"></script>
 <script type="text/javascript" th:src="@{/static/layer/layer.js}"></script>
 <script>
-    $(function(){
+    $(() => {
 		changeStep($("#step-01"));
 
 		// 项目头图预览
@@ -1108,7 +1105,7 @@
 		});
 
 		// 点击step-02:下一页，提交表单数据
-		$("#btn-next-step-03").click(function(){
+		$("#btn-next-step-03").click(() => {
 			// 1、检查表单项
 			let message = checkProjectFormData();
             if(message != null){
@@ -1121,37 +1118,31 @@
 			new FormData(document.querySelector("#form-member-launch")).forEach((value, key) => projectData.append(key, value));
 
 			// 3、执行ajax请求，提交表单数据，返回结果
-			let result = $.ajax({
+			$.ajax({
                 url: "/project/start/project_submit",
                 type: "POST",
                 data: projectData,
                 processData: false,
                 contentType: false,
                 dataType: "json",
-                async: false
+                success: (json) => {
+					if(json.result === "SUCCESS") changeStep($("#step-03"));
+                    else layer.msg(json.message);
+                },
+                error: errorCallback
             });
-
-			// 4、检查结果
-			let json = result.responseJSON;
-			if(result.status !== 200 || !json || json.result !== "SUCCESS"){
-				let message = json ? json.message : "服务器出现异常，请稍后再试~";
-				layer.msg(message);
-				return;
-			}
-
-			// 5、进入回报设置
-            changeStep($("#step-03"));
+			layer.msg("请求中，请稍等...");
 		});
 
 		// 限购数量显示-隐藏切换
 		const purchaseIpt = $("#ipt-return-purchase");
 		purchaseIpt.hide();
-		$("#radio-return-not-purchase").click(function(){
+		$("#radio-return-not-purchase").click(() => {
 			purchaseIpt.hide();
 			purchaseIpt.next().hide();
 			purchaseIpt.attr("disabled", true);
         });
-		$("#radio-return-purchase").click(function(){
+		$("#radio-return-purchase").click(() => {
             purchaseIpt.show();
 			purchaseIpt.next().show();
 			purchaseIpt.attr("disabled", false);
@@ -1169,14 +1160,14 @@
 		let returnFormDataArray = [];
 		const tbodyReturnData = $("#tbody-return-data");
 		// 点击添加回报
-		$("#btn-return-add").click(function(){
+		$("#btn-return-add").click(() => {
 			$("#modal-title-update-return-data").text("添加回报设置");
 			tbodyIndex = returnFormDataArray.length;
 			$("#modal-update-return-data").modal({backdrop: false});
 
 		});
 		// 确定回报设置后收集并显示表格数据
-		$("#btn-return-submit").click(function(){
+		$("#btn-return-submit").click(() => {
 			// 1、拿到表单数据，添加到数组中
             let returnData = new FormData(document.querySelector("#form-return"));
 			let result = checkReturnFormData(returnData);
@@ -1233,15 +1224,18 @@
 		});
 
 		// 回报设置数据提交
-		$("#btn-next-step-04").click(function(){
+		$("#btn-next-step-04").click(() => {
 			// 1、如果没有设置回报，退出
             if(returnFormDataArray.length < 1){
 				layer.msg("请添加至少一个回报设置");
 				return;
+            }else{
+				layer.msg("请求中，请稍等...");
             }
 
 			// 2、遍历回报数据，上传到服务器
 			for(let i=0; i<returnFormDataArray.length; i++){
+
 				let result = $.ajax({
 					url: "/project/start/return_submit",
 					type: "POST",
@@ -1262,16 +1256,71 @@
 			// 3、所有数据上传完毕，进入步骤4
 			changeStep($("#step-04"));
 		});
+
+		// 显示当前易付宝账号
+		$("#ipt-confirm-pay").change(() => {
+			const confirmInfoDiv = $("#div-confirm-show-info");
+			let pay = $("#ipt-confirm-pay").val();
+			if(numberRegex.test(pay)){
+				$("#ipt-confirm-show-pay").val(pay);
+				confirmInfoDiv.show();
+			}
+			else confirmInfoDiv.hide();
+		});
+		// 最终提交
+		$("#btn-next-step-05").click(() => {
+			let confirmData = new FormData(document.querySelector("#form-confirm"));
+			let message = checkConfirmFormData(confirmData);
+			if(message != null){
+				layer.msg(message);
+				return;
+			}
+
+			$.ajax({
+				url: "/project/start/confirm_submit",
+				type: "POST",
+				data: confirmData,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: (json) => {
+					if(json.result === "SUCCESS") changeStep($("#step-05"));
+					else layer.msg(json.message);
+				},
+				error: errorCallback
+			});
+
+			layer.msg("请求中，请稍等...");
+		});
+
+		// 步骤4返回上一步，将projectVO中的回报信息删除
+        $("#btn-prev-step-03").click(() => {
+			$.ajax({
+                url: "/project/start/return_rollback",
+                type: "POST",
+                dataType: "json",
+                success: (json) => {
+					if(json.result === "SUCCESS")
+					    changeStep($("#step-03"));
+					else layer.msg(json.message);
+                },
+                error: errorCallback
+            })
+        });
+
     });
 
+
+</script>
+<script type="text/javascript">
 	/**
-     * 执行下一步
+	 * 执行下一步
 	 * @param showStep 要显示的步骤
 	 */
 	function changeStep(showStep){
 		$(".start-step").attr("hidden", true);
-        showStep.attr("hidden", false);
-    }
+		showStep.attr("hidden", false);
+	}
 
 	function previewImage(fileInput, parent){
 		removeImage(parent);
@@ -1282,43 +1331,52 @@
 			let src = url.createObjectURL(image);
 			$("<img alt='' src='"+ src +"' class='img-thumbnail' style='width: 140px; height: 140px;'>").appendTo(parent);
 		}
-    }
+	}
 
 	function removeImage(parent){
 		parent.find("img").remove();
-    }
+	}
+
+	// 必须包含至少一个非空白字符
+	const hasLengthRegex = /\S+/;
+	// 必须不能包含空白字符
+	const notEmptyRegex = /^\S+$/;
+	// 必须为数字
+    const numberRegex = /^\d+$/;
+	// 必须为11位手机号码
+    const phoneRegex = /^\d{11}$/;
 
 	/**
-     * 检查发起项目页表单数据
+	 * 检查发起项目页表单数据
 	 * @returns {string|null} 如果检查失败，返回错误信息
 	 */
 	function checkProjectFormData(){
 		let message = null;
 		if($("#form-project input:checked[name=typeIdList]").length < 1){
 			message = "请选择分类信息";
-        }else if($("#ipt-project-name").val().length < 1){
+		}else if(!hasLengthRegex.test($("#ipt-project-name").val())){
 			message = "请输入项目名称";
-        }else if($("#textarea-project-description").val().length < 1){
+		}else if(!hasLengthRegex.test($("#textarea-project-description").val())){
 			message = "请输入简介";
-        }else if($("#ipt-project-money").val().length < 1){
+		}else if(!notEmptyRegex.test($("#ipt-project-money").val())){
 			message = "请设置筹资金额";
-        }else if($("#ipt-project-day").val().length < 1){
+		}else if(!numberRegex.test($("#ipt-project-day").val())){
 			message = "请设置筹资天数";
-        }else if(document.getElementById("ipt-project-header-image").files.length < 1){
+		}else if(document.getElementById("ipt-project-header-image").files.length < 1){
 			message = "请上传头图";
-        }else if($("#ipt-member-launch-description-simple").val().length < 1){
+		}else if(!hasLengthRegex.test($("#ipt-member-launch-description-simple").val())){
 			message = "请输入自我介绍";
-        }else if($("#ipt-member-launch-phone").val().length < 1){
+		}else if(!phoneRegex.test($("#ipt-member-launch-phone").val())){
 			message = "请输入联系电话";
-        }else if($("#ipt-member-launch-service").val().length < 1){
+		}else if(!phoneRegex.test($("#ipt-member-launch-service").val())){
 			message = "请输入客服电话";
-        }
+		}
 
 		return message;
-    }
+	}
 
 	/**
-     * 检查回报表单项
+	 * 检查回报表单项
 	 * @param returnData FormData数据
 	 * @returns {string|null} 如果有错误项，返回提示消息
 	 */
@@ -1327,20 +1385,30 @@
 
 		let purchase = returnData.get("purchase");
 		let count = returnData.get("count");
-		if(!returnData.get("type")) message = "请选择回报类型";
-		else if(returnData.get("supportMoney").length < 1) message = "请设置支持金额";
-		else if(returnData.get("content").length < 1) message = "请输入回报内容";
+		if(!notEmptyRegex.test(returnData.get("type"))) message = "请选择回报类型";
+		else if(!notEmptyRegex.test(returnData.get("supportMoney"))) message = "请设置支持金额";
+		else if(!hasLengthRegex.test(returnData.get("content"))) message = "请输入回报内容";
 		else if(returnData.get("describePicture").size < 1) message = "请上传说明图片";
-		else if(returnData.get("count").length < 1) message = "请设置回报数量";
+		else if(!numberRegex.test(returnData.get("count"))) message = "请设置回报数量";
 		else if($("#radio-return-purchase").prop("checked")
-            && (purchase.length < 1 || (count > 0 && purchase > count))) message = "单笔限购不能超过回报数量";
-		else if(returnData.get("returnDate").length < 1) message = "请设置回报时间";
+			&& (!numberRegex.test(purchase) || (count > 0 && purchase > count))) message = "单笔限购不能超过回报数量";
+		else if(!numberRegex.test(returnData.get("returnDate"))) message = "请设置回报时间";
+
+		return message;
+	}
+
+	function checkConfirmFormData(confirmData){
+		let message = null;
+		const cardReg = /^\d{15}|\d{18}$/;
+
+		if(!numberRegex.test(confirmData.get("payNum"))) message = "请输入易付宝企业账号";
+		else if(!cardReg.test($("#ipt-confirm-card").val())) message = "请输入正确的身份证号";
 
 		return message;
     }
 
 	/**
-     * 添加表格数据，或者更新表格数据
+	 * 添加表格数据，或者更新表格数据
 	 * @param isAdd 是否是新增的
 	 * @param index 序号
 	 * @param returnData FormData数据
@@ -1364,7 +1432,7 @@
 				"<td>"+ count +"</td>" +
 				"<td>"+ purchase +"</td>" +
 				"<td><button type='button' class='btn btn-default' data-container='body' data-toggle='popover'" +
-                "       data-placement='bottom' data-content='"+ content +"' onclick='$(this).popover()'>查看</button></td>" +
+				"       data-placement='bottom' data-content='"+ content +"' onclick='$(this).popover()'>查看</button></td>" +
 				"<td>项目结束后"+ returnDate +"天</td>" +
 				"<td>"+ freight +"</td>" +
 				"<td><button type='button' class='btn btn-primary btn-xs'>" +
@@ -1372,7 +1440,7 @@
 				"<button type='button' class='btn btn-danger btn-xs'>" +
 				"<i class=' glyphicon glyphicon-remove i-delete-return-data'></i></button></td>" +
 				"</tr>").appendTo($("#tbody-return-data"));
-        }else{
+		}else{
 			const tds = $("#tbody-return-data").children("tr").eq(index).children("td");
 			tds.eq(1).text(supportMoney);
 			tds.eq(2).text(count);
@@ -1380,8 +1448,12 @@
 			tds.eq(4).children().attr("data-content", content);
 			tds.eq(5).text("项目结束后" + returnDate + "天");
 			tds.eq(6).text(freight);
-        }
-    }
+		}
+	}
+
+	function errorCallback(resp){
+		layer.msg(resp.responseJSON.message);
+	}
 </script>
 </body>
 </html>

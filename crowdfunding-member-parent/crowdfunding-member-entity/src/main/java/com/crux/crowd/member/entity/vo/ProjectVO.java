@@ -3,7 +3,6 @@ package com.crux.crowd.member.entity.vo;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,10 +42,6 @@ public class ProjectVO implements java.io.Serializable{
 	 * 	筹集资金的天数
 	 */
 	private Integer day;
-	/**
-	 * 	创建项目的日期
-	 */
-	private LocalDateTime createDate;
 	/**
 	 * 头图的路径
  	 */

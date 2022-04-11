@@ -37,7 +37,7 @@ public interface AliyunOSSRemoteService{
 		try(InputStream body = multipartFile.getInputStream()){
 			uploadResult = upload(multipartFile.getOriginalFilename(), body);
 		}catch(IOException e){
-			LoggerFactory.getLogger(this.getClass()).warn("图片上传失败，原因：{}", e.getMessage());
+			LoggerFactory.getLogger(getClass()).error("图片上传失败，原因：{}", e.getMessage());
 			e.printStackTrace();
 			return ResultEntity.error(TipsMessage.SERVER_ERROR, Collections.singletonMap(MESSAGE, e.getMessage()));
 		}

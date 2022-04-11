@@ -5,6 +5,9 @@ import static com.crux.crowd.common.util.CrowdConstant.TipsMessage.*;
 import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.AliyunOSSRemoteService;
+import com.crux.crowd.member.api.DataSourceRemoteService;
+import com.crux.crowd.member.entity.vo.MemberConfirmInfoVO;
+import com.crux.crowd.member.entity.vo.MemberInfoVO;
 import com.crux.crowd.member.entity.vo.ProjectVO;
 import com.crux.crowd.member.entity.vo.ReturnVO;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -26,10 +27,13 @@ import java.util.List;
 public class ProjectController{
 
 	private final AliyunOSSRemoteService ossRemoteService;
+	private final DataSourceRemoteService dataSourceRemoteService;
 
-	public ProjectController(AliyunOSSRemoteService ossRemoteService){
+	public ProjectController(AliyunOSSRemoteService ossRemoteService, DataSourceRemoteService dataSourceRemoteService){
 		Assert.notNull(ossRemoteService, "ossRemoteService为空");
+		Assert.notNull(dataSourceRemoteService, "dataSourceRemoteService为空");
 		this.ossRemoteService = ossRemoteService;
+		this.dataSourceRemoteService = dataSourceRemoteService;
 	}
 
 	/**
@@ -93,6 +97,8 @@ public class ProjectController{
 		// 如果上传失败，将projectVO的ReturnVOList清空
 		if(!ResponseResult.SUCCESS.equalsResultEntity(uploadResult)){
 			projectVO.getReturnVOList().clear();
+			session.removeAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);
+			session.setAttribute(SESSION_ATTRIBUTE_PROJECT_DATA, projectVO);
 			return uploadResult;
 		}
 		// 4、如果上传成功，设置returnVO的path
@@ -100,6 +106,55 @@ public class ProjectController{
 		// 5、将returnVO添加到projectVO中
 		projectVO.getReturnVOList().add(returnVO);
 
+		// 6、更新session数据时，必须先删除再设置
+		session.removeAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);
+		session.setAttribute(SESSION_ATTRIBUTE_PROJECT_DATA, projectVO);
+
 		return ResultEntity.success();
+	}
+
+	/**
+	 * <h3>发起项目步骤4</h3>
+	 * 将发起人提交信息保存到ProjectVO，将ProjectVO发送给数据库服务保存
+	 * @param memberConfirmInfoVO 发起人提交信息
+	 * @param session 获取member id
+	 * @return 处理结果
+	 */
+	@PostMapping("/start/confirm_submit")
+	public ResultEntity<?,?> confirmSubmit(MemberConfirmInfoVO memberConfirmInfoVO, HttpSession session){
+		// 1、获取projectVO
+		Object project = session.getAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);
+		Object member = session.getAttribute(SESSION_ATTRIBUTE_MEMBER_INFO);
+
+		// 2、如果session中不存在保存的projectVO。应当刷新页面
+		if(!(project instanceof ProjectVO) || !(member instanceof MemberInfoVO)) return ResultEntity.failure(HTML_FAILURE);
+		ProjectVO projectVO = (ProjectVO)project;
+		Integer memberId = ((MemberInfoVO)member).getId();
+
+		projectVO.setMemberConfirmInfoVO(memberConfirmInfoVO);
+
+		// 3、保存projectVO
+		ResultEntity<?,?> result = dataSourceRemoteService.saveProject(projectVO, memberId);
+		if(!ResponseResult.SUCCESS.equalsResultEntity(result)) return result;
+
+		session.removeAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);
+		return ResultEntity.success("提交成功");
+	}
+
+	/**
+	 * 步骤4回到步骤3。将保存的回报设置项删除
+	 * @return 处理结果
+	 */
+	@PostMapping("/start/return_rollback")
+	public ResultEntity<?,?> returnRollback(HttpSession session){
+		Object project = session.getAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);
+		if(project instanceof ProjectVO){
+			((ProjectVO)project).getReturnVOList().clear();
+			session.removeAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);
+			session.setAttribute(SESSION_ATTRIBUTE_PROJECT_DATA, project);
+			return ResultEntity.success();
+		}else{
+			return ResultEntity.failure(HTML_FAILURE);
+		}
 	}
 }

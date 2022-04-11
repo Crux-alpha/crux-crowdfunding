@@ -2,6 +2,7 @@ package com.crux.crowd.member.api;
 
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.entity.po.MemberPO;
+import com.crux.crowd.member.entity.vo.ProjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,4 +25,10 @@ public interface DataSourceRemoteService{
 	 */
 	@PostMapping("/member")
  	ResultEntity<?,?> saveMember(@RequestBody MemberPO memberPO);
+
+	/**
+	 * 保存发起项目
+	 */
+	@PostMapping("/project")
+	ResultEntity<?,?> saveProject(@RequestBody ProjectVO projectVO, @RequestParam("memberId") Integer memberId);
 }

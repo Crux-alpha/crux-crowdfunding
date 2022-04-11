@@ -50,8 +50,8 @@ public abstract class AbstractService<M extends BaseMapper<T>,T> extends Service
 	}
 
 	/**
-	 * 通过此方法对save/update方法抛出的异常进行包装
-	 * @param method save/update方法
+	 * 通过此方法对方法(通常是save/update)抛出的异常进行包装
+	 * @param method 正在执行的方法
 	 * @param <R> 返回值类型
 	 * @return method的返回值
 	 * @throws ServiceException 将method抛出的异常包装为业务异常

@@ -3,7 +3,9 @@ package com.crux.crowd.member.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -15,6 +17,8 @@ import java.math.BigDecimal;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("t_return")
 public class ReturnPO implements Serializable {
 
@@ -28,12 +32,12 @@ public class ReturnPO implements Serializable {
     /**
      * 0-实物回报,1-虚拟物品回报
      */
-    private Integer type;
+    private ReturnType type;
 
     /**
      * 支持金额
      */
-    private Integer supportMoney;
+    private BigDecimal supportMoney;
 
     /**
      * 回报产品限额,0为不汇报数量
@@ -43,7 +47,7 @@ public class ReturnPO implements Serializable {
     /**
      * 设置单笔限购
      */
-    private Integer signalPurchase;
+    private Boolean signalPurchase;
 
     /**
      * 具体限购数量
@@ -58,7 +62,7 @@ public class ReturnPO implements Serializable {
     /**
      * 0-不开发票,1-开发票
      */
-    private Integer invoice;
+    private Boolean invoice;
 
     /**
      * 项目结束后多少天向支持者发送回报

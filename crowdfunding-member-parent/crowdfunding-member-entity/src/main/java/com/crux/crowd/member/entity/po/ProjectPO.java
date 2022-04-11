@@ -1,8 +1,6 @@
 package com.crux.crowd.member.entity.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,26 +47,30 @@ public class ProjectPO implements Serializable {
     /**
      * 0-即将开始;1-众筹中;2-众筹成功;3-众筹失败
      */
-    private Integer status;
+    @TableField(fill = FieldFill.INSERT)
+    private Status status;
 
     /**
-     * 项目发起时间
+     * 项目发起时间(审核通过后的日期)
      */
     private LocalDateTime deployDate;
 
     /**
      * 已筹集金额
      */
+    @TableField(fill = FieldFill.INSERT)
     private BigDecimal supportMoney;
 
     /**
      * 支持人数
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer supporter;
 
     /**
      * 百分比完成度
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer completion;
 
     /**
@@ -79,16 +81,41 @@ public class ProjectPO implements Serializable {
     /**
      * 项目创建时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createDate;
 
     /**
      * 关注人数
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer follower;
 
     /**
      * 头图路径
      */
     private String headerPicturePath;
+
+    public ProjectPO(String projectName, String projectDescription, BigDecimal money, Integer day, Integer memberId, String headerPicturePath){
+        this.projectName = projectName;
+        this.projectDescription = projectDescription;
+        this.money = money;
+        this.day = day;
+        this.memberId = memberId;
+        this.headerPicturePath = headerPicturePath;
+    }
+
+    public enum Status{
+        START("即将开始"), CROWDFUNDING("众筹中"), SUCCESS("众筹成功"), FAILED("众筹失败");
+
+        private final String status;
+
+        Status(String status){
+            this.status = status;
+        }
+
+        public String getStatus(){
+            return status;
+        }
+    }
 
 }

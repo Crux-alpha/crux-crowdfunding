@@ -1,6 +1,8 @@
 package com.crux.crowd.member.resolver;
 
 import com.crux.crowd.common.util.ResultEntity;
+import com.crux.crowd.member.controller.MemberPOProviderController;
+import com.crux.crowd.member.controller.ProjectProviderController;
 import com.crux.crowd.member.service.LoginAccountRepeatedException;
 import com.crux.crowd.member.service.PhoneRepeatedException;
 import com.google.gson.Gson;
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-@ControllerAdvice
+@ControllerAdvice(assignableTypes = MemberPOProviderController.class)
 public class MemberPOServiceExceptionResolver{
 
 	static final Gson gson = new Gson();
@@ -34,7 +36,7 @@ public class MemberPOServiceExceptionResolver{
 		responseToJson(ResultEntity.failure(e.getMessage()), response);
 	}
 
-	private static void responseToJson(ResultEntity<?,?> responseMessage, HttpServletResponse response) throws IOException{
+	static void responseToJson(ResultEntity<?,?> responseMessage, HttpServletResponse response) throws IOException{
 		String json = gson.toJson(responseMessage);
 		response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
 		response.getWriter().write(json);

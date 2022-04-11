@@ -2,4 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.crux.crowd.member.mapper.ProjectPOMapper">
 
+    <!-- 保存项目的类型 -->
+    <insert id="insertType">
+        insert into t_project_type(project_id, type_id) values
+        <foreach collection="typeIdList" item="typeId" separator=",">
+            (#{id}, #{typeId})
+        </foreach>
+    </insert>
+
+    <!-- 保存项目标签 -->
+    <insert id="insertTag">
+        insert into t_project_tag(project_id, tag_id) values
+        <foreach collection="tagIdList" item="tagId" separator=",">
+            (#{id}, #{tagId})
+        </foreach>
+    </insert>
 </mapper>

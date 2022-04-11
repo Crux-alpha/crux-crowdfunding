@@ -12,6 +12,7 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
 eureka:
   client:
     service-url:
