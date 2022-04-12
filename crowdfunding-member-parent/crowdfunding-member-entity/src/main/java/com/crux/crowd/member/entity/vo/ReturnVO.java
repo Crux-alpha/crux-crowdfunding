@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReturnVO implements java.io.Serializable{
@@ -54,5 +53,21 @@ public class ReturnVO implements java.io.Serializable{
 	@Override
 	public int hashCode(){
 		return Objects.hash(type, supportMoney, content, count, signalPurchase, purchase, freight, invoice);
+	}
+
+	@Override
+	public String toString(){
+		return getClass().getSimpleName() +
+				"{type=" + type +
+				",supportMoney=" + supportMoney +
+				",content=" + content +
+				",count=" + count +
+				",signalPurchase=" + signalPurchase +
+				",purchase=" + purchase +
+				",freight=" + freight +
+				",invoice=" + invoice +
+				",returnDate=" + returnDate +
+				",describePicPath=" + describePicPath +
+				'}';
 	}
 }

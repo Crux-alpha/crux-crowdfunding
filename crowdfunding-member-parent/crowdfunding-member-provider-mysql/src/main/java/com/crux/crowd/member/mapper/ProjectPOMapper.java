@@ -2,6 +2,8 @@ package com.crux.crowd.member.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.crux.crowd.member.entity.po.ProjectPO;
+import com.crux.crowd.member.entity.vo.DetailProjectVO;
+import com.crux.crowd.member.entity.vo.PortalTypeVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -29,5 +31,18 @@ public interface ProjectPOMapper extends BaseMapper<ProjectPO>{
 	 * @return 影响条数
 	 */
 	int insertTag(@Param("id") Integer id, @Param("tagIdList") List<Integer> tagIdList);
+
+	/**
+	 * 查询用以首页显示的数据
+	 * @return 首页项目展示信息，根据Type分类
+	 */
+	List<PortalTypeVO> selectPortalProjectAll();
+
+	/**
+	 * 查询项目详细视图数据
+	 * @param id 项目id
+	 * @return 详细的项目视图数据
+	 */
+	DetailProjectVO selectDetailProject(Integer id);
 
 }

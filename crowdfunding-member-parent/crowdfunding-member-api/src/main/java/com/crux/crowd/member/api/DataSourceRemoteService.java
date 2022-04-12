@@ -2,9 +2,12 @@ package com.crux.crowd.member.api;
 
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.entity.po.MemberPO;
+import com.crux.crowd.member.entity.vo.PortalTypeVO;
 import com.crux.crowd.member.entity.vo.ProjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 数据源服务接口
@@ -31,4 +34,10 @@ public interface DataSourceRemoteService{
 	 */
 	@PostMapping("/project")
 	ResultEntity<?,?> saveProject(@RequestBody ProjectVO projectVO, @RequestParam("memberId") Integer memberId);
+
+	/**
+	 * 获取首页显示的项目数据
+	 */
+	@GetMapping("/index/portal_project")
+	ResultEntity<String,List<PortalTypeVO>> getPortalProjectAll();
 }

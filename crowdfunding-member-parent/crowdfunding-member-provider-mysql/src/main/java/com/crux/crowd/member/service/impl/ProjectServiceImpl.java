@@ -3,9 +3,7 @@ package com.crux.crowd.member.service.impl;
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.crux.crowd.member.entity.po.*;
-import com.crux.crowd.member.entity.vo.MemberConfirmInfoVO;
-import com.crux.crowd.member.entity.vo.MemberLaunchInfoVO;
-import com.crux.crowd.member.entity.vo.ProjectVO;
+import com.crux.crowd.member.entity.vo.*;
 import com.crux.crowd.member.mapper.*;
 import com.crux.crowd.member.service.AbstractService;
 import com.crux.crowd.member.service.ProjectService;
@@ -74,6 +72,7 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 		List<ReturnPO> returnPOList = projectVO.getReturnVOList().stream().map(v -> new ReturnPO(null, projectId,
 				v.getType(),
 				v.getSupportMoney(),
+				v.getCount(),
 				v.getContent(),
 				v.getSignalPurchase(),
 				v.getPurchase(),
@@ -87,6 +86,16 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 		MemberConfirmInfoVO mciVO = projectVO.getMemberConfirmInfoVO();
 		MemberConfirmInfoPO mciPO = new MemberConfirmInfoPO(memberId, mciVO.getPayNum(), mciVO.getCardNum());
 		saveMemberConfirmInfo(mciPO);
+	}
+
+	@Override
+	public List<PortalTypeVO> listPortalProject(){
+		return baseMapper.selectPortalProjectAll();
+	}
+
+	@Override
+	public DetailProjectVO getDetailProjectById(Integer id){
+		return baseMapper.selectDetailProject(id);
 	}
 
 	/**

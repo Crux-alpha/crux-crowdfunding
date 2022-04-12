@@ -17,4 +17,49 @@
             (#{id}, #{tagId})
         </foreach>
     </insert>
+
+    <!-- 查询用以首页显示的数据 -->
+    <select id="selectPortalProjectAll" resultMap="portalProjectMap">
+        select * from t_type;
+    </select>
+    <resultMap id="portalProjectMap" type="com.crux.crowd.member.entity.vo.PortalTypeVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <collection property="portalProjectVOList" ofType="com.crux.crowd.member.entity.vo.PortalProjectVO"
+                    select="selectPortalProjectByTypeId" column="id"/>
+    </resultMap>
+    <select id="selectPortalProjectByTypeId" resultType="com.crux.crowd.member.entity.vo.PortalProjectVO">
+        select p.id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter
+        from t_project p right join t_project_type pt on p.id = pt.project_id
+        where pt.type_id = #{typeId} order by p.id desc limit 4;
+    </select>
+
+    <!-- 查询详细项目视图信息 -->
+    <select id="selectDetailProject" resultMap="detailProjectMap">
+        select id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter,
+               project_description, follower, support_money
+        from t_project where id = #{id}
+    </select>
+    <resultMap id="detailProjectMap" type="com.crux.crowd.member.entity.vo.DetailProjectVO">
+        <id column="id" property="id"/>
+        <result column="project_name" property="projectName"/>
+        <result column="header_picture_path" property="headerPicturePath"/>
+        <result column="money" property="money"/>
+        <result column="deadline" property="deadline"/>
+        <result column="completion" property="completion"/>
+        <result column="supporter" property="supporter"/>
+        <result column="project_description" property="projectDescription"/>
+        <result column="follower" property="follower"/>
+        <result column="support_money" property="supportMoney"/>
+        <collection property="detailPicturePath" ofType="string" select="selectDetailPicturePathByProjectId" column="id"/>
+        <collection property="detailReturnVO" ofType="com.crux.crowd.member.entity.vo.DetailReturnVO"
+                    select="selectDetailReturnVOByProjectId" column="id"/>
+    </resultMap>
+    <select id="selectDetailPicturePathByProjectId" resultType="string">
+        select item_pic_path from t_project_item_pic where project_id = #{projectId}
+    </select>
+    <select id="selectDetailReturnVOByProjectId" resultType="com.crux.crowd.member.entity.vo.DetailReturnVO">
+        select * from t_return where project_id = #{projectId}
+    </select>
 </mapper>

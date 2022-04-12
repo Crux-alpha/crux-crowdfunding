@@ -2,13 +2,11 @@ package com.crux.crowd.member.test;
 
 import com.crux.crowd.member.entity.po.MemberPO;
 import com.crux.crowd.member.entity.po.ReturnPO;
-import com.crux.crowd.member.entity.vo.MemberConfirmInfoVO;
-import com.crux.crowd.member.entity.vo.MemberLaunchInfoVO;
-import com.crux.crowd.member.entity.vo.ProjectVO;
-import com.crux.crowd.member.entity.vo.ReturnVO;
+import com.crux.crowd.member.entity.vo.*;
 import com.crux.crowd.member.mapper.MemberPOMapper;
 import com.crux.crowd.member.service.ProjectService;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @SpringBootTest
 class DataProviderTest{
@@ -67,5 +66,23 @@ class DataProviderTest{
 				new MemberConfirmInfoVO("12345678901", "123456789012345678")
 		);
 		projectService.saveProject(projectVO, 666);
+	}
+
+	@Test
+	@DisplayName("获取首页项目视图数据")
+	void listPortalProject(){
+		List<PortalTypeVO> portalTypeList = projectService.listPortalProject();
+		portalTypeList.forEach(pt -> {
+			log.info("{}, {}", pt.getName(), pt.getRemark());
+			pt.getPortalProjectVOList().forEach(pp -> log.info(pp.toString()));
+		});
+	}
+
+
+	@Test
+	@DisplayName("获取详细项目视图数据")
+	void getDetailProject(){
+		DetailProjectVO detailProjectVO = projectService.getDetailProjectById(1);
+		log.info(detailProjectVO.toString());
 	}
 }

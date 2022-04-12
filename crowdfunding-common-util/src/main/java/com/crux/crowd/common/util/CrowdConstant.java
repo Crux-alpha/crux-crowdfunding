@@ -18,6 +18,7 @@ public final class CrowdConstant{
 	public static final String COOKIE_MESSAGE_CODE_INTERVAL = "message_code_interval";
 	public static final String SESSION_ATTRIBUTE_MEMBER_INFO = "memberInfo";
 	public static final String SESSION_ATTRIBUTE_PROJECT_DATA = "project_data";
+	public static final String PORTAL_PROJECT_LIST = "portalProjectList";
 
 	/**
 	 * 与HTTP属性有关的常量池

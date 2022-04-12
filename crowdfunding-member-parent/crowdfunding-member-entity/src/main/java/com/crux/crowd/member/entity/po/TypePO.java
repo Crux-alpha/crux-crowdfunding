@@ -3,17 +3,17 @@ package com.crux.crowd.member.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 分类表
  * @since 2022-04-07
  */
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("t_type")
@@ -38,5 +38,25 @@ public class TypePO implements Serializable {
         this(null, name, remark);
     }
 
+    @Override
+    public final boolean equals(Object obj){
+        if(this == obj) return true;
+        if(!(obj instanceof TypePO)) return false;
+        TypePO other = (TypePO)obj;
+        return Objects.equals(id, other.id);
+    }
 
+    @Override
+    public final int hashCode(){
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString(){
+        return getClass().getSimpleName() +
+                "{id=" + id +
+                ", name=" + name +
+                ", remark=" + remark +
+                '}';
+    }
 }

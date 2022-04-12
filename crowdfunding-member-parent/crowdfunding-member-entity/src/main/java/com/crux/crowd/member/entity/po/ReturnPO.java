@@ -40,6 +40,11 @@ public class ReturnPO implements Serializable {
     private BigDecimal supportMoney;
 
     /**
+     * 总回报数量
+     */
+    private Integer count;
+
+    /**
      * 回报产品限额,0为不汇报数量
      */
     private String content;

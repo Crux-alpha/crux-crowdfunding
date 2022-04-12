@@ -45,6 +45,7 @@ public class FieldAutoFillHandler implements MetaObjectHandler{
 						StrictFill.of("supporter", GET_ZERO, Integer.class),
 						StrictFill.of("completion", GET_ZERO, Integer.class),
 						StrictFill.of("createDate", LocalDateTime::now, LocalDateTime.class),
-						StrictFill.of("follower", GET_ZERO, Integer.class)));
+						StrictFill.of("follower", GET_ZERO, Integer.class),
+						StrictFill.of("deployDate", () -> LocalDateTime.now().plusDays(1), LocalDateTime.class)));
 	}
 }
