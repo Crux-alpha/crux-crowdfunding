@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -45,9 +45,10 @@ public class MemberController{
 										 @CookieValue(name = COOKIE_MESSAGE_CODE_INTERVAL, required = false, defaultValue = "-1") long interval,
 										 HttpServletResponse response){
 		// 1、检查cookie是否过期
-		long time = interval - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-		if(time > 0){
-			return ResultEntity.failure("请" + time + "秒后重试");
+		Instant deadline = Instant.ofEpochSecond(interval);
+		Instant now = Instant.now();
+		if(now.isBefore(deadline)){
+			return ResultEntity.failure('请' + Duration.between(deadline, now).getSeconds() + "秒后重试");
 		}
 
 		// 2、发送短信验证码，并获取执行结果
@@ -68,7 +69,7 @@ public class MemberController{
 		}
 
 		// 6、执行成功，保存cookie
-		interval = LocalDateTime.now().plusMinutes(1).toEpochSecond(ZoneOffset.UTC);
+		interval = Instant.now().plusSeconds(60).getEpochSecond();
 		Cookie intervalCookie = new Cookie(COOKIE_MESSAGE_CODE_INTERVAL, Long.toString(interval));
 		intervalCookie.setMaxAge(60);
 		intervalCookie.setPath("/member/register/sendMessage");

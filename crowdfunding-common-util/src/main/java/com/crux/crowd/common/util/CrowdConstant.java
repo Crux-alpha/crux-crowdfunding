@@ -19,6 +19,7 @@ public final class CrowdConstant{
 	public static final String SESSION_ATTRIBUTE_MEMBER_INFO = "memberInfo";
 	public static final String SESSION_ATTRIBUTE_PROJECT_DATA = "project_data";
 	public static final String PORTAL_PROJECT_LIST = "portalProjectList";
+	public static final String DETAIL_PROJECT = "detailProject";
 
 	/**
 	 * 与HTTP属性有关的常量池

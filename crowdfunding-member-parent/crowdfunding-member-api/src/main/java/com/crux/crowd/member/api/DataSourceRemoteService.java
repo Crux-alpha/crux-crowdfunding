@@ -2,6 +2,7 @@ package com.crux.crowd.member.api;
 
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.entity.po.MemberPO;
+import com.crux.crowd.member.entity.vo.DetailProjectVO;
 import com.crux.crowd.member.entity.vo.PortalTypeVO;
 import com.crux.crowd.member.entity.vo.ProjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -40,4 +41,11 @@ public interface DataSourceRemoteService{
 	 */
 	@GetMapping("/index/portal_project")
 	ResultEntity<String,List<PortalTypeVO>> getPortalProjectAll();
+
+	/**
+	 * 获取指定id的项目详细信息
+	 * @param id 项目id
+	 */
+	@GetMapping("/project/detail/{id}")
+	ResultEntity<String,DetailProjectVO> getDetailProject(@PathVariable("id") Integer id);
 }

@@ -37,9 +37,9 @@
 
     <!-- 查询详细项目视图信息 -->
     <select id="selectDetailProject" resultMap="detailProjectMap">
-        select id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter,
-               project_description, follower, support_money
-        from t_project where id = #{id}
+        select p.id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter,
+               project_description, follower, support_money, description_simple, description_detail, phone_num, service_num
+        from t_project p join t_member_launch_info mli on p.member_id = mli.member_id where p.id = #{id}
     </select>
     <resultMap id="detailProjectMap" type="com.crux.crowd.member.entity.vo.DetailProjectVO">
         <id column="id" property="id"/>
@@ -52,6 +52,12 @@
         <result column="project_description" property="projectDescription"/>
         <result column="follower" property="follower"/>
         <result column="support_money" property="supportMoney"/>
+        <association property="memberLaunchInfoVO" javaType="com.crux.crowd.member.entity.vo.MemberLaunchInfoVO">
+            <result column="description_simple" property="descriptionSimple"/>
+            <result column="description_detail" property="descriptionDetail"/>
+            <result column="phone_num" property="phoneNum"/>
+            <result column="service_num" property="serviceNum"/>
+        </association>
         <collection property="detailPicturePath" ofType="string" select="selectDetailPicturePathByProjectId" column="id"/>
         <collection property="detailReturnVO" ofType="com.crux.crowd.member.entity.vo.DetailReturnVO"
                     select="selectDetailReturnVOByProjectId" column="id"/>
@@ -62,4 +68,7 @@
     <select id="selectDetailReturnVOByProjectId" resultType="com.crux.crowd.member.entity.vo.DetailReturnVO">
         select * from t_return where project_id = #{projectId}
     </select>
+    <!--<select id="selectMemberLaunchInfoByMemberId" resultType="com.crux.crowd.member.entity.vo.MemberLaunchInfoVO">
+        select description_simple, description_detail, phone_num, service_num from t_member_launch_info where member_id = #{memberId}
+    </select>-->
 </mapper>

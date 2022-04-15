@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Objects;
 
 /**
@@ -25,6 +26,12 @@ public class PortalProjectVO implements java.io.Serializable{
 	private LocalDate deadline;
 	private Integer completion;
 	private Integer supporter;
+
+	public Integer remainingDay(){
+		LocalDate now = LocalDate.now();
+		if(now.isAfter(deadline)) return -1;
+		return Period.between(now, deadline).getDays();
+	}
 
 	@Override
 	public final boolean equals(Object obj){
@@ -46,9 +53,9 @@ public class PortalProjectVO implements java.io.Serializable{
 				", projectName=" + projectName +
 				", headerPicturePath=" + headerPicturePath +
 				", money=" + money +
-				", deployDate=" + deadline +
+				", deadline=" + deadline +
 				", completion=" + completion +
-				", follower=" + supporter +
+				", supporter=" + supporter +
 				'}';
 	}
 }

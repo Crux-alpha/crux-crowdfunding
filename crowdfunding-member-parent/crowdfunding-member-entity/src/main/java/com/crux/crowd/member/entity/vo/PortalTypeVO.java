@@ -18,19 +18,19 @@ public class PortalTypeVO extends TypePO{
 	/**
 	 * 该分类下的项目(仅4条)
 	 */
-	private List<? extends PortalProjectVO> portalProjectVOList;
+	private List<PortalProjectVO> portalProjectVOList = new ArrayList<>();
 
 	public PortalTypeVO(Integer id, String name, String remark, List<? extends PortalProjectVO> portalProjectVOList){
 		super(id, name, remark);
-		this.portalProjectVOList = new ArrayList<>(portalProjectVOList);
+		this.portalProjectVOList.addAll(portalProjectVOList);
 	}
 
-	public List<? extends PortalProjectVO> getPortalProjectVOList(){
+	public List<PortalProjectVO> getPortalProjectVOList(){
 		return portalProjectVOList;
 	}
 
 	public void setPortalProjectVOList(List<? extends PortalProjectVO> portalProjectVOList){
-		this.portalProjectVOList = portalProjectVOList;
+		this.portalProjectVOList = new ArrayList<>(portalProjectVOList);
 	}
 
 	@Override
