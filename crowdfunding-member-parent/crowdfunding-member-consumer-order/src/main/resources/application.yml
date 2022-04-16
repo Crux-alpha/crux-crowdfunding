@@ -1,0 +1,19 @@
+server:
+  port: 8012
+spring:
+  application:
+    name: crowd-order
+  mvc:
+    static-path-pattern: /static/**
+    hiddenmethod:
+      filter:
+        enabled: true
+  redis:
+    host: 192.168.153.200
+    timeout: 1800s
+  session:
+    store-type: redis
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka

@@ -3,6 +3,7 @@ package com.crux.crowd.member.api;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.entity.po.MemberPO;
 import com.crux.crowd.member.entity.vo.DetailProjectVO;
+import com.crux.crowd.member.entity.vo.OrderProjectVO;
 import com.crux.crowd.member.entity.vo.PortalTypeVO;
 import com.crux.crowd.member.entity.vo.ProjectVO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -48,4 +49,11 @@ public interface DataSourceRemoteService{
 	 */
 	@GetMapping("/project/detail/{id}")
 	ResultEntity<String,DetailProjectVO> getDetailProject(@PathVariable("id") Integer id);
+
+	/**
+	 * 获取指定项目id和回报id的订单项目信息
+	 * @param returnId 回报id
+	 */
+	@GetMapping("/order/pay/{returnId}")
+	ResultEntity<String,OrderProjectVO> getOrderProject(@PathVariable("returnId") Integer returnId);
 }

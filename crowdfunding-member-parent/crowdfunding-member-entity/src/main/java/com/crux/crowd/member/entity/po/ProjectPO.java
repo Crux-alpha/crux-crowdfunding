@@ -53,6 +53,7 @@ public class ProjectPO implements Serializable {
     /**
      * 项目发起时间(审核通过后的日期)
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime deployDate;
 
     /**
@@ -74,9 +75,9 @@ public class ProjectPO implements Serializable {
     private Integer completion;
 
     /**
-     * 发起人会员ID
+     * 发起人ID
      */
-    private Integer memberId;
+    private Integer memberLaunchId;
 
     /**
      * 项目创建时间
@@ -95,12 +96,12 @@ public class ProjectPO implements Serializable {
      */
     private String headerPicturePath;
 
-    public ProjectPO(String projectName, String projectDescription, BigDecimal money, Integer day, Integer memberId, String headerPicturePath){
+    public ProjectPO(String projectName, String projectDescription, BigDecimal money, Integer day, Integer memberLaunchId, String headerPicturePath){
         this.projectName = projectName;
         this.projectDescription = projectDescription;
         this.money = money;
         this.day = day;
-        this.memberId = memberId;
+        this.memberLaunchId = memberLaunchId;
         this.headerPicturePath = headerPicturePath;
     }
 

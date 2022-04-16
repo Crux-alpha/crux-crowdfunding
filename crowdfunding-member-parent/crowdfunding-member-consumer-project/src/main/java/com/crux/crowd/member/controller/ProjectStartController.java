@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 项目处理器
@@ -56,9 +57,10 @@ public class ProjectStartController{
 		projectVO.setHeaderPicturePath(uploadResult.getData().get(AliyunOSSRemoteService.DATA_OSS_FILE_ACCESS_PATH));
 
 		// 4、上传详情图片
-		detailPicture.stream().filter(dp -> !dp.isEmpty()).map(ossRemoteService::uploadMultipartFile).filter(ResponseResult.SUCCESS::equalsResultEntity)
-				.map(result -> result.getData().get(AliyunOSSRemoteService.DATA_OSS_FILE_ACCESS_PATH))
-				.forEach(projectVO.getDetailPicturePathList()::add);
+		Optional.ofNullable(detailPicture).ifPresent(list ->
+				list.stream().filter(dp -> !dp.isEmpty()).map(ossRemoteService::uploadMultipartFile).filter(ResponseResult.SUCCESS::equalsResultEntity)
+						.map(result -> result.getData().get(AliyunOSSRemoteService.DATA_OSS_FILE_ACCESS_PATH))
+						.forEach(projectVO.getDetailPicturePathList()::add));
 		/* 传统foreach遍历
 		for(MultipartFile dp : detailPicture){
 			if(dp.isEmpty()) continue;

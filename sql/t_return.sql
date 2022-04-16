@@ -4,7 +4,7 @@ create table t_return(
     id int auto_increment,
     project_id int,
     type int(4) comment '0-实物回报,1-虚拟物品回报',
-    support_money int comment '支持金额',
+    support_money decimal(7,2) comment '支持金额',
     content varchar(255) comment '回报产品限额,0为不汇报数量',
     signal_purchase int comment '设置单笔限购',
     purchase int comment '具体限购数量',

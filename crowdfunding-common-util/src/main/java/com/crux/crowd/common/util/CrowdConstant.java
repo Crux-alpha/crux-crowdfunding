@@ -48,6 +48,7 @@ public final class CrowdConstant{
 		public static final String HEADER_IMAGE_NOT_UPLOAD = "没有上传头图，请检查！";
 		public static final String HEADER_IMAGE_UPLOAD_FAILED = "头图上传失败";
 		public static final String HTML_FAILURE = "当前页面已失效，请刷新后重试";
+		public static final String DATA_NOT_FOUNT = "查不到数据";
 
 		private TipsMessage(){}
 	}

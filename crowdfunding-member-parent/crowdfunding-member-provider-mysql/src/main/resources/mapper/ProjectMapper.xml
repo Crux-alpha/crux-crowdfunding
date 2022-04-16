@@ -39,7 +39,7 @@
     <select id="selectDetailProject" resultMap="detailProjectMap">
         select p.id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter,
                project_description, follower, support_money, description_simple, description_detail, phone_num, service_num
-        from t_project p join t_member_launch_info mli on p.member_id = mli.member_id where p.id = #{id}
+        from t_project p join t_member_launch_info mli on p.member_launch_id = mli.id where p.id = #{id}
     </select>
     <resultMap id="detailProjectMap" type="com.crux.crowd.member.entity.vo.DetailProjectVO">
         <id column="id" property="id"/>

@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Objects;
 
@@ -27,10 +29,11 @@ public class PortalProjectVO implements java.io.Serializable{
 	private Integer completion;
 	private Integer supporter;
 
-	public Integer remainingDay(){
-		LocalDate now = LocalDate.now();
+	public long remainingDay(){
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime deadline = this.deadline.atStartOfDay();
 		if(now.isAfter(deadline)) return -1;
-		return Period.between(now, deadline).getDays();
+		return Duration.between(now, deadline).toDays();
 	}
 
 	@Override

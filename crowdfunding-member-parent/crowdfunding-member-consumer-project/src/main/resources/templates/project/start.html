@@ -1383,15 +1383,21 @@
 	function checkReturnFormData(returnData){
 		let message = null;
 
-		let purchase = returnData.get("purchase");
-		let count = returnData.get("count");
+		const testPurchase = () => {
+			if($("#radio-return-not-purchase").prop("checked")) return false;
+			let purchase = returnData.get("purchase")
+			if(!numberRegex.test(purchase)) return true;
+			purchase = parseInt(returnData.get("purchase"));
+			let count = parseInt(returnData.get("count"));
+			return count > 0 && purchase > count
+		}
+
 		if(!notEmptyRegex.test(returnData.get("type"))) message = "请选择回报类型";
 		else if(!notEmptyRegex.test(returnData.get("supportMoney"))) message = "请设置支持金额";
 		else if(!hasLengthRegex.test(returnData.get("content"))) message = "请输入回报内容";
 		else if(returnData.get("describePicture").size < 1) message = "请上传说明图片";
 		else if(!numberRegex.test(returnData.get("count"))) message = "请设置回报数量";
-		else if($("#radio-return-purchase").prop("checked")
-			&& (!numberRegex.test(purchase) || (count > 0 && purchase > count))) message = "单笔限购不能超过回报数量";
+		else if(testPurchase()) message = "单笔限购不能超过回报数量";
 		else if(!numberRegex.test(returnData.get("returnDate"))) message = "请设置回报时间";
 
 		return message;

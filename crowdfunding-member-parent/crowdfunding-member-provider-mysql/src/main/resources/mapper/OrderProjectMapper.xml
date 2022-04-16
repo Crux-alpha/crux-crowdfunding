@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crux.crowd.member.mapper.OrderProjectPOMapper">
+
+    <select id="selectOrderProjectVO" resultType="com.crux.crowd.member.entity.vo.OrderProjectVO">
+        select project_name,  description_simple launchName, content returnContent, 1 returnCount, r.support_money supportPrice, freight,
+               signal_purchase, purchase
+        from t_project p join t_return r on p.id = r.project_id join t_member_launch_info mli on p.member_launch_id = mli.id
+        where r.id = #{returnId}
+    </select>
+</mapper>

@@ -10,6 +10,10 @@ spring:
     store-type: redis
 zuul:
   routes:
+    # 订单系统网关
+    order:
+      service-id: crowd-order
+      path: /order/**
     # 项目系统网关
     project:
       service-id: crowd-project

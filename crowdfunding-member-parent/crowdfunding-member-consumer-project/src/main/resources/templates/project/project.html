@@ -181,9 +181,7 @@
                             <div class="panel-body">
                                 <p th:text="'配送费用:' + (*{freight == 0} ? '包邮' : *{freight})">配送费用：包邮</p>
                                 <p th:text="|预计发放时间:项目筹款成功后的*{returnDate}天内|">预计发放时间：项目筹款成功后的50天内</p>
-                                <button type="button" class="btn  btn-warning btn-lg"
-                                        onclick="window.location.href='pay-step-1.html'">支持
-                                </button>
+                                <a class="btn  btn-warning btn-lg" th:href="|//localhost/order/pay?returnId=*{id}|">支持</a>
                                 <br><br>
                                 <p th:text="|回报内容:*{content}|">感谢您的支持，在众筹开始后，您将以79元的优惠价格获得“遇见彩虹?”智能插座一件（参考价208元）。</p>
                             </div>

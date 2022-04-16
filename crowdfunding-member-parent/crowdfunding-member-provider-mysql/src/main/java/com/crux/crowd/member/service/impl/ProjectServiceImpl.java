@@ -1,6 +1,5 @@
 package com.crux.crowd.member.service.impl;
 
-import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.crux.crowd.member.entity.po.*;
 import com.crux.crowd.member.entity.vo.*;
@@ -35,6 +34,15 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
 	public void saveProject(ProjectVO projectVO, Integer memberId){
+		/* 保存发起人信息 */
+		MemberLaunchInfoVO mliVO = projectVO.getMemberLaunchInfoVO();
+		MemberLaunchInfoPO mliPO = new MemberLaunchInfoPO(memberId,
+				mliVO.getDescriptionSimple(),
+				mliVO.getDescriptionDetail(),
+				mliVO.getPhoneNum(),
+				mliVO.getServiceNum());
+		saveMemberLaunchInfo(mliPO);
+
 		/* 保存ProjectPO */
 		// 1、将ProjectVO转为ProjectPO，保存
 		ProjectPO projectPO = new ProjectPO(
@@ -42,7 +50,7 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 				projectVO.getProjectDescription(),
 				projectVO.getMoney(),
 				projectVO.getDay(),
-				memberId,
+				mliPO.getId(),
 				projectVO.getHeaderPicturePath());
 		save(projectPO);
 		// 2、获取自增主键的ID
@@ -58,15 +66,6 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 		List<ProjectItemPicPO> pipPOList = projectVO.getDetailPicturePathList().stream()
 				.map(path -> new ProjectItemPicPO(projectId, path)).collect(Collectors.toList());
 		saveItemPicture(pipPOList);
-
-		/* 保存发起人信息 */
-		MemberLaunchInfoVO mliVO = projectVO.getMemberLaunchInfoVO();
-		MemberLaunchInfoPO mliPO = new MemberLaunchInfoPO(memberId,
-				mliVO.getDescriptionSimple(),
-				mliVO.getDescriptionDetail(),
-				mliVO.getPhoneNum(),
-				mliVO.getServiceNum());
-		saveMemberLaunchInfo(mliPO);
 
 		/* 保存回报信息 */
 		List<ReturnPO> returnPOList = projectVO.getReturnVOList().stream().map(v -> new ReturnPO(null, projectId,
