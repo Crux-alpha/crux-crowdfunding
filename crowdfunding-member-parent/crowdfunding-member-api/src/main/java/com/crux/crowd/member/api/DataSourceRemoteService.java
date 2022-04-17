@@ -2,10 +2,7 @@ package com.crux.crowd.member.api;
 
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.entity.po.MemberPO;
-import com.crux.crowd.member.entity.vo.DetailProjectVO;
-import com.crux.crowd.member.entity.vo.OrderProjectVO;
-import com.crux.crowd.member.entity.vo.PortalTypeVO;
-import com.crux.crowd.member.entity.vo.ProjectVO;
+import com.crux.crowd.member.entity.vo.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,4 +53,20 @@ public interface DataSourceRemoteService{
 	 */
 	@GetMapping("/order/pay/{returnId}")
 	ResultEntity<String,OrderProjectVO> getOrderProject(@PathVariable("returnId") Integer returnId);
+
+	/**
+	 * 根据用户id查询所有收货地址
+	 * @param memberId 用户id
+	 * @return 返回一个包含Map的响应实体，key为addressId，value为addressVO
+	 */
+	@GetMapping("/order/pay/address/{memberId}")
+	ResultEntity<Integer,AddressVO> getAddresses(@PathVariable("memberId") Integer memberId);
+
+	/**
+	 * 保存一个收货地址，并再次查询该用户所有收货地址
+	 * @param addressVO 新增的收货地址信息
+	 * @return 返回一个包含Map的响应实体，key为addressId，value为addressVO
+	 */
+	@PostMapping("/order/pay/address/save")
+	ResultEntity<Integer,AddressVO> saveAndGetAddress(@RequestBody AddressVO addressVO);
 }

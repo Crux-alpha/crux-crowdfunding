@@ -7,9 +7,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title th:text="${project.projectName}"></title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" th:href="@{/static/bootstrap/css/bootstrap.min.css}">
-    <link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{/static/css/font-awesome.min.css}">
-    <link rel="stylesheet" href="css/theme.css" th:href="@{/static/css/theme.css}">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" th:href="|//localhost/static/bootstrap/css/bootstrap.min.css|">
+    <link rel="stylesheet" href="css/font-awesome.min.css" th:href="|//localhost/static/css/font-awesome.min.css|">
+    <link rel="stylesheet" href="css/theme.css" th:href="|//localhost/static/css/theme.css|">
     <style>
         #footer {
             padding: 15px 0;
@@ -70,7 +70,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li>
-                                <a rel="nofollow" href="index.html" th:href="@{/index.html}"><i class="glyphicon glyphicon-home"></i> 众筹首页</a>
+                                <a rel="nofollow" href="index.html" th:href="|//localhost/index.html|"><i class="glyphicon glyphicon-home"></i> 众筹首页</a>
                             </li>
                             <li>
                                 <a rel="nofollow" href="projects.html"><i class="glyphicon glyphicon-th-large"></i> 众筹项目</a>
@@ -79,7 +79,7 @@
                                 <a rel="nofollow" href="start.html" th:href="@{/project/start.html}"><i class="glyphicon glyphicon-edit"></i> 发起众筹</a>
                             </li>
                             <li>
-                                <a rel="nofollow" href="minecrowdfunding.html" th:href="@{/member/center.html}"><i class="glyphicon glyphicon-user"></i>
+                                <a rel="nofollow" href="minecrowdfunding.html" th:href="|//localhost/member/center.html|"><i class="glyphicon glyphicon-user"></i>
                                     我的众筹</a>
                             </li>
                         </ul>
@@ -150,7 +150,7 @@
                                 <div class="container-fluid">
                                     <div class="row clearfix">
                                         <div class="col-md-3 column" style="padding:0;">
-                                            <img alt="140x140" src="img/services-box2.jpg" th:src="@{/static/img/services-box2.jpg}" data-holder-rendered="true"
+                                            <img alt="140x140" src="img/services-box2.jpg" th:src="|//localhost/static/img/services-box2.jpg|" data-holder-rendered="true"
                                                  style="width: 80px; height: 80px;">
                                         </div>
                                         <div class="col-md-9 column" th:object="${project.memberLaunchInfoVO}">
@@ -330,10 +330,10 @@
 </div>
 </div>
 
-<script src="jquery/jquery-2.1.1.min.js" th:src="@{/static/js/jquery-3.6.0.min.js}"></script>
-<script src="bootstrap/js/bootstrap.min.js" th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
-<script src="script/docs.min.js" th:src="@{/static/script/docs.min.js}"></script>
-<script src="script/back-to-top.js" th:src="@{/static/script/back-to-top.js}"></script>
+<script src="jquery/jquery-2.1.1.min.js" th:src="|//localhost/static/js/jquery-3.6.0.min.js|"></script>
+<script src="bootstrap/js/bootstrap.min.js" th:src="|//localhost/static/bootstrap/js/bootstrap.min.js|"></script>
+<script src="script/docs.min.js" th:src="|//localhost/static/script/docs.min.js|"></script>
+<script src="script/back-to-top.js" th:src="|//localhost/static/script/back-to-top.js|"></script>
 <script>
 	$(".prjtip img").css("cursor", "pointer");
 	$(".prjtip img").click(function(){

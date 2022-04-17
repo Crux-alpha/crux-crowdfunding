@@ -205,16 +205,15 @@
                                             <td th:text="*{projectName}">活性富氢净水直饮机</td>
                                             <td th:text="*{launchName}">深圳市博实永道电子商务有限公司</td>
                                             <td th:text="*{returnContent}">每满1750人抽取一台活性富氢净水直饮机，至少抽取一台。抽取名额（小数点后一位四舍五入）=参与人数÷1750人，由苏宁官方抽取。</td>
-                                            <td><input type="number" class="form-control" style="width:60px;" value="1" th:value="*{returnCount}"></td>
+                                            <td><input id="ipt-return-count" type="number" class="form-control" style="width:60px;" value="1" th:value="*{returnCount}" onchange="checkReturnCount()"></td>
                                             <td style="color:#F60" th:text="|￥*{supportPrice}|">￥ 1.00</td>
                                             <td th:text="*{freight == 0} ? '免运费' : *{freight}">免运费</td>
                                         </tr>
                                         </tbody>
                                     </table>
                                     <div style="float:right;">
-                                        <p th:object="${session.orderProject}">总价(含运费)：<span style="font-size:16px;color:#F60;" th:text="|￥*{supportPrice * returnCount + freight}|">￥1.00</span></p>
-                                        <button type="button" class="btn btn-warning btn-lg" style="float:right;"
-                                                onclick="changeStep(1)"><i
+                                        <p th:object="${session.orderProject}">总价(含运费)：<span id="span-total-price" style="font-size:16px;color:#F60;" th:text="|￥*{supportPrice * returnCount + freight}|">￥1.00</span></p>
+                                        <button id="btn-to-close-an-account" type="button" class="btn btn-warning btn-lg" style="float:right;"><i
                                                 class="glyphicon glyphicon-credit-card"></i> 去结算
                                         </button>
                                     </div>
@@ -255,7 +254,7 @@
                             </div>
                         </div>
 
-                        <div id="address" class="container-fluid">
+                        <div class="container-fluid">
                             <div class="row clearfix">
                                 <div class="col-md-12 column">
                                     <blockquote style="border-left: 5px solid #f60;color:#f60;padding: 0 0 0 20px;">
@@ -265,58 +264,44 @@
                                     </blockquote>
                                 </div>
                                 <div class="col-md-12 column" style="padding:0 120px;">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-                                            xxxxx 188****3342 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                                        </label>
+                                    <div id="div-no-address" hidden>您还没有任何收货地址，请添加至少一个收货地址</div>
+                                    <div id="div-address">
                                     </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                            xxxxx 188****3342 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                            新地址
-                                        </label>
-                                    </div>
-                                    <div style="border:10px solid #f60;border-bottom-color: #eceeef;border-width: 10px;width:20px;margin-left:20px;margin-top:-20px;
-                                             border-left-color: rgba(221, 221, 221, 0);
-                                             border-top-color: rgba(221, 221, 221, 0);
-                                             border-right-color: rgba(221, 221, 221, 0);
-                                    "></div>
-                                    <div class="panel panel-default" style="border-style: dashed;background-color:#eceeef">
-                                        <div class="panel-body">
-                                            <div class="col-md-12 column" >
-                                                <form class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">收货人（*）</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" class="form-control" style="width:200px;" placeholder="姓名：xxxx" >
+                                    <button id="btn-add-address" class="btn btn-primary" onclick="$('#modal-add-address').modal({backdrop: false})">添加新地址</button>
+                                    <div class="modal fade" id="modal-add-address" tabindex="-1" role="dialog" aria-labelledby="mt-add-address">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="mt-add-address">添加新地址</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="form-add-address" class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label for="ipt-receive-name" class="col-sm-2 control-label">收货人</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="ipt-receive-name" type="text" class="form-control" style="width:200px;" name="receiveName" placeholder="请填写收货人姓名" >
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">手机（*）</label>
-                                                        <div class="col-sm-10">
-                                                            <input class="form-control" type="text" style="width:200px;" placeholder="请填写11位手机号码"></input>
+                                                        <div class="form-group">
+                                                            <label for="ipt-phone" class="col-sm-2 control-label">手机</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="ipt-phone" class="form-control" type="text" style="width:200px;" name="phoneNum" placeholder="请填写11位手机号码"/>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">地址（*）</label>
-                                                        <div class="col-sm-10">
-                                                            <input class="form-control" type="text" style="width:400px;" placeholder="请填写11位手机号码"></input>
+                                                        <div class="form-group">
+                                                            <label for="ipt-address" class="col-sm-2 control-label">地址</label>
+                                                            <div class="col-sm-10">
+                                                                <input id="ipt-address" class="form-control" type="text" style="width:400px;" name="address" placeholder="请填写详细的收货地址"/>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="inputEmail3" class="col-sm-2 control-label"></label>
-                                                        <div class="col-sm-10">
-                                                            <button type="button" class="btn btn-primary">确认配送信息</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                                        <input type="hidden" name="memberId" th:value="${session.memberInfo.id}"/>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                                    <button id="btn-save-address" type="button" class="btn btn-primary">保存</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -388,14 +373,14 @@
                                             <td>配送费用</td>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tbody-order-project-confirm" th:object="${session.orderProject}">
                                         <tr>
-                                            <td>活性富氢净水直饮机</td>
-                                            <td>深圳市博实永道电子商务有限公司</td>
-                                            <td>每满1750人抽取一台活性富氢净水直饮机，至少抽取一台。抽取名额（小数点后一位四舍五入）=参与人数÷1750人，由苏宁官方抽取。</td>
-                                            <td>1</td>
-                                            <td style="color:#F60">￥ 1.00</td>
-                                            <td>免运费</td>
+                                            <td th:text="*{projectName}">活性富氢净水直饮机</td>
+                                            <td th:text="*{launchName}">深圳市博实永道电子商务有限公司</td>
+                                            <td th:text="*{returnContent}">每满1750人抽取一台活性富氢净水直饮机，至少抽取一台。抽取名额（小数点后一位四舍五入）=参与人数÷1750人，由苏宁官方抽取。</td>
+                                            <td id="td-return-count" th:text="*{returnCount}">1</td>
+                                            <td style="color:#F60" th:text="|￥*{supportPrice}|">￥ 1.00</td>
+                                            <td th:text="*{freight == 0} ? '免运费' : *{freight}">免运费</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -419,10 +404,10 @@
                                 <div class="col-md-12 column">
                                     <div class="alert alert-warning alert-dismissable" style="text-align:right; border:2px solid #ffc287;">
                                         <ul style="list-style:none;" >
-                                            <li style="margin-top:10px;">支持金额：<span style="color:red;">￥1.00</span></li>
-                                            <li style="margin-top:10px;">配送费用：<span style="color:red;">￥0.00</span></li>
-                                            <li style="margin-top:10px;">优惠金额：<span style="color:red;">-￥0.00</span></li>
-                                            <li style="margin-top:10px;margin-bottom:10px;"><h2>支付总金额：<span style="color:red;">￥1.00</span></h2></li>
+                                            <li style="margin-top:10px;">支持金额：<span style="color:red;" id="span-bill-support-money">￥1.00</span></li>
+                                            <li style="margin-top:10px;">配送费用：<span style="color:red;" th:text="|￥${session.orderProject.freight}|">￥0.00</span></li>
+                                            <li style="margin-top:10px;">优惠金额：<span style="color:red;" id="span-bill-discounts">-￥0.00</span></li>
+                                            <li style="margin-top:10px;margin-bottom:10px;"><h2>支付总金额：<span style="color:red;" id="span-bill-total">￥1.00</span></h2></li>
                                             <li style="margin-top:10px;padding:5px;border:1px solid #F00;display:initial;background:#FFF;">
                                                 <i class="glyphicon glyphicon-info-sign"></i> <strong>您需要先 <a href="#address">设置配送信息</a> ,再提交订单</strong>
                                             </li>
@@ -494,18 +479,97 @@
 <script src="bootstrap/js/bootstrap.min.js" th:src="|//localhost/static/bootstrap/js/bootstrap.min.js|"></script>
 <script src="script/docs.min.js" th:src="|//localhost/static/script/docs.min.js|"></script>
 <script src="script/back-to-top.js" th:src="|//localhost/static/script/back-to-top.js|"></script>
+<script type="text/javascript" src="http://localhost/static/layer/layer.js"></script>
 <script type="text/javascript">
     $(() => {
 		// 支持项目步骤1
         changeStep(0);
 
+		// 根据回报数量计算总价
+        let returnCountIpt = $("#ipt-return-count");
+		returnCountIpt.change(function(){
+            if(checkReturnCount()){
+				let total = price * this.value + freight;
+				$("#span-total-price").text("￥" + total);
+			}
+		});
+
+		// 去结算
+		$("#btn-to-close-an-account").click(() => {
+			// 1、检查回报数量合法性
+			if(!checkReturnCount()) return false;
+
+			// 2、发送请求，获取当前用户的收货地址
+			let returnCount = parseInt(returnCountIpt.val());
+			$.ajax({
+				url: "pay/" + returnCount,
+				type: "POST",
+				dataType: "json",
+				success: (json) => {
+					if(json.result !== "SUCCESS"){
+						layer.msg(json.message);
+						return;
+					}
+					generateAddress(json.data);
+
+					// 2、更新账单信息
+					let supportMoney = returnCount * price;
+					$("#td-return-count").text(returnCount);
+					$("#span-bill-support-money").text("￥" + supportMoney);
+					$("#span-bill-total").text("￥" + (supportMoney + freight));
+
+					changeStep(1);
+				},
+				error: errorCallback
+			});
+
+			layer.msg("请求中，请稍等...");
+        });
+
+		// 添加收货地址
+		$("#btn-save-address").click(() => {
+            let addressFormData = new FormData(document.querySelector("#form-add-address"));
+			let message = checkAddAddress(addressFormData);
+			if(message != null){
+				layer.msg(message);
+				return;
+            }
+
+			$.ajax({
+                url: "pay/address/save",
+                type: "POST",
+                data: addressFormData,
+                dataType: "json",
+                contentType: false,
+				processData: false,
+                success: (json) => {
+					if(json.result === "SUCCESS"){
+						generateAddress(json.data);
+						$("#modal-add-address").modal("hide");
+					}
+					else layer.msg(json.message);
+                },
+                error: errorCallback
+            });
+			layer.msg("请求中，请稍等...");
+        })
 
 
     });
 </script>
 <script type="text/javascript">
-    /*const signalPurchase = "${session.orderProject.signalPurchase}}";
-	const purchase = "${session.orderProject.purchase}";*/
+    // 是否限购
+    const signalPurchase = Boolean("[[${session.orderProject.signalPurchase}]]");
+	// 限额
+	const purchase = parseInt("[[${session.orderProject.purchase}]]");
+	// 单价
+	const price = parseInt("[[${session.orderProject.supportPrice}]]");
+	// 运费
+	const freight = parseInt("[[${session.orderProject.freight}]]");
+	const phoneRegex = /^\d{11}$/;
+	const hasLengthRegex = /\S+/;
+	// 姓名正则
+	const nameRegex = /^[\u4e00-\u9fa5]{2,5}$/;
 
 	/**
 	 * 执行下一步
@@ -519,6 +583,73 @@
 		pay.attr("hidden", true);
 		pay.eq(stepIndex).attr("hidden", false);
 	}
+
+	/**
+     * 检查回报数量
+	 * @returns {boolean}
+	 */
+	function checkReturnCount(){
+		const iptReturnCount = $("#ipt-return-count");
+		let value = Math.floor(parseInt(iptReturnCount.val()));
+		iptReturnCount.val(value);
+		if(isNaN(value) || value <= 0){
+			layer.msg("请输入正确的数量");
+			return false;
+		}
+		if(signalPurchase && value > purchase){
+			layer.msg("限购数量为" + purchase + "，不能超过限购数量");
+			return false;
+		}
+		return true;
+    }
+
+	/**
+     * 生成收货地址信息
+	 * @param addresses Map<addressId,addressVO>
+	 */
+	function generateAddress(addresses){
+        let addressDiv = $("#div-address");
+		addressDiv.empty();
+
+		let index = 0;
+		for(const field in addresses){
+			if(index >= 3){
+				$("<div>...</div>").appendTo(addressDiv);
+				break;
+			}
+			$("<div class='radio'>" +
+				"<label>" +
+				"<input type='radio' name='addressId' value='"+ field +"'>" +
+				addresses[field].receiveName + " " + addresses[field].phoneNum + " " + addresses[field].address + " " +
+				"</label>" +
+				"</div>").appendTo(addressDiv);
+			index++;
+		}
+	}
+
+	function errorCallback(resp){
+		layer.msg(resp.responseJSON.message);
+	}
+
+	function checkAddAddress(addressFormData){
+		let message = null;
+
+		if(!nameRegex.test(addressFormData.get("receiveName"))) message = "请输入正确的姓名";
+		else if(!phoneRegex.test(addressFormData.get("phoneNum"))) message = "请输入正确的手机号";
+		else if(!hasLengthRegex.test(addressFormData.get("address"))) message = "请输入收货地址";
+
+		return message;
+    }
+
+	function checkAjaxResult(result){
+		let json = result.responseJSON;
+		if(result.status !== 200 || !json || json.result !== "SUCCESS"){
+			let message = json ? json.message : "服务器出现异常，请稍后再试";
+			layer.msg(message);
+			return false;
+		}
+        return true;
+    }
 </script>
 </body>
 </html>

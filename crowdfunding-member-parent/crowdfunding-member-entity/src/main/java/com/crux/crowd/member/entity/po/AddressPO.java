@@ -3,6 +3,7 @@ package com.crux.crowd.member.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.crux.crowd.member.entity.vo.AddressVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,13 @@ public class AddressPO implements java.io.Serializable{
 	 * 所属用户id
 	 */
 	private Integer memberId;
+
+	public AddressPO(AddressVO addressVO){
+		receiveName = addressVO.getReceiveName();
+		phoneNum = addressVO.getPhoneNum();
+		address = addressVO.getAddress();
+		memberId = addressVO.getMemberId();
+	}
 
 	@Override
 	public final boolean equals(Object obj){
