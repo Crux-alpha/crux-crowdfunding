@@ -53,6 +53,10 @@ public class OrderPO implements java.io.Serializable{
 	 * 订单备注
 	 */
 	private String orderRemark;
+	/**
+	 * 收货地址id
+	 */
+	private Integer addressId;
 
 	@Override
 	public final boolean equals(Object obj){
@@ -77,6 +81,7 @@ public class OrderPO implements java.io.Serializable{
 				",invoice=" + invoice +
 				",invoiceTitle=" + invoiceTitle +
 				",orderRemark=" + orderRemark +
+				",addressId=" + addressId +
 				'}';
 	}
 }

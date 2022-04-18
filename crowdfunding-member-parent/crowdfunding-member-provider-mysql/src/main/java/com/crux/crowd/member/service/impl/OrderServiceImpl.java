@@ -13,8 +13,6 @@ import com.crux.crowd.member.service.AbstractService;
 import com.crux.crowd.member.service.OrderService;
 import com.crux.crowd.member.service.ServiceException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -39,9 +37,9 @@ public class OrderServiceImpl extends AbstractService<OrderPOMapper,OrderPO> imp
 	@Override
 	public Map<Integer,AddressVO> mapAddressVO(Integer memberId){
 		List<AddressPO> addressPOList =
-				Optional.ofNullable(addressMapper.selectList(Wrappers.<AddressPO>lambdaQuery().eq(AddressPO::getMemberId, memberId)))
-						.orElseGet(ArrayList::new);
-		Collections.reverse(addressPOList);
+				Optional.ofNullable(
+						addressMapper.selectList(Wrappers.<AddressPO>lambdaQuery().eq(AddressPO::getMemberId, memberId).orderByDesc(AddressPO::getId))
+						).orElseGet(ArrayList::new);
 		return addressPOList.stream().collect(Collectors.toMap(AddressPO::getId, AddressVO::new));
 	}
 

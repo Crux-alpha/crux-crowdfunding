@@ -1,6 +1,7 @@
 package com.crux.crowd.member.controller;
 
 import static com.crux.crowd.common.util.CrowdConstant.*;
+
 import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.DataSourceRemoteService;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -54,17 +58,16 @@ public class OrderController{
 	@PostMapping("/pay/{return_count}")
 	@ResponseBody
 	public ResultEntity<Integer,AddressVO> toCloseAnAccount(@PathVariable("return_count") Integer returnCount, HttpSession session){
-		final String ORDER_PROJECT = "orderProject";
 		Object memberInfo = session.getAttribute(SESSION_ATTRIBUTE_MEMBER_INFO);
-		Object orderProject = session.getAttribute(ORDER_PROJECT);
+		Object orderProject = session.getAttribute(SESSION_ATTRIBUTE_ORDER_PROJECT);
 
 		// 1、如果当前保存的用户信息和订单信息无效，则提示刷新页面
 		if(memberInfo instanceof MemberInfoVO && orderProject instanceof OrderProjectVO){
 			// 2、更新数量
 			OrderProjectVO orderProjectVO = (OrderProjectVO)orderProject;
 			orderProjectVO.setReturnCount(returnCount);
-			session.removeAttribute(ORDER_PROJECT);
-			session.setAttribute(ORDER_PROJECT, orderProjectVO);
+			session.removeAttribute(SESSION_ATTRIBUTE_ORDER_PROJECT);
+			session.setAttribute(SESSION_ATTRIBUTE_ORDER_PROJECT, orderProjectVO);
 
 			// 3、查询地址，返回客户端
 			return dataSourceRemoteService.getAddresses(((MemberInfoVO)memberInfo).getId());
@@ -72,6 +75,12 @@ public class OrderController{
 		}else return ResultEntity.failure(TipsMessage.HTML_FAILURE);
 	}
 
+	/**
+	 * 保存一个收货地址，同时再返回该用户所有收货地址
+	 * @param addressVO 一个收货地址
+	 * @return 当前用户的所有收货地址
+	 * @see #toCloseAnAccount(Integer, HttpSession)
+	 */
 	@PostMapping("/pay/address/save")
 	@ResponseBody
 	public ResultEntity<Integer,AddressVO> saveAndGetAddress(AddressVO addressVO){

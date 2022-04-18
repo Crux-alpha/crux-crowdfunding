@@ -13,11 +13,13 @@ public final class CrowdConstant{
 	public static final String ADMIN_LOGIN_ACCOUNT = "loginAccount_admin";
 	public static final String JSON_RESULT = "result_json";
 	public static final DateTimeFormatter DEFAULT_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	public static final DateTimeFormatter NUMBER_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 	public static final int DEFAULT_MESSAGE_TIMEOUT_MINUTES = 3;
 	public static final String REDIS_MESSAGE_CODE_PREFIX = "message-code:";
 	public static final String COOKIE_MESSAGE_CODE_INTERVAL = "message_code_interval";
 	public static final String SESSION_ATTRIBUTE_MEMBER_INFO = "memberInfo";
 	public static final String SESSION_ATTRIBUTE_PROJECT_DATA = "project_data";
+	public static final String SESSION_ATTRIBUTE_ORDER_PROJECT = "orderProject";
 	public static final String PORTAL_PROJECT_LIST = "portalProjectList";
 	public static final String DETAIL_PROJECT = "detailProject";
 

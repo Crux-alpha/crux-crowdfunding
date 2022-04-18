@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <title>确认支持订单</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"
           th:href="|//localhost/static/bootstrap/css/bootstrap.min.css|">
     <link rel="stylesheet" href="css/font-awesome.min.css" th:href="|//localhost/static/css/font-awesome.min.css|">
@@ -77,6 +78,7 @@
 
 
     </style>
+    <title></title>
 </head>
 <body>
 <div class="navbar-wrapper" th:fragment="center-head">
@@ -320,29 +322,27 @@
                                 <div class="col-md-12 column" style="padding:0 120px;">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="optionsRadios1" id="optionsRadios1" value="option1" checked>
+                                            <input class="ipt-invoice" type="radio" name="invoice" value="false" checked onclick="$('#div-invoice-title').hide();$('#ipt-invoice-title').prop('disabled', true)">
                                             无需发票
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="optionsRadios1" id="optionsRadios2" value="option2">
+                                            <input class="ipt-invoice" type="radio" name="invoice" value="true" onclick="$('#div-invoice-title').show();$('#ipt-invoice-title').prop('disabled', false)">
                                             需要发票
                                         </label>
                                     </div>
-                                    <div style="border:10px solid #f60;border-bottom-color: #eceeef;border-width: 10px;width:20px;margin-left:20px;margin-top:-20px;
-                                             border-left-color: rgba(221, 221, 221, 0);
-                                             border-top-color: rgba(221, 221, 221, 0);
-                                             border-right-color: rgba(221, 221, 221, 0);
+                                    <div style="width:20px;margin-left:20px;margin-top:-20px;
+                                             border: 10px solid rgba(221, 221, 221, 0);border-bottom-color: #eceeef;
                                     "></div>
-                                    <div class="panel panel-default" style="border-style: dashed;background-color:#eceeef">
+                                    <div id="div-invoice-title" class="panel panel-default" style="border-style: dashed;background-color:#eceeef;display: none">
                                         <div class="panel-body">
                                             <div class="col-md-12 column" >
                                                 <form class="form-horizontal">
                                                     <div class="form-group">
-                                                        <label class="col-sm-2 control-label">发票抬头（*）</label>
+                                                        <label class="col-sm-2 control-label">发票抬头</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" style="width:200px;" placeholder="个人" >
+                                                            <input id="ipt-invoice-title" type="text" class="form-control" name="invoiceTitle" style="width:200px;" placeholder="个人" disabled>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -357,7 +357,7 @@
                                 <div class="col-md-12 column">
                                     <blockquote style="border-left: 5px solid #f60;color:#f60;padding: 0 0 0 20px;">
                                         <b>
-                                            项目信息 <a style="font-size:12px;" href="pay-step-1.html">修改数量</a>
+                                            项目信息 <a style="font-size:12px;" href="#">修改数量</a>
                                         </b>
                                     </blockquote>
                                 </div>
@@ -389,7 +389,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">备注</label>
                                         <div class="col-sm-10">
-                                            <textarea class="form-control" rows="1" placeholder="填写关于回报或发起人希望您备注的信息"></textarea>
+                                            <textarea id="textarea-remark" class="form-control" rows="1" name="orderRemark" placeholder="填写关于回报或发起人希望您备注的信息"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -409,18 +409,20 @@
                                             <li style="margin-top:10px;">优惠金额：<span style="color:red;" id="span-bill-discounts">-￥0.00</span></li>
                                             <li style="margin-top:10px;margin-bottom:10px;"><h2>支付总金额：<span style="color:red;" id="span-bill-total">￥1.00</span></h2></li>
                                             <li style="margin-top:10px;padding:5px;border:1px solid #F00;display:initial;background:#FFF;">
-                                                <i class="glyphicon glyphicon-info-sign"></i> <strong>您需要先 <a href="#address">设置配送信息</a> ,再提交订单</strong>
+                                                <i class="glyphicon glyphicon-info-sign"></i> <strong>您需要先 <a href="#div-address">设置配送信息</a>以及阅读下方风险和规则后才能提交订单</strong>
                                             </li>
                                             <li style="margin-top:10px;">
                                                 请在下单后15分钟内付款，否则您的订单会被自动关闭。
                                             </li>
                                             <li style="margin-top:10px;">
-                                                <button disabled="disabled" type="button" class="btn btn-warning btn-lg" onclick="window.location.href='pay-step-3.html'"><i class="glyphicon glyphicon-credit-card"></i> 立即付款</button>
+                                                <button id="btn-pay" disabled type="button" class="btn btn-warning btn-lg">
+                                                    <i class="glyphicon glyphicon-credit-card"></i> 立即付款
+                                                </button>
                                             </li>
                                             <li style="margin-top:10px;">
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input type="checkbox" checked> 我已了解风险和规则
+                                                        <input type="checkbox" id="ipt-read-know"> 我已了解风险和规则
                                                     </label>
                                                 </div>
                                             </li>
@@ -552,8 +554,36 @@
                 error: errorCallback
             });
 			layer.msg("请求中，请稍等...");
-        })
+        });
 
+		$("#ipt-read-know").click(openButtonPay);
+
+		// 立即付款，收集数据，发送请求
+		$("#btn-pay").click(() => {
+			let payFormData = new FormData();
+			// 收货地址id
+			payFormData.append("addressId", $("#div-address input:checked").val());
+			// 是否开发票
+            payFormData.append("invoice", $(".ipt-invoice:checked").val());
+            let invoiceTitleInput = $("#ipt-invoice-title");
+            // 如果开发票，则发票抬头
+            if(!invoiceTitleInput.prop("disabled")) payFormData.append("invoiceTitle", invoiceTitleInput.val());
+            // 备注
+            payFormData.append("orderRemark", $("#textarea-remark").val());
+
+            $.ajax({
+                url: "pay",
+                type: "POST",
+                data: payFormData,
+                contentType: false,
+				processData: false,
+                dataType: "json",
+                success:(json) => {
+                	layer.msg(json.message);
+                },
+                error: errorCallback,
+            })
+        });
 
     });
 </script>
@@ -619,7 +649,7 @@
 			}
 			$("<div class='radio'>" +
 				"<label>" +
-				"<input type='radio' name='addressId' value='"+ field +"'>" +
+				"<input type='radio' name='addressId' value='"+ field +"' onclick='openButtonPay()'>" +
 				addresses[field].receiveName + " " + addresses[field].phoneNum + " " + addresses[field].address + " " +
 				"</label>" +
 				"</div>").appendTo(addressDiv);
@@ -650,6 +680,14 @@
 		}
         return true;
     }
+
+	/**
+     * 只有收货地址和阅读风险规则点击后支付按钮才会开启
+	 */
+	function openButtonPay(){
+		let open = $("#div-address").find("input:checked").length === 0 || !$("#ipt-read-know").prop("checked");
+		$("#btn-pay").prop("disabled", open);
+	}
 </script>
 </body>
 </html>
