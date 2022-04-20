@@ -7,7 +7,7 @@ import com.crux.crowd.member.api.SendMessageRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Slf4j
 @Service("sendMessageRemoteService")
-@EnableConfigurationProperties(MessageProviderProperties.class)
+@ConditionalOnBean(MessageProviderProperties.class)
 public class DefaultSendMessageRemoteService implements SendMessageRemoteService{
 
 	private MessageProviderProperties properties;

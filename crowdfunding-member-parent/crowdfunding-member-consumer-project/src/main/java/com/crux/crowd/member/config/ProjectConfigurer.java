@@ -1,11 +1,14 @@
 package com.crux.crowd.member.config;
 
+import com.crux.crowd.member.api.OSSProviderProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration(proxyBeanMethods = false)
-public class ProjectWebMvcConfigurer implements WebMvcConfigurer{
+@EnableConfigurationProperties(OSSProviderProperties.class)
+public class ProjectConfigurer implements WebMvcConfigurer{
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry){

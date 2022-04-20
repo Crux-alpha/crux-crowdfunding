@@ -22,6 +22,7 @@ public final class CrowdConstant{
 	public static final String SESSION_ATTRIBUTE_ORDER_PROJECT = "orderProject";
 	public static final String PORTAL_PROJECT_LIST = "portalProjectList";
 	public static final String DETAIL_PROJECT = "detailProject";
+	public static final String SESSION_ATTRIBUTE_ORDER = "order";
 
 	/**
 	 * 与HTTP属性有关的常量池

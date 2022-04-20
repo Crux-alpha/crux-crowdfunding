@@ -49,4 +49,4 @@ crowd:
       - "/member/login.html"
       - "/member/login/**"
       - "/member/logout.html"
-      - "/project/detail/*"
+      - "/project/detail/**"

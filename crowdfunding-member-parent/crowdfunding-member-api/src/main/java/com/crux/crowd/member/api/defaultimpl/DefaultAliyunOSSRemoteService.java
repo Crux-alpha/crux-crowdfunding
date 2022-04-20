@@ -8,6 +8,7 @@ import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.AliyunOSSRemoteService;
 import com.crux.crowd.member.api.OSSProviderProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.*;
 
 @Slf4j
 @Service("aliyunOSSRemoteService")
-@EnableConfigurationProperties(OSSProviderProperties.class)
+@ConditionalOnBean(OSSProviderProperties.class)
 public class DefaultAliyunOSSRemoteService implements AliyunOSSRemoteService{
 
 	private final OSSProviderProperties ossProviderProperties;

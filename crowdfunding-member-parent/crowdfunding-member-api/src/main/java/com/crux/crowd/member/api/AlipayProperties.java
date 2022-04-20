@@ -1,4 +1,4 @@
-package com.crux.crowd.member.config;
+package com.crux.crowd.member.api;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,5 +45,4 @@ public class AlipayProperties{
 	 * 支付宝网关
 	 */
 	private String gatewayUrl;
-	private String logPath = "C:\\";
 }

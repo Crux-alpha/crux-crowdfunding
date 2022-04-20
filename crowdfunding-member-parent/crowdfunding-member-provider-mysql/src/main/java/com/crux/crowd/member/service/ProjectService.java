@@ -1,8 +1,10 @@
 package com.crux.crowd.member.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.crux.crowd.member.entity.po.OrderProjectPO;
 import com.crux.crowd.member.entity.po.ProjectPO;
 import com.crux.crowd.member.entity.vo.DetailProjectVO;
+import com.crux.crowd.member.entity.vo.OrderProjectVO;
 import com.crux.crowd.member.entity.vo.PortalTypeVO;
 import com.crux.crowd.member.entity.vo.ProjectVO;
 
@@ -15,4 +17,10 @@ public interface ProjectService extends IService<ProjectPO>{
 	List<PortalTypeVO> listPortalProject();
 
 	DetailProjectVO getDetailProjectById(Integer id);
+
+	/**
+	 * 支持者支持成功后，增加项目已筹集金额和支持人数
+	 * @param orderProjectPO 支持的项目订单详情
+	 */
+	void supportProject(OrderProjectPO orderProjectPO);
 }

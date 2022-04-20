@@ -1,5 +1,6 @@
 package com.crux.crowd.member.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.crux.crowd.member.entity.po.*;
 import com.crux.crowd.member.entity.vo.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -95,6 +97,53 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 	@Override
 	public DetailProjectVO getDetailProjectById(Integer id){
 		return baseMapper.selectDetailProject(id);
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	public void supportProject(OrderProjectPO orderProjectPO){
+		ReturnPO returnPO;
+		int returnCount;
+		synchronized(returnPOMapper){
+			returnPO = returnPOMapper.selectById(orderProjectPO.getReturnId());
+			// 修改回报数量
+			returnCount = orderProjectPO.getReturnCount();
+			int count = returnPO.getCount();
+			if(count > 0){
+				int newCount = count - returnCount;
+				if(newCount < 0){    // 如果数量小于0，停止
+					throw new ServiceException(returnPO.getContent() + "的回报数量小于0！");
+				}
+				// 如果count等于0，将其减1表示已经售罄
+				if(newCount == 0) newCount--;
+
+				// 更新字段：回报数量
+				returnPOMapper.update(null, Wrappers.<ReturnPO>lambdaUpdate()
+						.set(ReturnPO::getCount, newCount)
+						.eq(ReturnPO::getId, returnPO.getId()));
+			}
+		}
+
+		synchronized(this){
+			// 修改项目支持金额、支持人数、状态
+			ProjectPO projectPO = getById(returnPO.getProjectId());
+			// 如果已经众筹成功，不再增加
+			if(projectPO.getStatus() == ProjectPO.Status.SUCCESS || projectPO.getStatus() == ProjectPO.Status.FAILED){
+				throw new ServiceException(projectPO.getProjectName() + "已经众筹结束！");
+			}
+			// 计算支持金额
+			BigDecimal addMoney = orderProjectPO.getSupportPrice().multiply(BigDecimal.valueOf(returnCount));
+			BigDecimal supportMoney = projectPO.getSupportMoney().add(addMoney);
+			projectPO.setSupportMoney(supportMoney);
+
+			// 更新字段：已筹集金额、百分比完成度、众筹状态、支持人数
+			update(lambdaUpdateWrapper()
+					.set(ProjectPO::getSupportMoney, projectPO.getSupportMoney())
+					.set(ProjectPO::getCompletion, projectPO.getCompletion())
+					.set(ProjectPO::getStatus, projectPO.getStatus())
+					.set(ProjectPO::getSupporter, projectPO.getSupporter() + 1)
+					.eq(ProjectPO::getId, projectPO.getId()));
+		}
 	}
 
 	/**

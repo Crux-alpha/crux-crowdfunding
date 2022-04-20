@@ -1,13 +1,15 @@
 package com.crux.crowd.member.controller;
 
-import com.crux.crowd.common.util.CrowdConstant;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.entity.vo.AddressVO;
 import com.crux.crowd.member.entity.vo.OrderProjectVO;
+import com.crux.crowd.member.entity.vo.OrderVO;
 import com.crux.crowd.member.service.OrderService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+
+import static com.crux.crowd.common.util.CrowdConstant.TipsMessage.*;
 
 @RestController
 @RequestMapping("/order")
@@ -27,7 +29,7 @@ public class OrderProviderController{
 	@GetMapping("/pay/{returnId}")
 	public ResultEntity<String,OrderProjectVO> getOrderProject(@PathVariable("returnId") Integer returnId){
 		OrderProjectVO orderProject = orderService.getOrderProjectVO(returnId);
-		if(orderProject == null) return ResultEntity.failure(CrowdConstant.TipsMessage.DATA_NOT_FOUNT);
+		if(orderProject == null) return ResultEntity.failure(DATA_NOT_FOUNT);
 		return ResultEntity.success(Collections.singletonMap("orderProject", orderProject));
 	}
 
@@ -43,7 +45,28 @@ public class OrderProviderController{
 
 	@PostMapping("/pay/address/save")
 	public ResultEntity<Integer,AddressVO> saveAndGetAddress(@RequestBody AddressVO addressVO){
-		if(!orderService.saveAddress(addressVO)) return ResultEntity.error(CrowdConstant.TipsMessage.SERVER_ERROR);
+		orderService.saveAddress(addressVO);
 		return getAddresses(addressVO.getMemberId());
 	}
+
+	@PostMapping
+	public ResultEntity<?,?> saveOrder(@RequestBody OrderVO orderVO){
+		orderService.saveOrderVO(orderVO);
+		return ResultEntity.success();
+	}
+
+	@PutMapping("/pay/{orderNum}")
+	public ResultEntity<?,?> payOrder(@PathVariable("orderNum") String orderNum,
+									  @RequestParam("payOrderNum") String payOrderNum,
+									  @RequestParam("orderAmount") double orderAmount){
+		orderService.payOrder(orderNum, payOrderNum, orderAmount);
+		return ResultEntity.success();
+	}
+
+	@DeleteMapping("/{orderNum}")
+	public ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum){
+		orderService.removeOrder(orderNum);
+		return ResultEntity.success();
+	}
+
 }

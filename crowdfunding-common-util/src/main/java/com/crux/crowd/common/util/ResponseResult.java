@@ -17,6 +17,6 @@ public enum ResponseResult{
 	}
 
 	public boolean equalsResultEntity(ResultEntity<?,?> resultEntity){
-		return this == resultEntity.getResult();
+		return resultEntity != null && this == resultEntity.getResult();
 	}
 }

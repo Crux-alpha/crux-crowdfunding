@@ -1,6 +1,8 @@
 package com.crux.crowd.member.config;
 
 import com.crux.crowd.common.util.CrowdConstant;
+import com.crux.crowd.member.api.MessageProviderProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.lang.NonNull;
@@ -17,7 +19,8 @@ import java.util.Objects;
 
 @Configuration(proxyBeanMethods = false)
 @Import(BCryptPasswordEncoder.class)
-public class AuthenticationWebMvcConfigurer implements WebMvcConfigurer{
+@EnableConfigurationProperties(MessageProviderProperties.class)
+public class AuthenticationConfigurer implements WebMvcConfigurer{
 
 	/**
 	 * 请求转发处理器

@@ -1,6 +1,5 @@
 package com.crux.crowd.member.entity.vo;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,18 +51,6 @@ public class OrderVO implements java.io.Serializable{
 		this.invoice = invoice;
 		this.invoiceTitle = invoiceTitle;
 		this.orderRemark = orderRemark;
-	}
-
-	/**
-	 * 保存支持的项目信息，同时计算总价
-	 * @param orderProjectVO see ——> {@link OrderProjectVO}
-	 */
-	public void setOrderProjectVO(OrderProjectVO orderProjectVO){
-		BigDecimal price = orderProjectVO.getSupportPrice();
-		BigDecimal count = BigDecimal.valueOf(orderProjectVO.getReturnCount());
-		BigDecimal freight = orderProjectVO.getFreight();
-		orderAmount = price.multiply(count).add(freight);
-		this.orderProjectVO = orderProjectVO;
 	}
 
 	@Override

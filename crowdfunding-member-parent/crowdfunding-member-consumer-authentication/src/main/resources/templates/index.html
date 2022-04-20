@@ -208,28 +208,11 @@
     </style>
 </head>
 <body>
-<div class="navbar-wrapper" th:if="${session.memberInfo == null}">
-        <div class="container">
-            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-                <div class="container">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="index.html" style="font-size:32px;">尚筹网-创意产品众筹平台</a>
-                    </div>
-                    <div id="navbar" class="navbar-collapse collapse" style="float:right;">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="login.html" th:href="@{/member/login.html}">登录</a></li>
-                            <li><a href="reg.html" th:href="@{/member/register.html}">注册</a></li>
-                            <li><a>|</a></li>
-                            <li><a href="admin-login.html">管理员入口</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-        </div>
-    </div>
-<div th:if="${session.memberInfo != null}" class="navbar-wrapper">
-    <div th:insert="~{/common/center-common::center-head}"></div>
+<div class="navbar-wrapper" th:if="${session?.memberInfo == null}">
+    <div th:insert="~{/common/center-common::center-head-unlogin}"></div>
+</div>
+<div class="navbar-wrapper" th:if="${session?.memberInfo != null}">
+    <div th:insert="~{/common/center-common::center-head-login}"></div>
 </div>
 
 

@@ -1,6 +1,7 @@
 package com.crux.crowd.member.api;
 
 import com.crux.crowd.common.util.ResultEntity;
+import com.crux.crowd.member.entity.vo.OrderVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * redis远程服务
  */
-@FeignClient(name = "crowd-redis", path = "/server/provider/redis")
+@FeignClient(name = "crowd-redis")
 public interface RedisRemoteService{
 
 	/**
@@ -37,4 +38,8 @@ public interface RedisRemoteService{
 	 */
 	@DeleteMapping("/delete")
 	ResultEntity<?,?> delete(@RequestParam(name = "key") String key);
+
+
+	@PostMapping("/order")
+	ResultEntity<?,?> saveOrder(@RequestBody OrderVO orderVO);
 }

@@ -7,9 +7,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title th:text="${project.projectName}"></title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" th:href="|//localhost/static/bootstrap/css/bootstrap.min.css|">
-    <link rel="stylesheet" href="css/font-awesome.min.css" th:href="|//localhost/static/css/font-awesome.min.css|">
-    <link rel="stylesheet" href="css/theme.css" th:href="|//localhost/static/css/theme.css|">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{/static/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="css/theme.css" th:href="@{/static/css/theme.css}">
     <style>
         #footer {
             padding: 15px 0;
@@ -59,7 +59,12 @@
     </style>
 </head>
 <body>
-<div th:replace="~{/common/center-common::center-head}"></div>
+<div class="navbar-wrapper" th:if="${session?.memberInfo == null}">
+    <div th:insert="~{/common/center-common::center-head-unlogin}"></div>
+</div>
+<div th:if="${session?.memberInfo != null}" class="navbar-wrapper">
+    <div th:insert="~{/common/center-common::center-head-login}"></div>
+</div>
 
 <div class="container theme-showcase" role="main">
 
@@ -70,7 +75,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li>
-                                <a rel="nofollow" href="index.html" th:href="|//localhost/index.html|"><i class="glyphicon glyphicon-home"></i> 众筹首页</a>
+                                <a rel="nofollow" href="index.html" th:href="@{/index.html}"><i class="glyphicon glyphicon-home"></i> 众筹首页</a>
                             </li>
                             <li>
                                 <a rel="nofollow" href="projects.html"><i class="glyphicon glyphicon-th-large"></i> 众筹项目</a>
@@ -79,7 +84,7 @@
                                 <a rel="nofollow" href="start.html" th:href="@{/project/start.html}"><i class="glyphicon glyphicon-edit"></i> 发起众筹</a>
                             </li>
                             <li>
-                                <a rel="nofollow" href="minecrowdfunding.html" th:href="|//localhost/member/center.html|"><i class="glyphicon glyphicon-user"></i>
+                                <a rel="nofollow" href="minecrowdfunding.html" th:href="@{/member/center.html}"><i class="glyphicon glyphicon-user"></i>
                                     我的众筹</a>
                             </li>
                         </ul>
@@ -150,7 +155,7 @@
                                 <div class="container-fluid">
                                     <div class="row clearfix">
                                         <div class="col-md-3 column" style="padding:0;">
-                                            <img alt="140x140" src="img/services-box2.jpg" th:src="|//localhost/static/img/services-box2.jpg|" data-holder-rendered="true"
+                                            <img alt="140x140" src="img/services-box2.jpg" th:src="@{/static/img/services-box2.jpg}" data-holder-rendered="true"
                                                  style="width: 80px; height: 80px;">
                                         </div>
                                         <div class="col-md-9 column" th:object="${project.memberLaunchInfoVO}">
@@ -175,13 +180,15 @@
                         <div class="panel panel-default" style="border-radius: 0;" th:each="return : ${project.detailReturnVO}" th:object="${return}">
                             <div class="panel-heading">
                                 <h3>
-                                    [[|￥*{supportMoney}|]] <span style="float:right;font-size:12px;" th:text="*{signalPurchase} ? '限额' + *{purchase} : '无限额'">无限额，447位支持者</span>
+                                    [[|￥*{supportMoney}|]]
+                                    <span style="float:right;font-size:12px;" th:text="*{count} > 0 ? '库存：' + *{count} : '库存：充足'"></span><br/>
+                                    <span style="float:right;font-size:12px;" th:text="*{signalPurchase} ? '单笔限额：' + *{purchase} : '无限额'">无限额，447位支持者</span>
                                 </h3>
                             </div>
                             <div class="panel-body">
                                 <p th:text="'配送费用:' + (*{freight == 0} ? '包邮' : *{freight})">配送费用：包邮</p>
                                 <p th:text="|预计发放时间:项目筹款成功后的*{returnDate}天内|">预计发放时间：项目筹款成功后的50天内</p>
-                                <a class="btn  btn-warning btn-lg" th:href="|//localhost/order/pay?returnId=*{id}|">支持</a>
+                                <a class="btn  btn-warning btn-lg" th:href="|/order/pay?returnId=*{id}|">支持</a>
                                 <br><br>
                                 <p th:text="|回报内容:*{content}|">感谢您的支持，在众筹开始后，您将以79元的优惠价格获得“遇见彩虹?”智能插座一件（参考价208元）。</p>
                             </div>
@@ -330,10 +337,10 @@
 </div>
 </div>
 
-<script src="jquery/jquery-2.1.1.min.js" th:src="|//localhost/static/js/jquery-3.6.0.min.js|"></script>
-<script src="bootstrap/js/bootstrap.min.js" th:src="|//localhost/static/bootstrap/js/bootstrap.min.js|"></script>
-<script src="script/docs.min.js" th:src="|//localhost/static/script/docs.min.js|"></script>
-<script src="script/back-to-top.js" th:src="|//localhost/static/script/back-to-top.js|"></script>
+<script src="jquery/jquery-2.1.1.min.js" th:src="@{/static/js/jquery-3.6.0.min.js}"></script>
+<script src="bootstrap/js/bootstrap.min.js" th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<script src="script/docs.min.js" th:src="@{/static/script/docs.min.js}"></script>
+<script src="script/back-to-top.js" th:src="@{/static/script/back-to-top.js}"></script>
 <script>
 	$(".prjtip img").css("cursor", "pointer");
 	$(".prjtip img").click(function(){

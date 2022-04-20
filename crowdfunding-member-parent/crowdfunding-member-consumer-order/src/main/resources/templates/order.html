@@ -8,9 +8,9 @@
     <meta name="author" content="">
     <title>确认支持订单</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"
-          th:href="|//localhost/static/bootstrap/css/bootstrap.min.css|">
-    <link rel="stylesheet" href="css/font-awesome.min.css" th:href="|//localhost/static/css/font-awesome.min.css|">
-    <link rel="stylesheet" href="css/theme.css" th:href="|//localhost/static/css/theme.css|">
+          th:href="@{/static/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{/static/css/font-awesome.min.css}">
+    <link rel="stylesheet" href="css/theme.css" th:href="@{/static/css/theme.css}">
     <style>
         #footer {
             padding: 15px 0;
@@ -81,23 +81,23 @@
     <title></title>
 </head>
 <body>
-<div class="navbar-wrapper" th:fragment="center-head">
+<div class="navbar-wrapper">
     <div class="container">
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="index.html" th:href="|//localhost/index.html|" style="font-size:32px;">尚筹网-创意产品众筹平台</a>
+                    <a class="navbar-brand" href="index.html" th:href="@{/index.html}" style="font-size:32px;">尚筹网-创意产品众筹平台</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse" style="float:right;">
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                    class="glyphicon glyphicon-user"></i> [[|${session.memberInfo.userName}|]]<span class="caret"></span></a>
+                                    class="glyphicon glyphicon-user"></i> [[|${session?.memberInfo?.userName}|]]<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="member.html" th:href="|//localhost/member/center.html|"><i class="glyphicon glyphicon-scale"></i> 会员中心</a></li>
+                                <li><a href="member.html" th:href="@{/member/center.html}"><i class="glyphicon glyphicon-scale"></i> 会员中心</a></li>
                                 <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
                                 <li class="divider"></li>
-                                <li><a href="index.html" th:href="|//localhost/member/logout.html|"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                                <li><a href="index.html" th:href="@{/member/logout.html}"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -297,7 +297,7 @@
                                                                 <input id="ipt-address" class="form-control" type="text" style="width:400px;" name="address" placeholder="请填写详细的收货地址"/>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" name="memberId" th:value="${session.memberInfo.id}"/>
+                                                        <input type="hidden" name="memberId" th:value="${session.memberInfo?.id}"/>
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
@@ -477,11 +477,13 @@
     </div>
 
 </div> <!-- /container -->
-<script src="jquery/jquery-2.1.1.min.js" th:src="|//localhost/static/js/jquery-3.6.0.min.js|"></script>
-<script src="bootstrap/js/bootstrap.min.js" th:src="|//localhost/static/bootstrap/js/bootstrap.min.js|"></script>
-<script src="script/docs.min.js" th:src="|//localhost/static/script/docs.min.js|"></script>
-<script src="script/back-to-top.js" th:src="|//localhost/static/script/back-to-top.js|"></script>
-<script type="text/javascript" src="http://localhost/static/layer/layer.js"></script>
+
+<div id="div-alipay-order-generator" hidden></div>
+<script src="jquery/jquery-2.1.1.min.js" th:src="@{/static/js/jquery-3.6.0.min.js}"></script>
+<script src="bootstrap/js/bootstrap.min.js" th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
+<script src="script/docs.min.js" th:src="@{/static/script/docs.min.js}"></script>
+<script src="script/back-to-top.js" th:src="@{/static/script/back-to-top.js}"></script>
+<script type="text/javascript" th:src="@{/static/layer/layer.js}"></script>
 <script type="text/javascript">
     $(() => {
 		// 支持项目步骤1
@@ -525,7 +527,7 @@
 				error: errorCallback
 			});
 
-			layer.msg("请求中，请稍等...");
+			layer.msg("请求中，请稍等...", {icon: 16});
         });
 
 		// 添加收货地址
@@ -572,16 +574,28 @@
             payFormData.append("orderRemark", $("#textarea-remark").val());
 
             $.ajax({
-                url: "pay",
+                url: location.protocol + "//" + location.hostname + "/pay/order/support_project",
                 type: "POST",
                 data: payFormData,
                 contentType: false,
 				processData: false,
-                dataType: "json",
-                success:(json) => {
-                	layer.msg(json.message);
+                dataType: "text",
+                success:txt => {
+                    /*
+                    该文本由支付宝接口提供，需要进行处理
+                    包含一个form和一个script，script用来提交form
+                    */
+                    // 1、将自带的script去除
+                    txt = txt.substring(0, txt.lastIndexOf("<script>"));
+                    // 2、解析txt并放在页面上
+                    let orderDiv = $("#div-alipay-order-generator");
+                	$(txt).appendTo(orderDiv);
+                	// 3、提交表单
+                    layer.msg("正在跳转到支付页面，请稍后...", {icon: 16}, () => {
+                        orderDiv.children().submit();
+                    });
                 },
-                error: errorCallback,
+                error: resp => console.log(resp.message)
             })
         });
 

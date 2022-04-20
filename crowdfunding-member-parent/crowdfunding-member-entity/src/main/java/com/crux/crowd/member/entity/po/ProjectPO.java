@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 /**
@@ -103,6 +104,13 @@ public class ProjectPO implements Serializable {
         this.day = day;
         this.memberLaunchId = memberLaunchId;
         this.headerPicturePath = headerPicturePath;
+    }
+
+    public void setSupportMoney(BigDecimal supportMoney){
+        this.supportMoney = supportMoney;
+        if(money == null || money.compareTo(BigDecimal.ZERO) <= 0) return;
+        completion = supportMoney.divide(money, 2, RoundingMode.DOWN).multiply(BigDecimal.TEN.multiply(BigDecimal.TEN)).intValue();
+        if(completion >= 100)  status = Status.SUCCESS;
     }
 
     public enum Status{

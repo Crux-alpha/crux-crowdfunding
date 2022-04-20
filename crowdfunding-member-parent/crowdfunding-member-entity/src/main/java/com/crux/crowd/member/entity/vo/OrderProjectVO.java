@@ -29,7 +29,7 @@ public class OrderProjectVO implements java.io.Serializable{
 	 */
 	private String returnContent;
 	/**
-	 * 回报数量
+	 * 回报(购买)数量
 	 */
 	private Integer returnCount;
 	/**
@@ -52,6 +52,10 @@ public class OrderProjectVO implements java.io.Serializable{
 	 * 是否限购
 	 */
 	private Boolean signalPurchase;
+	/**
+	 * 所属回报id
+	 */
+	private Integer returnId;
 
 	@Override
 	public boolean equals(Object obj){

@@ -69,4 +69,45 @@ public interface DataSourceRemoteService{
 	 */
 	@PostMapping("/order/pay/address/save")
 	ResultEntity<Integer,AddressVO> saveAndGetAddress(@RequestBody AddressVO addressVO);
+
+
+	/**
+	 * 保存一个完整的订单信息
+	 * @param orderVO 完整的订单信息
+	 * @return 执行结果
+	 */
+	@PostMapping("/order")
+	ResultEntity<?,?> saveOrder(@RequestBody OrderVO orderVO);
+
+
+	/**
+	 * 支付已保存的订单
+	 * @param orderNum 订单号
+	 * @param payOrderNum 支付宝交易号
+	 * @param orderAmount 支付金额
+	 * @return 执行结果
+	 */
+	@PutMapping("/order/pay/{orderNum}")
+	ResultEntity<?,?> payOrder(@PathVariable("orderNum") String orderNum,
+							   @RequestParam("payOrderNum") String payOrderNum,
+							   @RequestParam("orderAmount") double orderAmount);
+
+	/**
+	 * 订单支付成功后，后台更新项目数据
+	 * @param orderNum 订单号
+	 * @param supportMoney 支付金额，不等同于支持金额
+	 * @return 执行结果
+	 */
+	@PutMapping("/project/support/{orderNum}")
+	ResultEntity<?,?> supportProject(@PathVariable("orderNum") String orderNum,
+									 @RequestParam("supportMoney") double supportMoney);
+
+	/**
+	 * 删除订单
+	 * @param orderNum 订单号
+	 * @return 执行结果
+	 */
+	@DeleteMapping("/order/{orderNum}")
+	ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum);
+
 }

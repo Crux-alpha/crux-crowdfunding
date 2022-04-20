@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.crux.crowd.member.entity.po.AddressPO;
 import com.crux.crowd.member.entity.po.OrderPO;
+import com.crux.crowd.member.entity.po.OrderProjectPO;
 import com.crux.crowd.member.entity.vo.AddressVO;
 import com.crux.crowd.member.entity.vo.OrderProjectVO;
+import com.crux.crowd.member.entity.vo.OrderVO;
 import com.crux.crowd.member.mapper.AddressPOMapper;
 import com.crux.crowd.member.mapper.OrderPOMapper;
 import com.crux.crowd.member.mapper.OrderProjectPOMapper;
@@ -13,7 +15,9 @@ import com.crux.crowd.member.service.AbstractService;
 import com.crux.crowd.member.service.OrderService;
 import com.crux.crowd.member.service.ServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -31,7 +35,7 @@ public class OrderServiceImpl extends AbstractService<OrderPOMapper,OrderPO> imp
 
 	@Override
 	public OrderProjectVO getOrderProjectVO(Integer returnId){
-		return opMapper.selectOrderProjectVO(returnId);
+		return opMapper.selectOrderProjectVOByReturnId(returnId);
 	}
 
 	@Override
@@ -43,12 +47,50 @@ public class OrderServiceImpl extends AbstractService<OrderPOMapper,OrderPO> imp
 		return addressPOList.stream().collect(Collectors.toMap(AddressPO::getId, AddressVO::new));
 	}
 
-	public boolean saveAddress(AddressVO addressVO){
-		return execute(() -> addressVO.getMemberId() != null && SqlHelper.retBool(addressMapper.insert(new AddressPO(addressVO))));
+	public void saveAddress(AddressVO addressVO){
+		execute(() -> addressVO.getMemberId() != null && SqlHelper.retBool(addressMapper.insert(new AddressPO(addressVO))));
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	@Override
+	public void saveOrderVO(OrderVO orderVO){
+		final OrderProjectPO orderProjectPO = new OrderProjectPO(orderVO.getOrderProjectVO());
+		final OrderPO orderPO = new OrderPO(orderVO);
+
+		execute(() -> {
+			if(save(orderPO)){
+				orderProjectPO.setOrderId(orderPO.getId());
+				return SqlHelper.retBool(opMapper.insert(orderProjectPO));
+			}
+			return false;
+		});
+	}
+
+	@Override
+	public void payOrder(String orderNum, String payOrderNum, double orderAmount){
+		execute(() -> update(lambdaUpdateWrapper()
+				.set(OrderPO::getPayOrderNum, payOrderNum)
+				.set(OrderPO::getOrderAmount, BigDecimal.valueOf(orderAmount))
+				.eq(OrderPO::getOrderNum, orderNum)));
+	}
+
+	@Override
+	public OrderProjectPO getOrderProjectPO(String orderNum){
+		return opMapper.selectOrderProjectPOByOrderNum(orderNum);
+	}
+
+	@Override
+	public void removeOrder(String orderNum){
+		Optional.ofNullable(opMapper.selectOrderProjectPOByOrderNum(orderNum))
+				.ifPresent(op ->
+					execute(() -> removeById(op.getOrderId()) && SqlHelper.retBool(opMapper.deleteById(op.getId())))
+				);
 	}
 
 	@Override
 	protected <R> R execute(Supplier<R> method) throws ServiceException{
-		return method.get();
+		R r = method.get();
+		if(r instanceof Boolean && !((Boolean)r)) throw new ServiceException("未能成功保存");
+		return r;
 	}
 }

@@ -3,6 +3,7 @@ package com.crux.crowd.member.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.crux.crowd.member.entity.vo.OrderProjectVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,6 +54,21 @@ public class OrderProjectPO implements java.io.Serializable{
 	 * 所属订单id
 	 */
 	private Integer orderId;
+	/**
+	 * 所属回报id
+	 */
+	private Integer returnId;
+
+	public OrderProjectPO(OrderProjectVO vo){
+		projectName = vo.getProjectName();
+		launchName = vo.getLaunchName();
+		returnContent = vo.getReturnContent();
+		returnCount = vo.getReturnCount();
+		supportPrice = vo.getSupportPrice();
+		freight = vo.getFreight();
+		orderId = vo.getOrderId();
+		returnId = vo.getReturnId();
+	}
 
 	@Override
 	public final boolean equals(Object obj){

@@ -31,6 +31,12 @@
             <artifactId>aliyun-sdk-oss</artifactId>
             <version>3.14.0</version>
         </dependency>
+        <!-- 支付宝SDK -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.22.81.ALL</version>
+        </dependency>
 
         <dependency>
             <groupId>com.crux.crowd</groupId>

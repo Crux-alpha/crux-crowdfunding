@@ -84,7 +84,8 @@ public class LoginCheckedZuulFilter extends ZuulFilter{
 	static boolean isInterceptPath(String requestURI){
 		return !RELEASE_PATH_LOGIN.contains(requestURI) &&
 				RELEASE_PATH_LOGIN.stream()
-						.filter(path -> path.endsWith("/**")).map(path -> path.substring(0, path.indexOf("/**")))
+						.filter(path -> path.endsWith("/**"))
+						.map(path -> path.substring(0, path.length() - 3))
 						.noneMatch(requestURI::startsWith);
 	}
 

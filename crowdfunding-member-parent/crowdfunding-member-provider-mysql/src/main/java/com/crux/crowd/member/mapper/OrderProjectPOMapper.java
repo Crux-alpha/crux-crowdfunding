@@ -8,5 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface OrderProjectPOMapper extends BaseMapper<OrderProjectPO>{
 
-	OrderProjectVO selectOrderProjectVO(Integer returnId);
+	OrderProjectVO selectOrderProjectVOByReturnId(Integer returnId);
+
+	OrderProjectPO selectOrderProjectPOByOrderNum(String orderNum);
 }
