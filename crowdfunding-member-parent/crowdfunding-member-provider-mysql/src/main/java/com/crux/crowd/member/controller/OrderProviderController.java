@@ -55,14 +55,6 @@ public class OrderProviderController{
 		return ResultEntity.success();
 	}
 
-	@PutMapping("/pay/{orderNum}")
-	public ResultEntity<?,?> payOrder(@PathVariable("orderNum") String orderNum,
-									  @RequestParam("payOrderNum") String payOrderNum,
-									  @RequestParam("orderAmount") double orderAmount){
-		orderService.payOrder(orderNum, payOrderNum, orderAmount);
-		return ResultEntity.success();
-	}
-
 	@DeleteMapping("/{orderNum}")
 	public ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum){
 		orderService.removeOrder(orderNum);

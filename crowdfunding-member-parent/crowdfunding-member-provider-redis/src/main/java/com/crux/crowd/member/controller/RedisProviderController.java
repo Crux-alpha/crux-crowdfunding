@@ -1,7 +1,6 @@
 package com.crux.crowd.member.controller;
 
 import com.crux.crowd.common.util.ResultEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.StringUtils;
@@ -16,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/server/provider/redis")
 public class RedisProviderController{
 
-	private StringRedisTemplate redisTemplate;
+	private final StringRedisTemplate redisTemplate;
+
+	public RedisProviderController(StringRedisTemplate redisTemplate){this.redisTemplate = redisTemplate;}
 
 	/**
 	 * set 'key' 'value'
@@ -63,13 +64,7 @@ public class RedisProviderController{
 	}
 
 
-
 	private ValueOperations<String,String> valueOperations(){
 		return redisTemplate.opsForValue();
-	}
-
-	@Autowired
-	public void setRedisTemplate(StringRedisTemplate redisTemplate){
-		this.redisTemplate = redisTemplate;
 	}
 }

@@ -40,6 +40,19 @@ public interface RedisRemoteService{
 	ResultEntity<?,?> delete(@RequestParam(name = "key") String key);
 
 
+	/**
+	 * 保存一个已确认但尚未支付的订单信息
+	 * @param orderVO 确认订单信息
+	 * @return 执行结果
+	 */
 	@PostMapping("/order")
 	ResultEntity<?,?> saveOrder(@RequestBody OrderVO orderVO);
+
+	/**
+	 * 取出订单
+	 * @param orderNum 订单号
+	 * @return {@link OrderVO}
+	 */
+	@GetMapping("/order/{orderNum}")
+	ResultEntity<String,OrderVO> getOrder(@PathVariable("orderNum") String orderNum);
 }

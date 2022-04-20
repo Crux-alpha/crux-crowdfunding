@@ -38,14 +38,6 @@ public interface OrderService extends IService<OrderPO>{
 	void saveOrderVO(OrderVO orderVO);
 
 	/**
-	 * 支付订单
-	 * @param orderNum 订单号
-	 * @param payOrderNum 支付宝交易号
-	 * @param orderAmount 订单金额
-	 */
-	void payOrder(String orderNum, String payOrderNum, double orderAmount);
-
-	/**
 	 * 根据订单号获取订单
 	 * @param orderNum 订单号
 	 * @return 该订单的详细信息

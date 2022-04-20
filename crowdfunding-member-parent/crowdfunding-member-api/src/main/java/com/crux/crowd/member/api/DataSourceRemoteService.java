@@ -72,25 +72,13 @@ public interface DataSourceRemoteService{
 
 
 	/**
-	 * 保存一个完整的订单信息
+	 * <h3>保存一个完整的订单信息</h3>
+	 * 应当在支付成功后执行保存
 	 * @param orderVO 完整的订单信息
 	 * @return 执行结果
 	 */
 	@PostMapping("/order")
 	ResultEntity<?,?> saveOrder(@RequestBody OrderVO orderVO);
-
-
-	/**
-	 * 支付已保存的订单
-	 * @param orderNum 订单号
-	 * @param payOrderNum 支付宝交易号
-	 * @param orderAmount 支付金额
-	 * @return 执行结果
-	 */
-	@PutMapping("/order/pay/{orderNum}")
-	ResultEntity<?,?> payOrder(@PathVariable("orderNum") String orderNum,
-							   @RequestParam("payOrderNum") String payOrderNum,
-							   @RequestParam("orderAmount") double orderAmount);
 
 	/**
 	 * 订单支付成功后，后台更新项目数据

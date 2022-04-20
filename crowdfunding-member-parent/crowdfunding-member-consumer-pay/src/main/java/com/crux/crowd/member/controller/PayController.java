@@ -7,6 +7,7 @@ import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.AlipayRemoteService;
 import com.crux.crowd.member.api.DataSourceRemoteService;
+import com.crux.crowd.member.api.RedisRemoteService;
 import com.crux.crowd.member.entity.vo.OrderProjectVO;
 import com.crux.crowd.member.entity.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +35,12 @@ public class PayController{
 
 	private final AlipayRemoteService alipayRemoteService;
 	private final DataSourceRemoteService dataSourceRemoteService;
+	private final RedisRemoteService redisRemoteService;
 
-	public PayController(AlipayRemoteService alipayRemoteService, DataSourceRemoteService dataSourceRemoteService){
+	public PayController(AlipayRemoteService alipayRemoteService, DataSourceRemoteService dataSourceRemoteService, RedisRemoteService redisRemoteService){
 		this.alipayRemoteService = alipayRemoteService;
 		this.dataSourceRemoteService = dataSourceRemoteService;
+		this.redisRemoteService = redisRemoteService;
 	}
 
 
@@ -60,9 +63,10 @@ public class PayController{
 			String uid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
 			orderVO.setOrderNum(instant + uid);
 
-			// 3、先存入数据库(或者redis)，最后根据结果修改数据。此时订单没有支付宝交易号和付款金额
+			// 3、先存入redis，最后根据结果修改数据，再存入数据库。此时订单没有支付宝交易号和付款金额
 			session.removeAttribute(SESSION_ATTRIBUTE_ORDER_PROJECT);
-			ResultEntity<?,?> result = dataSourceRemoteService.saveOrder(orderVO);
+			// ResultEntity<?,?> result = dataSourceRemoteService.saveOrder(orderVO);
+			ResultEntity<?,?> result = redisRemoteService.saveOrder(orderVO);
 
 			// 4、计算所需支付金额
 			BigDecimal price = op.getSupportPrice();	// 单价
@@ -112,7 +116,6 @@ public class PayController{
 			}
 		};
 		//——请在这里编写您的程序（以下代码仅作参考）——
-	
 		/* 实际验证过程建议商户务必添加以下校验：
 		1、需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
 		2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
@@ -124,21 +127,37 @@ public class PayController{
 		//支付宝交易号
 		String tradeNo = new String(request.getParameter("trade_no").getBytes(ISO_8859_1), UTF_8);
 		//付款金额
-		double orderAmount = Double.parseDouble(new String(request.getParameter("total_amount").getBytes(ISO_8859_1), UTF_8));
+		String orderAmount = new String(request.getParameter("total_amount").getBytes(ISO_8859_1), UTF_8);
 		//交易状态
 		String tradeStatus = new String(request.getParameter("trade_status").getBytes(ISO_8859_1), UTF_8);
 
 		log.info("当前交易状态 ==> 商户订单号:{}, 支付宝交易号:{}, 交易金额:{}, 交易状态:{}", outTradeNo, tradeNo, orderAmount, tradeStatus);
 		// 如果交易成功，更新项目筹集状态
-		if("TRADE_SUCCESS".equals(tradeStatus)){
-			// 1、后台'支付'订单
+		if("TRADE_SUCCESS".equalsIgnoreCase(tradeStatus)){
+			/* 1、后台'支付'订单
 			ResultEntity<?,?> payResult = dataSourceRemoteService.payOrder(outTradeNo, tradeNo, orderAmount);
 			checkResult.accept(payResult);
+			*/
+
+			// 1、从redis中获取该订单
+			ResultEntity<String,OrderVO> getResult = redisRemoteService.getOrder(outTradeNo);
+			checkResult.accept(getResult);
+
+			OrderVO order = getResult.getData().get("order");
+			// 2、设置支付宝流水号、订单金额
+			order.setPayOrderNum(tradeNo);
+			order.setOrderAmount(new BigDecimal(orderAmount));
+
+			// 3、保存到数据库
+			checkResult.accept(dataSourceRemoteService.saveOrder(order));
 
 			// 4、后台'支持'项目
-			ResultEntity<?,?> supportProjectResult = dataSourceRemoteService.supportProject(outTradeNo, orderAmount);
+			ResultEntity<?,?> supportProjectResult = dataSourceRemoteService.supportProject(outTradeNo, Double.parseDouble(orderAmount));
 			checkResult.accept(supportProjectResult);
-			log.info("订单号为-{} 的订单已成功保存", outTradeNo);
-		}else dataSourceRemoteService.removeOrder(outTradeNo);
+
+			log.info("订单号为：{} 的订单已成功保存！", outTradeNo);
+		}else{
+			log.warn("订单号为：{} 的订单支付失败！", outTradeNo);
+		}
 	}
 }

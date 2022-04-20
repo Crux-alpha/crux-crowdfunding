@@ -17,7 +17,6 @@ import com.crux.crowd.member.service.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -64,14 +63,6 @@ public class OrderServiceImpl extends AbstractService<OrderPOMapper,OrderPO> imp
 			}
 			return false;
 		});
-	}
-
-	@Override
-	public void payOrder(String orderNum, String payOrderNum, double orderAmount){
-		execute(() -> update(lambdaUpdateWrapper()
-				.set(OrderPO::getPayOrderNum, payOrderNum)
-				.set(OrderPO::getOrderAmount, BigDecimal.valueOf(orderAmount))
-				.eq(OrderPO::getOrderNum, orderNum)));
 	}
 
 	@Override

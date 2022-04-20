@@ -1,5 +1,6 @@
 package com.crux.crowd.common.util;
 
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -23,6 +24,7 @@ public final class CrowdConstant{
 	public static final String PORTAL_PROJECT_LIST = "portalProjectList";
 	public static final String DETAIL_PROJECT = "detailProject";
 	public static final String SESSION_ATTRIBUTE_ORDER = "order";
+	public static final Duration REDIS_ORDER_DEFAULT_EXPIRE = Duration.ofHours(48);
 
 	/**
 	 * 与HTTP属性有关的常量池

@@ -104,6 +104,7 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 	public void supportProject(OrderProjectPO orderProjectPO){
 		ReturnPO returnPO;
 		int returnCount;
+		// 更新剩余回报数量
 		synchronized(returnPOMapper){
 			returnPO = returnPOMapper.selectById(orderProjectPO.getReturnId());
 			// 修改回报数量
@@ -124,8 +125,9 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 			}
 		}
 
+		// 更新项目支持金额、支持人数、状态
 		synchronized(this){
-			// 修改项目支持金额、支持人数、状态
+
 			ProjectPO projectPO = getById(returnPO.getProjectId());
 			// 如果已经众筹成功，不再增加
 			if(projectPO.getStatus() == ProjectPO.Status.SUCCESS || projectPO.getStatus() == ProjectPO.Status.FAILED){
