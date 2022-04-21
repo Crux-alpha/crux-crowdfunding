@@ -22,3 +22,8 @@ logging:
   level:
     com.crux.crowd.member.mapper: debug
     com.crux.crowd.member.test: debug
+crowd:
+  task:
+    order:
+      expire-days: 30
+

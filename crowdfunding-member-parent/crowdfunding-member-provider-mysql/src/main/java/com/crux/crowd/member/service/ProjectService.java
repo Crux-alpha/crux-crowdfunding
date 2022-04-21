@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface ProjectService extends IService<ProjectPO>{
 
+
 	void saveProject(ProjectVO projectVO, Integer memberId);
 
 	List<PortalTypeVO> listPortalProject();

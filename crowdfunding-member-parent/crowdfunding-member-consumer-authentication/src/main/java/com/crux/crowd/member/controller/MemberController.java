@@ -12,7 +12,6 @@ import com.crux.crowd.member.entity.vo.MemberInfoVO;
 import com.crux.crowd.member.entity.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,18 +21,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/member")
 @Slf4j
 public class MemberController{
 
-	private SendMessageRemoteService messageRemoteService;
-	private RedisRemoteService redisRemoteService;
-	private DataSourceRemoteService dataSourceRemoteService;
-	private PasswordEncoder passwordEncoder;
+	private final SendMessageRemoteService messageRemoteService;
+	private final RedisRemoteService redisRemoteService;
+	private final DataSourceRemoteService dataSourceRemoteService;
+	private final PasswordEncoder passwordEncoder;
+
+	public MemberController(SendMessageRemoteService messageRemoteService, RedisRemoteService redisRemoteService, DataSourceRemoteService dataSourceRemoteService, PasswordEncoder passwordEncoder){
+		this.messageRemoteService = messageRemoteService;
+		this.redisRemoteService = redisRemoteService;
+		this.dataSourceRemoteService = dataSourceRemoteService;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	/**
 	 * 注册账号，发送短信验证码
@@ -48,12 +52,11 @@ public class MemberController{
 		Instant deadline = Instant.ofEpochSecond(interval);
 		Instant now = Instant.now();
 		if(now.isBefore(deadline)){
-			return ResultEntity.failure('请' + Duration.between(deadline, now).getSeconds() + "秒后重试");
+			return ResultEntity.failure("请" + Duration.between(now, deadline).getSeconds() + "秒后重试");
 		}
 
 		// 2、发送短信验证码，并获取执行结果
-		ResultEntity<String,String> messageResult = ResultEntity.success("", Collections.singletonMap("code", "111111"));
-													// messageRemoteService.sendMessage(phone, codeTimeout);
+		ResultEntity<String,String> messageResult = messageRemoteService.sendMessage(phone, (int)DEFAULT_MESSAGE_EXPIRE.toMinutes());
 		// 3、检查是否发送成功
 		if(messageResult.getResult() != ResponseResult.SUCCESS){
 			return ResultEntity.error(messageResult.getMessage());
@@ -62,7 +65,7 @@ public class MemberController{
 		// 4、发送成功，存入redis中
 		String key = REDIS_MESSAGE_CODE_PREFIX + phone;
 		// key=message-code:phone,value=code,timeout=3 minutes
-		ResultEntity<?,?> redisResult = redisRemoteService.set(key, messageResult.getData().get("code"), DEFAULT_MESSAGE_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+		ResultEntity<?,?> redisResult = redisRemoteService.set(key, messageResult.getData().get("code"), DEFAULT_MESSAGE_EXPIRE);
 		// 5、检查是否存入成功
 		if(redisResult.getResult() == ResponseResult.FAILURE){
 			return ResultEntity.error(redisResult.getMessage());
@@ -142,25 +145,5 @@ public class MemberController{
 		session.setAttribute(SESSION_ATTRIBUTE_MEMBER_INFO, memberInfoVO);
 		session.removeAttribute(MESSAGE);
 		return ResultEntity.success();
-	}
-
-	@Autowired
-	public void setMessageService(SendMessageRemoteService messageRemoteService){
-		this.messageRemoteService = messageRemoteService;
-	}
-
-	@Autowired
-	public void setRedisRemoteService(RedisRemoteService redisRemoteService){
-		this.redisRemoteService = redisRemoteService;
-	}
-
-	@Autowired
-	public void setDataSourceRemoteService(DataSourceRemoteService dataSourceRemoteService){
-		this.dataSourceRemoteService = dataSourceRemoteService;
-	}
-
-	@Autowired
-	public void setPasswordEncoder(PasswordEncoder passwordEncoder){
-		this.passwordEncoder = passwordEncoder;
 	}
 }

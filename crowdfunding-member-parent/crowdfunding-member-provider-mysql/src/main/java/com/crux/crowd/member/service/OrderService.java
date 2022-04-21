@@ -7,6 +7,8 @@ import com.crux.crowd.member.entity.vo.AddressVO;
 import com.crux.crowd.member.entity.vo.OrderProjectVO;
 import com.crux.crowd.member.entity.vo.OrderVO;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public interface OrderService extends IService<OrderPO>{

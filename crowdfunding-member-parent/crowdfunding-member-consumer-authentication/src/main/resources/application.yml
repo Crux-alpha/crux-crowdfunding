@@ -28,10 +28,8 @@ crowd:
       Authorization: 'APPCODE e5d453c148934283923555adbeb4c91b'
     mobile-name: mobile
     param:
-      param-name: param
-      code-prefix: '**code**:'
-      minute-prefix: '**minute**:'
+      param: '**code**:#{code},**minute**:#{minute}'
     sign:
       smsSignId: 2e65b1bb3d054466b82f0c9d125465e2
     template:
-      templateId: 908e94ccf08b4476ba6c876d13f084ad
+      templateId: a09602b817fd47e59e7c6e603d3f088d

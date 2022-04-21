@@ -1,5 +1,6 @@
 package com.crux.crowd.member.entity.vo;
 
+import com.crux.crowd.member.entity.po.ProjectPO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.Objects;
 
 /**
@@ -28,6 +28,7 @@ public class PortalProjectVO implements java.io.Serializable{
 	private LocalDate deadline;
 	private Integer completion;
 	private Integer supporter;
+	private ProjectPO.Status status;
 
 	public long remainingDay(){
 		LocalDateTime now = LocalDateTime.now();
@@ -59,6 +60,7 @@ public class PortalProjectVO implements java.io.Serializable{
 				", deadline=" + deadline +
 				", completion=" + completion +
 				", supporter=" + supporter +
+				", status=" + status +
 				'}';
 	}
 }

@@ -5,7 +5,7 @@ import com.crux.crowd.member.entity.vo.OrderVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 /**
  * redis远程服务
@@ -15,15 +15,13 @@ public interface RedisRemoteService{
 
 	/**
 	 * set 'key' 'value'
-	 * @param timeout 超时时长。默认-1
-	 * @param timeunit 时间单位。默认毫秒
+	 * @param timeout 超时时长。
 	 * @return 执行结果
 	 */
 	@PostMapping("/set")
 	ResultEntity<?,?> set(@RequestParam(name = "key") String key,
 						  @RequestParam(name = "value") String value,
-						  @RequestParam(name = "timeout", required = false, defaultValue = "-1") long timeout,
-						  @RequestParam(name = "timeunit", required = false, defaultValue = "MILLISECONDS") TimeUnit timeunit);
+						  @RequestParam(name = "expire", required = false) Duration timeout);
 
 	/**
 	 * get 'key'

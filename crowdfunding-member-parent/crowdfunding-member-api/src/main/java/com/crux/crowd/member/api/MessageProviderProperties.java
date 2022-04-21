@@ -5,11 +5,15 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Setter
 @Getter
 @ConfigurationProperties("crowd.message-api")
 public class MessageProviderProperties{
+
+	public static final String CODE_PATTERN = "#{code}";
+	public static final String MINUTE_PATTERN = "#{minute}";
 	/**
 	 * API URL
 	 */
@@ -32,8 +36,10 @@ public class MessageProviderProperties{
 	private Map<String,String> sign;
 	/**
 	 * 参数信息
+	 * 其中key为短信模板参数名，value为模板表达式；
+	 * 例如code:#{code},code=3 ==> code:3
 	 */
-	private Param param;
+	private Map<String,String> param;
 	/**
 	 * 模板信息
 	 */
@@ -47,21 +53,9 @@ public class MessageProviderProperties{
 	 */
 	private Map<String,String> bodies;
 
-	@Setter
-	@Getter
-	public static class Param{
-		/**
-		 * 编辑验证码，有效时长的参数名
-		 */
-		private String paramName;
-		/**
-		 * 验证码前缀
-		 */
-		private String codePrefix;
-		/**
-		 * 有效时长前缀
-		 */
-		private String minutePrefix;
+	public void setParam(Map<String,String> param){
+		this.param = Optional.ofNullable(param).filter(p -> p.values().stream().allMatch(v -> v.contains(CODE_PATTERN)))
+				.orElseThrow(() -> new IllegalArgumentException("参数缺少必要的表达式：" + CODE_PATTERN));
 	}
 }
 

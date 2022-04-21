@@ -8,7 +8,7 @@
         from t_project p join t_return r on p.id = r.project_id join t_member_launch_info mli on p.member_launch_id = mli.id
         where r.id = #{returnId}
     </select>
-    <select id="selectOrderProjectPOByOrderNum" resultType="com.crux.crowd.member.entity.po.OrderProjectPO">
+    <select id="selectByOrderNum" resultType="com.crux.crowd.member.entity.po.OrderProjectPO">
         select op.*
         from t_order_project op join t_order o on op.order_id = o.id where o.order_num = #{orderNum}
     </select>

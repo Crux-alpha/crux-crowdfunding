@@ -603,13 +603,13 @@
 </script>
 <script type="text/javascript">
     // 是否限购
-    const signalPurchase = Boolean("[[${session.orderProject.signalPurchase}]]");
+    const signalPurchase = [[${session.orderProject.signalPurchase}]];
 	// 限额
-	const purchase = parseInt("[[${session.orderProject.purchase}]]");
+	const purchase = [[${session.orderProject.purchase}]];
 	// 单价
-	const price = parseInt("[[${session.orderProject.supportPrice}]]");
+	const price = [[${session.orderProject.supportPrice}]];
 	// 运费
-	const freight = parseInt("[[${session.orderProject.freight}]]");
+	const freight = [[${session.orderProject.freight}]];
 	const phoneRegex = /^\d{11}$/;
 	const hasLengthRegex = /\S+/;
 	// 姓名正则

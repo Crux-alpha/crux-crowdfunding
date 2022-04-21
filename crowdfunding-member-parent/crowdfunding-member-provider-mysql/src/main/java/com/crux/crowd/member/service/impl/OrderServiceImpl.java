@@ -67,15 +67,22 @@ public class OrderServiceImpl extends AbstractService<OrderPOMapper,OrderPO> imp
 
 	@Override
 	public OrderProjectPO getOrderProjectPO(String orderNum){
-		return opMapper.selectOrderProjectPOByOrderNum(orderNum);
+		return opMapper.selectByOrderNum(orderNum);
 	}
 
 	@Override
 	public void removeOrder(String orderNum){
-		Optional.ofNullable(opMapper.selectOrderProjectPOByOrderNum(orderNum))
+		Optional.ofNullable(opMapper.selectByOrderNum(orderNum))
 				.ifPresent(op ->
 					execute(() -> removeById(op.getOrderId()) && SqlHelper.retBool(opMapper.deleteById(op.getId())))
 				);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public boolean removeBatchByIds(Collection<?> list){
+		return super.removeBatchByIds(list) &&
+				SqlHelper.retBool(opMapper.delete(Wrappers.<OrderProjectPO>lambdaQuery().in(OrderProjectPO::getOrderId, list)));
 	}
 
 	@Override

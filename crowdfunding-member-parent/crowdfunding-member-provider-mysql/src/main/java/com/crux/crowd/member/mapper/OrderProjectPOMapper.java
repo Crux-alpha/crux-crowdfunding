@@ -10,5 +10,5 @@ public interface OrderProjectPOMapper extends BaseMapper<OrderProjectPO>{
 
 	OrderProjectVO selectOrderProjectVOByReturnId(Integer returnId);
 
-	OrderProjectPO selectOrderProjectPOByOrderNum(String orderNum);
+	OrderProjectPO selectByOrderNum(String orderNum);
 }

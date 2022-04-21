@@ -8,17 +8,18 @@ import com.crux.crowd.member.mapper.*;
 import com.crux.crowd.member.service.AbstractService;
 import com.crux.crowd.member.service.ProjectService;
 import com.crux.crowd.member.service.ServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service("projectService")
+@Slf4j
 public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectPO> implements ProjectService{
 
 	protected final ProjectItemPicPOMapper pipMapper;

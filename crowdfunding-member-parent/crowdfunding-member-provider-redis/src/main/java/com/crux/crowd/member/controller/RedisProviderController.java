@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import static java.util.Collections.singletonMap;
 
+import java.time.Duration;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/server/provider/redis")
 public class RedisProviderController{
 
 	private final StringRedisTemplate redisTemplate;
@@ -21,21 +20,17 @@ public class RedisProviderController{
 
 	/**
 	 * set 'key' 'value'
-	 * @param timeout 超时时长。默认-1
-	 * @param timeunit 时间单位。默认毫秒
+	 * @param timeout 超时时长
 	 * @return 执行结果
 	 */
 	@PostMapping("/set")
 	ResultEntity<?,?> set(@RequestParam("key") String key,
 						  @RequestParam("value") String value,
-						  @RequestParam(name = "timeout", required = false, defaultValue = "-1") long timeout,
-						  @RequestParam(name = "timeunit", required = false, defaultValue = "MILLISECONDS") TimeUnit timeunit){
+						  @RequestParam(name = "expire", required = false) Duration timeout){
 
-		if(timeout == -1) valueOperations().set(key, value);
+		if(timeout == null || timeout.isNegative()) valueOperations().set(key, value);
 
-		else if(timeout > 0) valueOperations().set(key, value, timeout, timeunit);
-
-		else return ResultEntity.failure("非法的超时时间:" + timeout);
+		else valueOperations().set(key, value, timeout);
 
 		return ResultEntity.success("保存成功");
 	}

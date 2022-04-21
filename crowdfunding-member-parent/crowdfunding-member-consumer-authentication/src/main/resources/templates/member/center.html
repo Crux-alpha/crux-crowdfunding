@@ -104,7 +104,7 @@
             <div id="main2" style="width: 600px;height:400px;"></div>
         </div>
         <div class="col-sm-9 col-md-9 column member-group">
-            <ul id="myTab" style="" class="nav nav-pills" role="tablist">
+            <ul style="" class="nav nav-pills my-tab" role="tablist">
                 <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab" aria-controls="home"
                                                           aria-expanded="true">我的众筹</a></li>
                 <li role="presentation"><a href="#profile">众筹资产</a></li>
@@ -112,7 +112,7 @@
             <div id="myTabContent" class="tab-content" style="margin-top:10px;">
                 <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
 
-                    <ul id="myTab1" class="nav nav-tabs">
+                    <ul class="nav nav-tabs my-tab">
                         <li role="presentation" class="active"><a href="#support">我支持的</a></li>
                         <li role="presentation"><a href="#attension">我关注的</a></li>
                         <li role="presentation"><a href="#add">我发起的</a></li>
@@ -121,7 +121,7 @@
                             </button>
                         </li>
                     </ul>
-                    <div id="myTab1" class="tab-content" style="margin-top:10px;">
+                    <div class="tab-content my-tab" style="margin-top:10px;">
                         <div role="tabpanel" class="tab-pane fade active in" id="support" aria-labelledby="home-tab">
                             <div class="container-fluid">
                                 <div class="row clearfix">
@@ -142,7 +142,7 @@
                                                 <td width="120">操作</td>
                                             </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="tbody-my-support-project">
                                             <tr>
                                                 <td style="vertical-align:middle;">
                                                     <div class="thumbnail">
@@ -381,11 +381,7 @@
 <script src="script/back-to-top.js" th:src="@{/static/script/back-to-top.js}"></script>
 <script src="script/echarts.js" th:src="@{/static/script/echarts.js}"></script>
 <script>
-	$('#myTab a').click(function(e){
-		e.preventDefault()
-		$(this).tab('show')
-	})
-	$('#myTab1 a').click(function(e){
+	$('.my-tab a').click(function(e){
 		e.preventDefault()
 		$(this).tab('show')
 	})
@@ -568,6 +564,10 @@
 <script type="text/javascript">
     $(function(){
 		$(".member-group:not(:first)").hide();
+
+		$.ajax({
+            url:
+        })
 
 	});
 

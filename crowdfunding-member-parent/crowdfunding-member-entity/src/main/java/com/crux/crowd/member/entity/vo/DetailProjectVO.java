@@ -1,5 +1,6 @@
 package com.crux.crowd.member.entity.vo;
 
+import com.crux.crowd.member.entity.po.ProjectPO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,17 +23,12 @@ public class DetailProjectVO extends PortalProjectVO{
 	private Integer follower;
 	private BigDecimal supportMoney;
 	private MemberLaunchInfoVO memberLaunchInfoVO;
-	private List<String> detailPicturePath;
-	private List<DetailReturnVO> detailReturnVO;
+	private List<String> detailPicturePath = new ArrayList<>();
+	private List<DetailReturnVO> detailReturnVO = new ArrayList<>();
 
-	{
-		detailPicturePath = new ArrayList<>();
-		detailReturnVO = new ArrayList<>();
-	}
-
-	public DetailProjectVO(Integer id, String projectName, String headerPicturePath, BigDecimal money, LocalDate deadline, Integer completion, Integer supporter,
+	public DetailProjectVO(Integer id, String projectName, String headerPicturePath, BigDecimal money, LocalDate deadline, Integer completion, Integer supporter, ProjectPO.Status status,
 						   String projectDescription, Integer follower, BigDecimal supportMoney, MemberLaunchInfoVO memberLaunchInfoVO, List<String> detailPicturePath, List<DetailReturnVO> detailReturnVO){
-		super(id, projectName, headerPicturePath, money, deadline, completion, supporter);
+		super(id, projectName, headerPicturePath, money, deadline, completion, supporter, status);
 		this.projectDescription = projectDescription;
 		this.follower = follower;
 		this.supportMoney = supportMoney;

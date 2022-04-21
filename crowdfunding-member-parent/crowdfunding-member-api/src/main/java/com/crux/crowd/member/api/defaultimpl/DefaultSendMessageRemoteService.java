@@ -6,7 +6,6 @@ import com.crux.crowd.member.api.MessageProviderProperties;
 import com.crux.crowd.member.api.SendMessageRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +13,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("sendMessageRemoteService")
 @ConditionalOnBean(MessageProviderProperties.class)
 public class DefaultSendMessageRemoteService implements SendMessageRemoteService{
 
-	private MessageProviderProperties properties;
+	private final MessageProviderProperties properties;
+
+	public DefaultSendMessageRemoteService(MessageProviderProperties properties){this.properties = properties;}
 
 	/**
 	 * 发送短信验证码
@@ -43,8 +45,8 @@ public class DefaultSendMessageRemoteService implements SendMessageRemoteService
 		queries.putAll(properties.getSign());
 		queries.putAll(properties.getTemplate());
 		queries.put(properties.getMobileName(), phone);
-		String paramValue = properties.getParam().getCodePrefix() + code + ',' + properties.getParam().getMinutePrefix() + minutes;
-		queries.put(properties.getParam().getParamName(), paramValue);
+		// String paramValue = properties.getParam().getCodePrefix() + code + ',' + properties.getParam().getMinutePrefix() + minutes;
+		queries.putAll(parseParams(code, minutes));
 
 		Map<String,String> bodies = properties.getBodies();
 
@@ -64,8 +66,15 @@ public class DefaultSendMessageRemoteService implements SendMessageRemoteService
 		}
 	}
 
-	@Autowired
-	public void setProperties(MessageProviderProperties properties){
-		this.properties = properties;
+	private Map<String,String> parseParams(String code, int minutes){
+		Map<String,String> param = new HashMap<>();
+		properties.getParam().forEach((k, v) -> {
+			v = v.replace(MessageProviderProperties.CODE_PATTERN, code);
+			if(v.contains(MessageProviderProperties.MINUTE_PATTERN)){
+				v = v.replace(MessageProviderProperties.MINUTE_PATTERN, Integer.toString(minutes));
+			}
+			param.put(k, v);
+		});
+		return param;
 	}
 }
