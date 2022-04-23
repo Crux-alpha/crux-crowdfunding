@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @Service("memberPOService")
-public class MemberPOServiceImpl extends AbstractService<MemberPOMapper,MemberPO> implements MemberPOService{
+public class MemberServiceImpl extends AbstractService<MemberPOMapper,MemberPO> implements MemberService{
 
 	@Override
 	public MemberPO getByLoginAcctOrPhone(String accountOrPhone){

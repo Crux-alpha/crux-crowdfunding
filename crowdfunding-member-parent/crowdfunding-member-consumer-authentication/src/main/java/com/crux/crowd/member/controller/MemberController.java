@@ -2,6 +2,7 @@ package com.crux.crowd.member.controller;
 
 import static com.crux.crowd.common.util.CrowdConstant.*;
 
+import com.crux.crowd.common.util.CrowdConstant;
 import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.DataSourceRemoteService;
@@ -9,6 +10,8 @@ import com.crux.crowd.member.api.RedisRemoteService;
 import com.crux.crowd.member.api.SendMessageRemoteService;
 import com.crux.crowd.member.entity.po.MemberPO;
 import com.crux.crowd.member.entity.vo.MemberInfoVO;
+import com.crux.crowd.member.entity.vo.MemberProjectVO;
+import com.crux.crowd.member.entity.vo.MemberSupportProjectVO;
 import com.crux.crowd.member.entity.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
@@ -145,5 +149,40 @@ public class MemberController{
 		session.setAttribute(SESSION_ATTRIBUTE_MEMBER_INFO, memberInfoVO);
 		session.removeAttribute(MESSAGE);
 		return ResultEntity.success();
+	}
+
+	/**
+	 * 会员中心-我的众筹-我支持的
+	 * @return 这个会员所有支持的项目
+	 */
+	@GetMapping("/center/support")
+	public ResultEntity<String,List<MemberSupportProjectVO>> getMemberSupportProject(HttpSession session){
+		Object memberInfo = session.getAttribute(SESSION_ATTRIBUTE_MEMBER_INFO);
+		if(!(memberInfo instanceof MemberInfoVO)) return ResultEntity.failure(CrowdConstant.TipsMessage.HTML_FAILURE);
+
+		ResultEntity<String,List<MemberSupportProjectVO>> result = dataSourceRemoteService.getMemberSupportProject(((MemberInfoVO)memberInfo).getId());
+		if(!ResponseResult.SUCCESS.equalsResultEntity(result)){
+			log.warn(result.getMessage());
+			return ResultEntity.error(CrowdConstant.TipsMessage.SERVER_ERROR);
+		}
+		return result;
+
+	}
+
+	/**
+	 * 会员中心-我的众筹-我发布的
+	 * @return 这个会员所有发布的项目
+	 */
+	@GetMapping("/center/project")
+	public ResultEntity<String,List<MemberProjectVO>> getMemberProject(HttpSession session){
+		Object memberInfo = session.getAttribute(SESSION_ATTRIBUTE_MEMBER_INFO);
+		if(!(memberInfo instanceof MemberInfoVO)) return ResultEntity.failure(CrowdConstant.TipsMessage.HTML_FAILURE);
+
+		ResultEntity<String,List<MemberProjectVO>> result = dataSourceRemoteService.getMemberProject(((MemberInfoVO)memberInfo).getId());
+		if(!ResponseResult.SUCCESS.equalsResultEntity(result)){
+			log.warn(result.getMessage());
+			return ResultEntity.error(CrowdConstant.TipsMessage.SERVER_ERROR);
+		}
+		return result;
 	}
 }

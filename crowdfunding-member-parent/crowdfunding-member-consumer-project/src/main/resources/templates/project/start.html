@@ -70,34 +70,11 @@
     </style>
 </head>
 <body>
-<div th:replace="~{/common/center-common::center-head}"></div>
-
+<div class="navbar-wrapper">
+    <div th:insert="~{/common/common::head-login}"></div>
+</div>
 <div class="container theme-showcase" role="main">
-    <div class="container">
-        <div class="row clearfix">
-            <div class="col-md-12 column">
-                <nav class="navbar navbar-default" role="navigation">
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li>
-                                <a rel="nofollow" href="index.html"><i class="glyphicon glyphicon-home"></i> 众筹首页</a>
-                            </li>
-                            <li>
-                                <a rel="nofollow" href="projects.html"><i class="glyphicon glyphicon-th-large"></i> 项目总览</a>
-                            </li>
-                            <li class="active">
-                                <a rel="nofollow" href="javascript:;"><i class="glyphicon glyphicon-edit"></i> 发起项目</a>
-                            </li>
-                            <li>
-                                <a rel="nofollow" href="minecrowdfunding.html"><i class="glyphicon glyphicon-user"></i>
-                                    我的众筹</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </div>
-    </div>
+    <div th:replace="~{/common/common::navigation}"></div>
 
 
     <!-- 阅读协议 -->
@@ -559,13 +536,13 @@
                                     </div>
                                     <form id="form-member-launch" class="form-horizontal">
                                         <div class="form-group">
-                                            <label for="ipt-member-launch-description-simple" class="col-sm-2 control-label">自我介绍</label>
+                                            <label for="ipt-member-launch-description-simple" class="col-sm-2 control-label">发起人</label>
                                             <div class="col-sm-10">
                                                 <input id="ipt-member-launch-description-simple" name="memberLaunchInfoVO.descriptionSimple" type="text" class="form-control" placeholder="自我介绍，不超过40字">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="textarea-member-launch-description-detail" class="col-sm-2 control-label">详细自我介绍</label>
+                                            <label for="textarea-member-launch-description-detail" class="col-sm-2 control-label">介绍</label>
                                             <div class="col-sm-10">
                                                 <textarea id="textarea-member-launch-description-detail" name="memberLaunchInfoVO.descriptionDetail" class="form-control" rows="5"
                                                           placeholder="向支持者详细介绍你自己或你的团队及项目背景，让支持者在最短时间内了解你，不超过160字"></textarea>
@@ -1082,7 +1059,7 @@
         </div>
     </div>
 
-    <div th:replace="~{common/center-common::center-footer}"></div>
+    <div th:replace="~{common/common::footer}"></div>
 
 </div> <!-- /container -->
 <script src="jquery/jquery-2.1.1.min.js" th:src="@{/static/js/jquery-3.6.0.min.js}"></script>
@@ -1457,9 +1434,9 @@
 		}
 	}
 
-	function errorCallback(resp){
-		layer.msg(resp.responseJSON.message);
-	}
+    function errorCallback(resp){
+	    layer.msg(resp.responseJSON.message);
+    }
 </script>
 </body>
 </html>

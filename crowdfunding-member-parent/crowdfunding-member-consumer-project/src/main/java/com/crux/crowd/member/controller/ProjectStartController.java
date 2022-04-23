@@ -6,10 +6,7 @@ import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.AliyunOSSRemoteService;
 import com.crux.crowd.member.api.DataSourceRemoteService;
-import com.crux.crowd.member.entity.vo.MemberConfirmInfoVO;
-import com.crux.crowd.member.entity.vo.MemberInfoVO;
-import com.crux.crowd.member.entity.vo.ProjectVO;
-import com.crux.crowd.member.entity.vo.ReturnVO;
+import com.crux.crowd.member.entity.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -134,10 +131,12 @@ public class ProjectStartController{
 		ProjectVO projectVO = (ProjectVO)project;
 		Integer memberId = ((MemberInfoVO)member).getId();
 
+		memberConfirmInfoVO.setMemberId(memberId);
+		projectVO.getMemberLaunchInfoVO().setMemberId(memberId);
 		projectVO.setMemberConfirmInfoVO(memberConfirmInfoVO);
 
 		// 3、保存projectVO
-		ResultEntity<?,?> result = dataSourceRemoteService.saveProject(projectVO, memberId);
+		ResultEntity<?,?> result = dataSourceRemoteService.saveProject(projectVO);
 		if(!ResponseResult.SUCCESS.equalsResultEntity(result)) return result;
 
 		session.removeAttribute(SESSION_ATTRIBUTE_PROJECT_DATA);

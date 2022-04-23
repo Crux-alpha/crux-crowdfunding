@@ -61,11 +61,11 @@ class DataProviderTest{
 				30,
 				"头图路径",
 				Arrays.asList("详情图片01", "详情图片02", "详情图片03"),
-				new MemberLaunchInfoVO("简单介绍", "详细介绍", "12345678901", "3216549870"),
+				new MemberLaunchInfoVO("简单介绍", "详细介绍", "12345678901", "3216549870", 999),
 				Collections.singletonList(new ReturnVO(ReturnPO.ReturnType.PRACTICAL, BigDecimal.valueOf(233.0), "回报内容", 0, false, 0, BigDecimal.valueOf(5.5), false, 60, "说明图片")),
-				new MemberConfirmInfoVO("12345678901", "123456789012345678")
+				new MemberConfirmInfoVO("12345678901", "123456789012345678", 999)
 		);
-		projectService.saveProject(projectVO, 666);
+		projectService.saveProject(projectVO);
 	}
 
 	@Test

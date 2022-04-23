@@ -52,7 +52,7 @@ public class OrderServiceImpl extends AbstractService<OrderPOMapper,OrderPO> imp
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public void saveOrderVO(OrderVO orderVO){
+	public void saveOrder(OrderVO orderVO){
 		final OrderProjectPO orderProjectPO = new OrderProjectPO(orderVO.getOrderProjectVO());
 		final OrderPO orderPO = new OrderPO(orderVO);
 
@@ -71,11 +71,41 @@ public class OrderServiceImpl extends AbstractService<OrderPOMapper,OrderPO> imp
 	}
 
 	@Override
-	public void removeOrder(String orderNum){
-		Optional.ofNullable(opMapper.selectByOrderNum(orderNum))
-				.ifPresent(op ->
-					execute(() -> removeById(op.getOrderId()) && SqlHelper.retBool(opMapper.deleteById(op.getId())))
-				);
+	public boolean removeByOrderNumAndMemberId(String orderNum, Integer memberId){
+		OrderPO orderPO = getOne(lambdaQueryWrapper().eq(OrderPO::getOrderNum, orderNum));
+		if(orderPO == null) return false;
+		AddressPO address = addressMapper.selectOne(Wrappers.<AddressPO>lambdaQuery().eq(AddressPO::getId, orderPO.getAddressId()).eq(AddressPO::getMemberId, memberId));
+		if(address == null) return false;
+		Integer id = orderPO.getId();
+		return removeById(id) &&
+				SqlHelper.retBool(opMapper.delete(Wrappers.<OrderProjectPO>lambdaQuery().eq(OrderProjectPO::getOrderId, id)));
+	}
+
+	@Override
+	public OrderVO getOrder(String orderNum){
+		OrderPO orderPO = getOne(lambdaQueryWrapper().eq(OrderPO::getOrderNum, orderNum));
+		OrderVO orderVO = null;
+
+		if(orderPO != null){
+			OrderProjectPO orderProjectPO = opMapper.selectOne(Wrappers.<OrderProjectPO>lambdaQuery().eq(OrderProjectPO::getOrderId, orderPO.getId()));
+
+			orderVO = new OrderVO(orderPO.getAddressId(), orderPO.getInvoice(), orderPO.getInvoiceTitle(), orderPO.getOrderRemark());
+			orderVO.setOrderNum(orderNum);
+			orderVO.setPayOrderNum(orderPO.getPayOrderNum());
+			orderVO.setOrderAmount(orderPO.getOrderAmount());
+
+			OrderProjectVO orderProjectVO = new OrderProjectVO(orderProjectPO.getProjectName(),
+					orderProjectPO.getLaunchName(),
+					orderProjectPO.getReturnContent(),
+					orderProjectPO.getReturnCount(),
+					orderProjectPO.getSupportPrice(),
+					orderProjectPO.getFreight(),
+					orderProjectPO.getOrderId(),
+					null, null, orderProjectPO.getReturnId());
+			orderVO.setOrderProjectVO(orderProjectVO);
+		}
+
+		return orderVO;
 	}
 
 	@Override

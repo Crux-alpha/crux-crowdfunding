@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -36,10 +37,10 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-	public void saveProject(ProjectVO projectVO, Integer memberId){
+	public void saveProject(ProjectVO projectVO){
 		/* 保存发起人信息 */
 		MemberLaunchInfoVO mliVO = projectVO.getMemberLaunchInfoVO();
-		MemberLaunchInfoPO mliPO = new MemberLaunchInfoPO(memberId,
+		MemberLaunchInfoPO mliPO = new MemberLaunchInfoPO(mliVO.getMemberId(),
 				mliVO.getDescriptionSimple(),
 				mliVO.getDescriptionDetail(),
 				mliVO.getPhoneNum(),
@@ -86,7 +87,7 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 
 		/* 保存项目确认信息 */
 		MemberConfirmInfoVO mciVO = projectVO.getMemberConfirmInfoVO();
-		MemberConfirmInfoPO mciPO = new MemberConfirmInfoPO(memberId, mciVO.getPayNum(), mciVO.getCardNum());
+		MemberConfirmInfoPO mciPO = new MemberConfirmInfoPO(mciVO.getMemberId(), mciVO.getPayNum(), mciVO.getCardNum());
 		saveMemberConfirmInfo(mciPO);
 	}
 
@@ -97,7 +98,9 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 
 	@Override
 	public DetailProjectVO getDetailProjectById(Integer id){
-		return baseMapper.selectDetailProject(id);
+		DetailProjectVO detailProjectVO = baseMapper.selectDetailProject(id);
+		detailProjectVO.getDetailReturnVO().sort(Comparator.comparing(DetailReturnVO::getSupportMoney));
+		return detailProjectVO;
 	}
 
 	@Override
@@ -147,6 +150,31 @@ public class ProjectServiceImpl extends AbstractService<ProjectPOMapper,ProjectP
 					.set(ProjectPO::getSupporter, projectPO.getSupporter() + 1)
 					.eq(ProjectPO::getId, projectPO.getId()));
 		}
+	}
+
+	@Override
+	public List<MemberProjectVO> listMemberProject(Integer memberId){
+		return Optional.ofNullable(baseMapper.selectMemberProjectByMemberId(memberId)).orElseGet(ArrayList::new);
+	}
+
+	@Override
+	public List<MemberSupportProjectVO> listMemberSupportProject(Integer memberId){
+		return Optional.ofNullable(baseMapper.selectMemberSupportProjectByMemberId(memberId)).orElseGet(ArrayList::new);
+	}
+
+	@Override
+	public boolean removeByIdAndMemberId(Integer id, Integer memberId){
+		List<MemberProjectVO> list = baseMapper.selectMemberProjectByMemberId(memberId);
+		if(list == null || list.stream().map(MemberProjectVO::getId).noneMatch(id::equals)) return false;
+		return removeById0(id);
+	}
+
+	protected boolean removeById0(Integer id){
+		return SqlHelper.retBool(returnPOMapper.delete(Wrappers.<ReturnPO>lambdaQuery().eq(ReturnPO::getProjectId, id))) &&
+				SqlHelper.retBool(baseMapper.removeProjectType(id)) &&
+				SqlHelper.retBool(baseMapper.removeProjectTag(id)) &&
+				SqlHelper.retBool(pipMapper.delete(Wrappers.<ProjectItemPicPO>lambdaQuery().eq(ProjectItemPicPO::getProjectId, id))) &&
+				removeById(id);
 	}
 
 	/**

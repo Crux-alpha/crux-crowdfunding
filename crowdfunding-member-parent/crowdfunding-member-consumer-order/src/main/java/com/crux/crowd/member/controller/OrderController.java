@@ -2,11 +2,8 @@ package com.crux.crowd.member.controller;
 
 import static com.crux.crowd.common.util.CrowdConstant.*;
 
-import com.alipay.api.AlipayApiException;
-import com.aliyun.oss.ServiceException;
 import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
-import com.crux.crowd.member.api.AlipayRemoteService;
 import com.crux.crowd.member.api.DataSourceRemoteService;
 import com.crux.crowd.member.entity.vo.AddressVO;
 import com.crux.crowd.member.entity.vo.MemberInfoVO;
@@ -19,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -90,5 +85,26 @@ public class OrderController{
 		return addressVO.getMemberId() == null ?
 				ResultEntity.failure(TipsMessage.HTML_FAILURE) :
 				dataSourceRemoteService.saveAndGetAddress(addressVO);
+	}
+
+	/**
+	 * 删除一个订单
+	 * @param orderNum 订单号
+	 * @return 执行结果
+	 */
+	@DeleteMapping("/remove/{orderNum}")
+	@ResponseBody
+	public ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum, HttpSession session){
+		Object memberInfo = session.getAttribute(SESSION_ATTRIBUTE_MEMBER_INFO);
+		if(memberInfo instanceof MemberInfoVO){
+			return dataSourceRemoteService.removeOrder(orderNum, ((MemberInfoVO)memberInfo).getId());
+		}
+		return ResultEntity.failure(TipsMessage.HTML_FAILURE);
+	}
+
+	@GetMapping("/get/{orderNum}")
+	@ResponseBody
+	public ResultEntity<String,OrderVO> getOrder(@PathVariable("orderNum") String orderNum){
+		return dataSourceRemoteService.getOrder(orderNum);
 	}
 }

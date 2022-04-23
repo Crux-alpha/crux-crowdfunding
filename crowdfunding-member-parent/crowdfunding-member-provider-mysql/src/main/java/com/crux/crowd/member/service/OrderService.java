@@ -7,8 +7,6 @@ import com.crux.crowd.member.entity.vo.AddressVO;
 import com.crux.crowd.member.entity.vo.OrderProjectVO;
 import com.crux.crowd.member.entity.vo.OrderVO;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public interface OrderService extends IService<OrderPO>{
@@ -37,7 +35,7 @@ public interface OrderService extends IService<OrderPO>{
 	 * 保存一个订单，需要已经
 	 * @param orderVO 订单详情
 	 */
-	void saveOrderVO(OrderVO orderVO);
+	void saveOrder(OrderVO orderVO);
 
 	/**
 	 * 根据订单号获取订单
@@ -47,6 +45,8 @@ public interface OrderService extends IService<OrderPO>{
 	OrderProjectPO getOrderProjectPO(String orderNum);
 
 
-	void removeOrder(String orderNum);
+	boolean removeByOrderNumAndMemberId(String orderNum, Integer memberId);
+
+	OrderVO getOrder(String orderNum);
 
 }

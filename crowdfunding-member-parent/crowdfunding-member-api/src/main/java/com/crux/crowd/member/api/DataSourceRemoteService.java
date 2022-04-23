@@ -29,10 +29,18 @@ public interface DataSourceRemoteService{
  	ResultEntity<?,?> saveMember(@RequestBody MemberPO memberPO);
 
 	/**
+	 * 会员中心-我的众筹-我支持的
+	 * @param memberId 当前会员id
+	 * @return 这个会员所有支持的项目
+	 */
+	@GetMapping("/project/member/support/{memberId}")
+	ResultEntity<String,List<MemberSupportProjectVO>> getMemberSupportProject(@PathVariable("memberId") Integer memberId);
+
+	/**
 	 * 保存发起项目
 	 */
 	@PostMapping("/project")
-	ResultEntity<?,?> saveProject(@RequestBody ProjectVO projectVO, @RequestParam("memberId") Integer memberId);
+	ResultEntity<?,?> saveProject(@RequestBody ProjectVO projectVO);
 
 	/**
 	 * 获取首页显示的项目数据
@@ -46,6 +54,14 @@ public interface DataSourceRemoteService{
 	 */
 	@GetMapping("/project/detail/{id}")
 	ResultEntity<String,DetailProjectVO> getDetailProject(@PathVariable("id") Integer id);
+
+	/**
+	 * 会员中心-我的众筹-我发布的
+	 * @param memberId 当前会员id
+	 * @return 这个会员所有发布的项目
+	 */
+	@GetMapping("/project/member/project/{memberId}")
+	ResultEntity<String,List<MemberProjectVO>> getMemberProject(@PathVariable("memberId") Integer memberId);
 
 	/**
 	 * 获取指定项目id和回报id的订单项目信息
@@ -96,6 +112,18 @@ public interface DataSourceRemoteService{
 	 * @return 执行结果
 	 */
 	@DeleteMapping("/order/{orderNum}")
-	ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum);
+	ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum, @RequestParam("memberId") Integer memberId);
+
+	@GetMapping("/order/{orderNum}")
+	ResultEntity<String,OrderVO> getOrder(@PathVariable("orderNum") String orderNum);
+
+	/**
+	 * 删除项目
+	 * @param id 项目id
+	 * @param memberId 项目发起人会员id
+	 * @return 执行结果
+	 */
+	@DeleteMapping("/project/{id}")
+	ResultEntity<?,?> removeProject(@PathVariable("id") Integer id, @RequestParam("memberId") Integer memberId);
 
 }

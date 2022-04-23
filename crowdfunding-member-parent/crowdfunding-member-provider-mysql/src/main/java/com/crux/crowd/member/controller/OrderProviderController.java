@@ -51,14 +51,19 @@ public class OrderProviderController{
 
 	@PostMapping
 	public ResultEntity<?,?> saveOrder(@RequestBody OrderVO orderVO){
-		orderService.saveOrderVO(orderVO);
-		return ResultEntity.success();
+		orderService.saveOrder(orderVO);
+		return ResultEntity.success("保存成功");
 	}
 
 	@DeleteMapping("/{orderNum}")
-	public ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum){
-		orderService.removeOrder(orderNum);
-		return ResultEntity.success();
+	public ResultEntity<?,?> removeOrder(@PathVariable("orderNum") String orderNum, @RequestParam("memberId") Integer memberId){
+		return orderService.removeByOrderNumAndMemberId(orderNum, memberId) ?
+				ResultEntity.success("删除成功") : ResultEntity.failure("删除失败");
 	}
 
+	@GetMapping("/{orderNum}")
+	ResultEntity<String,OrderVO> getOrder(@PathVariable("orderNum") String orderNum){
+		return Optional.ofNullable(orderService.getOrder(orderNum))
+				.map(o -> ResultEntity.success(Collections.singletonMap("orderVO", o))).orElse(ResultEntity.failure(DATA_NOT_FOUNT));
+	}
 }

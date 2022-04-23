@@ -17,6 +17,12 @@
             (#{id}, #{tagId})
         </foreach>
     </insert>
+    <delete id="removeProjectTag">
+        delete from t_project_tag where project_id = #{id}
+    </delete>
+    <delete id="removeProjectType">
+        delete from t_project_type where project_id = #{id}
+    </delete>
 
     <!-- 查询用以首页显示的数据 -->
     <select id="selectPortalProjectAll" resultMap="portalProjectMap">
@@ -30,15 +36,15 @@
                     select="selectPortalProjectByTypeId" column="id"/>
     </resultMap>
     <select id="selectPortalProjectByTypeId" resultType="com.crux.crowd.member.entity.vo.PortalProjectVO">
-        select p.id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter
+        select <include refid="selectProjectColumn"/>
         from t_project p right join t_project_type pt on p.id = pt.project_id
         where pt.type_id = #{typeId} order by p.id desc limit 4;
     </select>
 
     <!-- 查询详细项目视图信息 -->
     <select id="selectDetailProject" resultMap="detailProjectMap">
-        select p.id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter,
-               project_description, follower, support_money, description_simple, description_detail, phone_num, service_num
+        select <include refid="selectProjectColumn"/>
+               , project_description, follower, support_money, description_simple, description_detail, phone_num, service_num
         from t_project p join t_member_launch_info mli on p.member_launch_id = mli.id where p.id = #{id}
     </select>
     <resultMap id="detailProjectMap" type="com.crux.crowd.member.entity.vo.DetailProjectVO">
@@ -68,6 +74,27 @@
     <select id="selectDetailReturnVOByProjectId" resultType="com.crux.crowd.member.entity.vo.DetailReturnVO">
         select * from t_return where project_id = #{projectId}
     </select>
+
+    <sql id="selectProjectColumn">
+        p.id, project_name, header_picture_path, money, date_add(date(deploy_date), interval day day) deadline, completion, supporter
+    </sql>
+    <select id="selectMemberProjectByMemberId" resultType="com.crux.crowd.member.entity.vo.MemberProjectVO">
+        select <include refid="selectProjectColumn"/>
+               , status, support_money
+        from t_project p join t_member_launch_info mli on p.member_launch_id = mli.id where mli.member_id = #{memberId}
+    </select>
+
+    <select id="selectMemberSupportProjectByMemberId"
+            resultType="com.crux.crowd.member.entity.vo.MemberSupportProjectVO">
+        select order_id, order_num, support_price, return_count, op.freight, op.project_name, status, date_add(date(deploy_date), interval day day) deadline, completion
+        from t_order_project op
+                 join t_order o on op.order_id = o.id
+                 join t_address a on o.address_id = a.id
+                 join t_return r on op.return_id = r.id
+                 join t_project p on r.project_id = p.id
+        where a.member_id = #{memberId}
+    </select>
+
     <!--<select id="selectMemberLaunchInfoByMemberId" resultType="com.crux.crowd.member.entity.vo.MemberLaunchInfoVO">
         select description_simple, description_detail, phone_num, service_num from t_member_launch_info where member_id = #{memberId}
     </select>-->

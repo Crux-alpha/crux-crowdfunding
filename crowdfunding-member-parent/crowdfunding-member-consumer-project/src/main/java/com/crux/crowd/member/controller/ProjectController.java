@@ -5,12 +5,21 @@ import com.crux.crowd.common.util.ResponseResult;
 import com.crux.crowd.common.util.ResultEntity;
 import com.crux.crowd.member.api.DataSourceRemoteService;
 import com.crux.crowd.member.entity.vo.DetailProjectVO;
+import com.crux.crowd.member.entity.vo.MemberInfoVO;
+import com.crux.crowd.member.entity.vo.MemberProjectVO;
+import com.crux.crowd.member.entity.vo.MemberSupportProjectVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
+import static com.crux.crowd.common.util.CrowdConstant.SESSION_ATTRIBUTE_MEMBER_INFO;
+
+@Slf4j
 @Controller
 public class ProjectController{
 
@@ -38,5 +47,15 @@ public class ProjectController{
 			mav.addObject("message", detailProject.getMessage());
 		}
 		return mav;
+	}
+
+	@DeleteMapping("/remove/{id}")
+	@ResponseBody
+	public ResultEntity<?,?> remove(@PathVariable("id") Integer id, HttpSession session){
+		Object memberInfo = session.getAttribute(SESSION_ATTRIBUTE_MEMBER_INFO);
+		if(memberInfo instanceof MemberInfoVO){
+			return dataSourceRemoteService.removeProject(id, ((MemberInfoVO)memberInfo).getId());
+		}
+		return ResultEntity.failure(CrowdConstant.TipsMessage.HTML_FAILURE);
 	}
 }

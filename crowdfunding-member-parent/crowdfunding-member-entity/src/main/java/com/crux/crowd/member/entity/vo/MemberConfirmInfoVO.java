@@ -18,16 +18,18 @@ public class MemberConfirmInfoVO implements java.io.Serializable{
 	// 身份证号
 	private String cardNum;
 
+	private Integer memberId;
+
 	@Override
 	public boolean equals(Object obj){
 		if(this == obj) return true;
 		if(obj == null || getClass() != obj.getClass()) return false;
 		MemberConfirmInfoVO other = (MemberConfirmInfoVO)obj;
-		return Objects.equals(payNum, other.payNum) && Objects.equals(cardNum, other.cardNum);
+		return Objects.equals(memberId, other.memberId);
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(payNum, cardNum);
+		return Objects.hash(payNum);
 	}
 }

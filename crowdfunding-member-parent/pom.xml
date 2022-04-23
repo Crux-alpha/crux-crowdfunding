@@ -6,7 +6,7 @@
 
     <groupId>com.crux.crowd</groupId>
     <artifactId>crowdfunding-member-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
     <modules>
         <!-- 注册中心 -->
@@ -95,7 +95,7 @@
 
 
     <properties>
-        <crowd.version>1.0-SNAPSHOT</crowd.version>
+        <crowd.version>1.0</crowd.version>
         <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

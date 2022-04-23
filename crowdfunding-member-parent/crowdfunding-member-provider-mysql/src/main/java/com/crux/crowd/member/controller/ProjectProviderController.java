@@ -23,8 +23,8 @@ public class ProjectProviderController{
 	}
 
 	@PostMapping("/project")
-	public ResultEntity<?,?> saveProject(@RequestBody ProjectVO projectVO, @RequestParam("memberId") Integer memberId){
-		projectService.saveProject(projectVO, memberId);
+	public ResultEntity<?,?> saveProject(@RequestBody ProjectVO projectVO){
+		projectService.saveProject(projectVO);
 		return ResultEntity.success("保存成功");
 	}
 
@@ -49,6 +49,21 @@ public class ProjectProviderController{
 		OrderProjectPO orderProjectPO = orderService.getOrderProjectPO(orderNum);
 		if(orderProjectPO == null) return ResultEntity.error("没有查询到订单号为" + orderNum + "的订单");
 		projectService.supportProject(orderProjectPO);
-		return ResultEntity.success();
+		return ResultEntity.success("保存成功");
+	}
+
+	@GetMapping("/project/member/support/{memberId}")
+	public ResultEntity<String,List<MemberSupportProjectVO>> getMemberSupportProject(@PathVariable("memberId") Integer memberId){
+		return ResultEntity.success(Collections.singletonMap("listMemberSupportProjectVO", projectService.listMemberSupportProject(memberId)));
+	}
+
+	@GetMapping("/project/member/project/{memberId}")
+	public ResultEntity<String,List<MemberProjectVO>> getMemberProject(@PathVariable("memberId") Integer memberId){
+		return ResultEntity.success(Collections.singletonMap("listMemberProjectVO", projectService.listMemberProject(memberId)));
+	}
+
+	@DeleteMapping("/project/{id}")
+	public ResultEntity<?,?> removeProject(@PathVariable("id") Integer id, @RequestParam("memberId") Integer memberId){
+		return projectService.removeByIdAndMemberId(id, memberId) ? ResultEntity.success("删除成功") : ResultEntity.failure("删除失败");
 	}
 }

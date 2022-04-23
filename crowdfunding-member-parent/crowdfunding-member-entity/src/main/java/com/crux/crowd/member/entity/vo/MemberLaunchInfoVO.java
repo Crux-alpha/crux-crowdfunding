@@ -29,16 +29,18 @@ public class MemberLaunchInfoVO implements java.io.Serializable{
  	 */
 	private String serviceNum;
 
+	private Integer memberId;
+
 	@Override
 	public boolean equals(Object obj){
 		if(this == obj) return true;
 		if(obj == null || getClass() != obj.getClass()) return false;
 		MemberLaunchInfoVO other = (MemberLaunchInfoVO)obj;
-		return Objects.equals(phoneNum, other.phoneNum) && Objects.equals(serviceNum, other.serviceNum);
+		return Objects.equals(memberId, other.memberId);
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(phoneNum, serviceNum);
+		return Objects.hash(memberId);
 	}
 }

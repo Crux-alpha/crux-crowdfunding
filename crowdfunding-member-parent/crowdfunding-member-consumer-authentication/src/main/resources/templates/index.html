@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <base href="/" th:href="@{/}"/>
     <title>众筹平台-创意产品的众筹基地</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" th:href="@{/static/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{/static/css/font-awesome.min.css}">
@@ -209,10 +208,10 @@
 </head>
 <body>
 <div class="navbar-wrapper" th:if="${session?.memberInfo == null}">
-    <div th:insert="~{/common/center-common::center-head-unlogin}"></div>
+    <div th:insert="~{/common/common::head-unlogin}"></div>
 </div>
 <div class="navbar-wrapper" th:if="${session?.memberInfo != null}">
-    <div th:insert="~{/common/center-common::center-head-login}"></div>
+    <div th:insert="~{/common/common::head-login}"></div>
 </div>
 
 
@@ -289,7 +288,7 @@
                             <a href="projects.html">更多...</a>
                         </div>
                         <h3>
-                            [[${type.name}]] <small style="color:#FFF;" th:text="type.remark"></small>
+                            [[${type.name}]] <small style="color:#FFF;" th:text="${type.remark}"></small>
                         </h3>
                     </div>
                     <div class="mBd" style="padding-top:10px;">
@@ -336,25 +335,7 @@
     </div>
 
     <!-- FOOTER -->
-    <div class="container">
-        <div class="row clearfix">
-            <div class="col-md-12 column">
-                <div id="footer">
-                    <div class="footerNav">
-                        <a rel="nofollow" href="http://www.atguigu.com">关于我们</a> | <a rel="nofollow"
-                                                                                      href="http://www.atguigu.com">服务条款</a>
-                        | <a rel="nofollow" href="http://www.atguigu.com">免责声明</a> | <a rel="nofollow"
-                                                                                        href="http://www.atguigu.com">网站地图</a>
-                        | <a rel="nofollow" href="http://www.atguigu.com">联系我们</a>
-                    </div>
-                    <div class="copyRight">
-                        XXX版权所有
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <div th:replace="~{common/common::footer}"></div>
 
 </div><!-- /.container -->
 

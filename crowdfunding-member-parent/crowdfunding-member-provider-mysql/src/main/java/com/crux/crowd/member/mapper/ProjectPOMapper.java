@@ -2,8 +2,7 @@ package com.crux.crowd.member.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.crux.crowd.member.entity.po.ProjectPO;
-import com.crux.crowd.member.entity.vo.DetailProjectVO;
-import com.crux.crowd.member.entity.vo.PortalTypeVO;
+import com.crux.crowd.member.entity.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -45,4 +44,11 @@ public interface ProjectPOMapper extends BaseMapper<ProjectPO>{
 	 */
 	DetailProjectVO selectDetailProject(Integer id);
 
+	List<MemberProjectVO> selectMemberProjectByMemberId(Integer memberId);
+
+	List<MemberSupportProjectVO> selectMemberSupportProjectByMemberId(Integer memberId);
+
+	int removeProjectTag(Integer id);
+
+	int removeProjectType(Integer id);
 }

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title th:text="|${session.memberInfo.userName}的会员中心|"></title>
+    <title th:text="|${session?.memberInfo?.userName}的会员中心|"></title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" th:href="@{/static/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" href="css/font-awesome.min.css" th:href="@{/static/css/font-awesome.min.css}">
     <link rel="stylesheet" href="css/theme.css" th:href="@{/static/css/font-awesome.min.css}">
@@ -52,7 +52,7 @@
     </style>
 </head>
 <body>
-<div th:replace="~{/common/center-common::center-head-login}"></div>
+<div th:replace="~{/common/common::head-login}"></div>
 <br/><br/><br/>
 <div class="container">
     <div class="row clearfix">
@@ -64,7 +64,7 @@
                              alt="">
                         <div class="caption" style="text-align:center;">
                             <h3>
-                                [[|${session.memberInfo.userName}|]]
+                                [[|${session?.memberInfo?.userName}|]]
                             </h3>
                             <span class="label label-danger" style="cursor:pointer;"
                                   onclick="window.location.href='accttype.html'">未实名认证</span>
@@ -114,7 +114,6 @@
 
                     <ul class="nav nav-tabs my-tab">
                         <li role="presentation" class="active"><a href="#support">我支持的</a></li>
-                        <li role="presentation"><a href="#attension">我关注的</a></li>
                         <li role="presentation"><a href="#add">我发起的</a></li>
                         <li class=" pull-right">
                             <button type="button" class="btn btn-warning" onclick="location.href='/project/start.html'">发起众筹
@@ -125,11 +124,6 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="support" aria-labelledby="home-tab">
                             <div class="container-fluid">
                                 <div class="row clearfix">
-                                    <div class="col-md-12 column">
-                                        <span class="label label-warning">全部</span> <span class="label"
-                                                                                          style="color:#000;">已支付</span>
-                                        <span class="label " style="color:#000;">未支付</span>
-                                    </div>
                                     <div class="col-md-12 column" style="margin-top:10px;padding:0;">
                                         <table class="table table-bordered" style="text-align:center;">
                                             <thead>
@@ -143,156 +137,23 @@
                                             </tr>
                                             </thead>
                                             <tbody id="tbody-my-support-project">
-                                            <tr>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="thumbnail">
-                                                        <div class="caption">
-                                                            <h3>
-                                                                活性富氢净水直饮机
-                                                            </h3>
-                                                            <p>
-                                                                订单编号:2x002231111
-                                                            </p>
-                                                            <p>
-                                                            <div style="float:left;"><i
-                                                                    class="glyphicon glyphicon-screenshot"
-                                                                    title="目标金额"></i> 已完成 100%
-                                                            </div>
-                                                            <div style="float:right;"><i title="截至日期"
-                                                                                         class="glyphicon glyphicon-calendar"></i>
-                                                                剩余8天
-                                                            </div>
-                                                            </p>
-                                                            <br>
-                                                            <div class="progress" style="margin-bottom: 4px;">
-                                                                <div class="progress-bar progress-bar-danger"
-                                                                     role="progressbar" aria-valuenow="40"
-                                                                     aria-valuemin="0" aria-valuemax="100"
-                                                                     style="width: 40%">
-                                                                    <span>众筹中</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td style="vertical-align:middle;">2017-05-23 11:31:22</td>
-                                                <td style="vertical-align:middle;">1.00<br>(运费：0.00 )</td>
-                                                <td style="vertical-align:middle;">1</td>
-                                                <td style="vertical-align:middle;">交易关闭</td>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="btn-group-vertical" role="group"
-                                                         aria-label="Vertical button group">
-                                                        <button type="button" class="btn btn-default">删除订单</button>
-                                                        <button type="button" class="btn btn-default">交易详情</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="thumbnail">
-                                                        <div class="caption">
-                                                            <h3>
-                                                                BAVOSN便携折叠移动电源台灯
-                                                            </h3>
-                                                            <p>
-                                                                订单编号:2x002231111
-                                                            </p>
-                                                            <p>
-                                                            <div style="float:left;"><i
-                                                                    class="glyphicon glyphicon-screenshot"
-                                                                    title="目标金额"></i> 已完成 100%
-                                                            </div>
-                                                            <div style="float:right;"><i title="截至日期"
-                                                                                         class="glyphicon glyphicon-calendar"></i>
-                                                                剩余8天
-                                                            </div>
-                                                            </p>
-                                                            <br>
-                                                            <div class="progress" style="margin-bottom: 4px;">
-                                                                <div class="progress-bar progress-bar-success"
-                                                                     role="progressbar" aria-valuenow="40"
-                                                                     aria-valuemin="0" aria-valuemax="100"
-                                                                     style="width: 40%">
-                                                                    <span>众筹成功</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td style="vertical-align:middle;">2017-05-23 11:31:22</td>
-                                                <td style="vertical-align:middle;">1.00<br>(运费：0.00 )</td>
-                                                <td style="vertical-align:middle;">1</td>
-                                                <td style="vertical-align:middle;">交易关闭</td>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="btn-group-vertical" role="group"
-                                                         aria-label="Vertical button group">
-                                                        <button type="button" class="btn btn-default">删除订单</button>
-                                                        <button type="button" class="btn btn-default">交易详情</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="attension" aria-labelledby="attension-tab">
-                            <div class="container-fluid">
-                                <div class="row clearfix">
-                                    <div class="col-md-12 column" style="padding:0;">
-                                        <table class="table table-bordered" style="text-align:center;">
-                                            <thead>
-                                            <tr style="background-color:#ddd;">
-                                                <td>项目信息</td>
-                                                <td width="120">支持人数</td>
-                                                <td width="120">关注人数</td>
-                                                <td width="120">操作</td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="thumbnail">
-                                                        <div class="caption">
-                                                            <p>
-                                                                BAVOSN便携折叠移动电源台灯
-                                                            </p>
-                                                            <p>
-                                                                <i class="glyphicon glyphicon-jpy"></i> 已筹集 1000.0元
-                                                            </p>
-                                                            <p>
-                                                            <div style="float:left;"><i
-                                                                    class="glyphicon glyphicon-screenshot"
-                                                                    title="目标金额"></i> 已完成 100%
-                                                            </div>
-                                                            <div style="float:right;"><i
-                                                                    class="glyphicon glyphicon-calendar"></i> 剩余2天
-                                                            </div>
-                                                            </p>
-                                                            <br>
-                                                            <div class="progress" style="margin-bottom: 4px;">
-                                                                <div class="progress-bar progress-bar-success"
-                                                                     role="progressbar" aria-valuenow="40"
-                                                                     aria-valuemin="0" aria-valuemax="100"
-                                                                     style="width: 40%">
-                                                                    <span>众筹中</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td style="vertical-align:middle;">1</td>
-                                                <td style="vertical-align:middle;">1</td>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="btn-group-vertical" role="group"
-                                                         aria-label="Vertical button group">
-                                                        <button type="button" class="btn btn-default">取消关注</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="modal fade" id="modal-order-detail" tabindex="-1" role="dialog" aria-labelledby="modal-title-order-detail">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="modal-title-order-detail">交易详情</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -300,64 +161,17 @@
                         <div role="tabpanel" class="tab-pane fade  " id="add" aria-labelledby="add-tab">
                             <div class="container-fluid">
                                 <div class="row clearfix">
-                                    <div class="col-md-12 column">
-                                        <span class="label label-warning">全部</span> <span class="label"
-                                                                                          style="color:#000;">众筹中</span>
-                                        <span class="label " style="color:#000;">众筹成功</span> <span class="label "
-                                                                                                   style="color:#000;">众筹失败</span>
-                                    </div>
                                     <div class="col-md-12 column" style="padding:0;margin-top:10px;">
                                         <table class="table table-bordered" style="text-align:center;">
                                             <thead>
                                             <tr style="background-color:#ddd;">
                                                 <td>项目信息</td>
                                                 <td width="120">募集金额（元）</td>
-                                                <td width="80">当前状态</td>
+                                                <td width="80">支持人数</td>
                                                 <td width="120">操作</td>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="thumbnail">
-                                                        <div class="caption">
-                                                            <p>
-                                                                BAVOSN便携折叠移动电源台灯
-                                                            </p>
-                                                            <p>
-                                                            <div style="float:left;"><i
-                                                                    class="glyphicon glyphicon-screenshot"
-                                                                    title="目标金额"></i> 已完成 100%
-                                                            </div>
-                                                            <div style="float:right;"><i title="截至日期"
-                                                                                         class="glyphicon glyphicon-calendar"></i>
-                                                                剩余8天
-                                                            </div>
-                                                            </p>
-                                                            <br>
-                                                            <div class="progress" style="margin-bottom: 4px;">
-                                                                <div class="progress-bar progress-bar-success"
-                                                                     role="progressbar" aria-valuenow="40"
-                                                                     aria-valuemin="0" aria-valuemax="100"
-                                                                     style="width: 40%">
-                                                                    <span>众筹中</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td style="vertical-align:middle;">1.00<br>(运费：0.00 )</td>
-                                                <td style="vertical-align:middle;">草稿</td>
-                                                <td style="vertical-align:middle;">
-                                                    <div class="btn-group-vertical" role="group"
-                                                         aria-label="Vertical button group">
-                                                        <button type="button" class="btn btn-default">项目预览</button>
-                                                        <button type="button" class="btn btn-default">修改项目</button>
-                                                        <button type="button" class="btn btn-default">删除项目</button>
-                                                        <button type="button" class="btn btn-default">问题管理</button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            <tbody id="tbody-my-project">
                                             </tbody>
                                         </table>
                                     </div>
@@ -374,12 +188,13 @@
         </div>
     </div>
 </div>
-<div th:replace="~{/common/center-common::center-footer}"></div>
+<div th:replace="~{/common/common::footer}"></div>
 <script src="jquery/jquery-2.1.1.min.js" th:src="@{/static/js/jquery-3.6.0.min.js}"></script>
 <script src="bootstrap/js/bootstrap.min.js" th:src="@{/static/bootstrap/js/bootstrap.min.js}"></script>
 <script src="script/docs.min.js" th:src="@{/static/script/docs.min.js}"></script>
 <script src="script/back-to-top.js" th:src="@{/static/script/back-to-top.js}"></script>
 <script src="script/echarts.js" th:src="@{/static/script/echarts.js}"></script>
+<script type="text/javascript" th:src="@{/static/layer/layer.js}"></script>
 <script>
 	$('.my-tab a').click(function(e){
 		e.preventDefault()
@@ -561,22 +376,248 @@
 	// 使用刚指定的配置项和数据显示图表。
 	myChart2.setOption(option2);
 </script>
+<script type="text/javascript" th:src="@{/static/script/crowd.js}"></script>
 <script type="text/javascript">
+
     $(function(){
 		$(".member-group:not(:first)").hide();
 
+		const mySupportTbody = $("#tbody-my-support-project");
+		const myProjectTbody = $("#tbody-my-project");
+
 		$.ajax({
-            url:
+            url: "/member/center/support",
+            type: "GET",
+            dataType: "json",
+            success: json => {
+                let tipTd = $("<tr><td rowspan='6'></td></tr>");
+                if(json.result !== "SUCCESS"){
+                    tipTd.children().text(json.message);
+                    tipTd.appendTo(mySupportTbody);
+                    return;
+                }
+
+                let data = json.data.listMemberSupportProjectVO;
+                if(data.length < 1){
+                    tipTd.children().text("您还没有支持任何项目");
+                    tipTd.appendTo(mySupportTbody);
+                }else generateMySupportProject(data);
+            },
+            error: defaultErrorCallback
+        });
+
+		$.ajax({
+            url: "/member/center/project",
+            type: "GET",
+            dataType: "json",
+            success: json => {
+                let tipTd = $("<tr><td rowspan='4'></td></tr>");
+                if(json.result !== "SUCCESS"){
+                    tipTd.children().text(json.message);
+                    tipTd.appendTo(myProjectTbody);
+                    return;
+                }
+                let data = json.data.listMemberProjectVO;
+                if(data.length < 1){
+                    tipTd.children().text("您还没有发布任何项目");
+                    tipTd.appendTo(myProjectTbody);
+                }else generateMemberProject(data);
+            },
+            error: defaultErrorCallback
         })
 
+        mySupportTbody.on("click", ".btn-order-remove", function(){
+            let thisTr = $(this).closest("tr");
+            let orderNum = thisTr.find(".p-order-num").text();
+            layer.confirm("订单号："+ orderNum +"<br/>确认删除此订单？", function(){
+                $.ajax({
+                    url: "/order/remove/" + orderNum,
+                    data: {_method: "delete"},
+                    type: "POST",
+                    dataType: "json",
+                    success: json => {
+                        layer.msg(json.message);
+                        if(json.result === "SUCCESS"){
+                            thisTr.remove();
+                        }
+                    },
+                    error: defaultErrorCallback
+                })
+            });
+        });
+		mySupportTbody.on("click", ".btn-order-detail", function(){
+            let thisTr = $(this).closest("tr");
+            let orderNum = thisTr.find(".p-order-num").text();
+            $.ajax({
+                url: "/order/get/" + orderNum,
+                type: "GET",
+                dataType: "json",
+                success: json => {
+                    if(json.result !== "SUCCESS"){
+                        layer.msg(json.message);
+                        return;
+                    }
+                    generateOrderDetail(json.data.orderVO);
+                    $("#modal-order-detail").modal();
+                },
+                error: defaultErrorCallback
+            })
+        })
+        myProjectTbody.on("click", ".btn-project-delete", function(){
+            let thisTr = $(this).closest("tr");
+            let id = $(this).attr("project-id");
+            layer.confirm("确认删除此项目？", function(){
+                $.ajax({
+                    url: "/project/remove/" + id,
+                    type: "POST",
+                    data: {_method: "DELETE"},
+                    dataType: "json",
+                    success: json => {
+                        layer.msg(json.message);
+                        if(json.result === "SUCCESS"){
+                            thisTr.remove();
+                        }
+                    },
+                    error: defaultErrorCallback
+                })
+            })
+        })
 	});
+</script>
+<script type="text/javascript">
 
-	function showMemberGroup(click){
-		if($(click).hasClass("active")) return false;
+    const status = status => {
+        switch(status){
+            case "START" : return "即将开始";
+            case "CROWDFUNDING" : return "众筹中";
+            case "SUCCESS" : return "众筹成功";
+            case "FAILED" : return "众筹失败";
+        }
+    }
 
-		$(".list-group-item").toggleClass("active");
+    const processBar = (status) => {
+        switch(status){
+            case "CROWDFUNDING" : return "process-bar-warning";
+            case "SUCCESS" : return  "process-bar-success";
+            case "FAILED" : return "process-bar-danger"
+        }
+    }
 
-		$(".member-group").toggle();
+    function showMemberGroup(click){
+        if($(click).hasClass("active")) return false;
+
+        $(".list-group-item").toggleClass("active");
+
+        $(".member-group").toggle();
+    }
+
+    function generateMySupportProject(data){
+        for(const project of data){
+            $("<tr>" +
+                "    <td style=\"vertical-align:middle;\">" +
+                "        <div class=\"thumbnail\">" +
+                "            <div class=\"caption\">" +
+                "                <h3>" + project.projectName + "</h3>" +
+                "                <p class='p-order-num'>" + project.orderNum + "</p>" +
+                "                <p>" +
+                "                <div style=\"float:left;\"><i" +
+                "                        class=\"glyphicon glyphicon-screenshot\"" +
+                "                        title=\"目标金额\"></i> 已完成 "+ project.completion +
+                "%</div>" +
+                "                <div style=\"float:right;\"><i title=\"截至日期\"" +
+                "                                             class=\"glyphicon glyphicon-calendar\"></i>" +
+                "                    截止日期:" + project.deadline +
+                "                </div>" +
+                "                </p>" +
+                "                <br>" +
+                "                <div class=\"progress\" style=\"margin-bottom: 4px;\">" +
+                "                    <div class=\"progress-bar "+ processBar(project.status) +"\"" +
+                "                         role=\"progressbar\" aria-valuenow=\""+ project.completion + "\"" +
+                "                         aria-valuemin=\"0\" aria-valuemax=\"100\"" +
+                "                         style=\"width: "+ project.completion +"%\">" +
+                "                        <span>"+ status(project.status) +"</span>" +
+                "                    </div>" +
+                "                </div>" +
+                "            </div>" +
+                "        </div>" +
+                "    </td>" +
+                "    <td style=\"vertical-align:middle;\">"+ project.supportDateTime +"</td>" +
+                "    <td style=\"vertical-align:middle;\">"+ project.supportPrice * project.returnCount +"<br>(运费："+ project.freight +" )</td>" +
+                "    <td style=\"vertical-align:middle;\">"+ project.returnCount +"</td>" +
+                "    <td style=\"vertical-align:middle;\">交易关闭</td>" +
+                "    <td style=\"vertical-align:middle;\">" +
+                "        <div class=\"btn-group-vertical\" role=\"group\"" +
+                "             aria-label=\"Vertical button group\">" +
+                "            <button type=\"button\" class=\"btn btn-default btn-order-remove\">删除订单</button>" +
+                "            <button type=\"button\" class=\"btn btn-default btn-order-detail\">交易详情</button>" +
+                "        </div>" +
+                "    </td>" +
+                "</tr>").appendTo($("#tbody-my-support-project"));
+        }
+    }
+
+    function generateMemberProject(data){
+        for(const project of data){
+            $("<tr>" +
+            "    <td style=\"vertical-align:middle;\">" +
+            "        <div class=\"thumbnail\">" +
+            "            <div class=\"caption\">" +
+            "                <p>"+ project.projectName +"</p>" +
+            "                <div style=\"float:left;\"><i" +
+            "                        class=\"glyphicon glyphicon-screenshot\"" +
+            "                        title=\"目标金额\"></i> 已完成 "+ project.completion +
+            "%               </div>" +
+            "                <div style=\"float:right;\"><i title=\"截至日期\"" +
+            "                                             class=\"glyphicon glyphicon-calendar\"></i>" +
+            project.deadline +
+            "                </div>" +
+            "                <br>" +
+            "                <div class=\"progress\" style=\"margin-bottom: 4px;\">" +
+            "                    <div class=\"progress-bar progress-bar-success\"" +
+            "                         role=\"progressbar\" aria-valuenow='"+ project.completion +"'" +
+            "                         aria-valuemin=\"0\" aria-valuemax=\"100\"" +
+            "                         style=\"width: "+ project.completion +"%\">" +
+            "                        <span>"+ status(project.status) +"</span>" +
+            "                    </div>" +
+            "                </div>" +
+            "            </div>" +
+            "        </div>" +
+            "    </td>" +
+            "    <td style=\"vertical-align:middle;\">"+ project.supportMoney +"</td>" +
+            "    <td style=\"vertical-align:middle;\">"+ project.supporter +"</td>" +
+            "    <td style=\"vertical-align:middle;\">" +
+            "        <div class=\"btn-group-vertical\" role=\"group\"" +
+            "             aria-label=\"Vertical button group\">" +
+            "            <button type=\"button\" class=\"btn btn-default\" onclick='location.href=\"/project/detail/"+ project.id +"\"'>项目预览</button>" +
+            "            <button type=\"button\" class=\"btn btn-default\">修改项目</button>" +
+            "            <button type=\"button\" class=\"btn btn-default btn-project-delete\" project-id='"+ project.id +"'>删除项目</button>" +
+            "            <button type=\"button\" class=\"btn btn-default\">问题管理</button>" +
+            "        </div>" +
+            "    </td>" +
+            "</tr>").appendTo($("#tbody-my-project"));
+        }
+    }
+
+    function generateOrderDetail(order){
+        const body = $("#modal-order-detail .modal-body");
+        body.empty();
+
+        let project = order.orderProjectVO;
+
+        $("<ul style='list-style:none'>" +
+            "<li>订单号："+ order.orderNum +"</li>" +
+            "<li>支付宝流水号："+ order.payOrderNum +"</li>" +
+            "<li>订单金额："+ order.orderAmount +"</li>" +
+            "<li>是否开发票："+ (order.invoice ? "是" : "否") +"</li>" +
+            (order.invoice ? "<li>发票抬头："+ order.invoiceTitle +"</li>" : "") +
+            "<li>备注："+ order.orderRemark +"</li>" +
+            "<li>支持项目："+ project.projectName +"</li>" +
+            "<li>发起人："+ project.launchName +"</li>" +
+            "<li>回报内容："+ project.returnContent +"</li>" +
+            "<li>购买数量："+ project.returnCount +"</li>" +
+            "<li>单价："+ project.supportPrice +"</li>" +
+            "<li>运费："+ project.freight +"</li>" +
+            "</ul>").appendTo(body);
     }
 </script>
 </body>
