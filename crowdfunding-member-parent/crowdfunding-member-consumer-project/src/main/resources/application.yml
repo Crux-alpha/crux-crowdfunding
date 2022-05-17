@@ -19,8 +19,8 @@ eureka:
       defaultZone: http://localhost:8001/eureka
 aliyun:
   oss:
-    access-key-id: LTAI5tRJW4CvJu3y2Y2sV1YU
-    access-key-secret: lX7iDvm3kzs9EQGUAsgYTRONtou4pO
-    bucket-name: crux-crowd
-    bucket-domain: https://crux-crowd.oss-cn-qingdao.aliyuncs.com
-    endpoint: https://oss-cn-qingdao.aliyuncs.com
+    access-key-id: key
+    access-key-secret: secret
+    bucket-name: name
+    bucket-domain: domain
+    endpoint: endpoint
